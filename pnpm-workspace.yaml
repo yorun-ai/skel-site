@@ -1,0 +1,14 @@
+allowBuilds:
+  core-js: true
+
+auditConfig:
+  ignoreGhsas:
+    - GHSA-5c6j-r48x-rmvq
+
+overrides:
+  brace-expansion: 5.0.8
+  fast-uri: 3.1.4
+  uuid: 11.1.1
+
+patchedDependencies:
+  serialize-javascript@6.0.2: patches/serialize-javascript@6.0.2.patch

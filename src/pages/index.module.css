@@ -1,0 +1,109 @@
+.main {
+  min-height: calc(100vh - var(--ifm-navbar-height));
+  padding: 5rem 1.5rem;
+}
+
+.hero {
+  margin: 0 auto;
+  max-width: 880px;
+  text-align: center;
+}
+
+.eyebrow {
+  color: var(--ifm-color-primary);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  font-size: clamp(2.6rem, 7vw, 5.2rem);
+  letter-spacing: -0.055em;
+  line-height: 1.02;
+  margin: 1rem 0 1.5rem;
+}
+
+.lead {
+  color: var(--muted-foreground);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  line-height: 1.8;
+  margin: 0 auto;
+  max-width: 720px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.primaryAction,
+.secondaryAction {
+  border-radius: var(--radius);
+  font-weight: 650;
+  padding: 0.75rem 1.25rem;
+  transition: transform 150ms ease, background-color 150ms ease;
+}
+
+.primaryAction {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.secondaryAction {
+  border: 1px solid var(--border);
+  color: var(--foreground);
+}
+
+.primaryAction:hover,
+.secondaryAction:hover {
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.flow {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 5rem auto 0;
+  max-width: 1040px;
+}
+
+.flow article {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) + 4px);
+  padding: 1.5rem;
+}
+
+.flow span {
+  color: var(--ifm-color-primary);
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.flow h2 {
+  font-size: 1.3rem;
+  margin: 1rem 0 0.6rem;
+}
+
+.flow p {
+  color: var(--muted-foreground);
+  line-height: 1.7;
+  margin: 0;
+}
+
+@media (max-width: 760px) {
+  .main {
+    padding-top: 3.5rem;
+  }
+
+  .flow {
+    grid-template-columns: 1fr;
+    margin-top: 3.5rem;
+  }
+}

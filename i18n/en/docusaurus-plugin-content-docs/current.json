@@ -1,0 +1,30 @@
+{
+  "version.label": {
+    "message": "skelc next",
+    "description": "The label for version current"
+  },
+  "sidebar.docsSidebar.category.开始使用": {
+    "message": "Get Started",
+    "description": "The Get Started category"
+  },
+  "sidebar.docsSidebar.category.Skel 语言": {
+    "message": "Skel Language",
+    "description": "The Skel Language category"
+  },
+  "sidebar.docsSidebar.category.日常工具": {
+    "message": "Daily Tooling",
+    "description": "The Daily Tooling category"
+  },
+  "sidebar.docsSidebar.category.代码生成": {
+    "message": "Code Generation",
+    "description": "The Code Generation category"
+  },
+  "sidebar.docsSidebar.category.Vine 集成": {
+    "message": "Vine Integration",
+    "description": "The Vine Integration category"
+  },
+  "sidebar.docsSidebar.category.参考": {
+    "message": "Reference",
+    "description": "The Reference category"
+  }
+}

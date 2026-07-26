@@ -1,0 +1,23 @@
+diff --git a/index.js b/index.js
+index 156f8f917f41ff5eea61809d4bcd7125091ff2c6..e167c211583fb99a16fd63c1a5d8017a4fe23a34 100644
+--- a/index.js
++++ b/index.js
+@@ -112,2 +112,2 @@ module.exports = function serialize(obj, options) {
+-            if(origValue instanceof Array) {
+-                var isSparse = origValue.filter(function(){return true}).length !== origValue.length;
++            if(Array.isArray(origValue)) {
++                var isSparse = Object.keys(origValue).length !== origValue.length;
+@@ -229 +229,5 @@ module.exports = function serialize(obj, options) {
+-            return "new Date(\"" + dates[valueIndex].toISOString() + "\")";
++            var isoStr = String(dates[valueIndex].toISOString());
++            if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/.test(isoStr)) {
++                throw new TypeError('Invalid Date ISO string');
++            }
++            return "new Date(\"" + isoStr + "\")";
+@@ -233 +237,5 @@ module.exports = function serialize(obj, options) {
+-            return "new RegExp(" + serialize(regexps[valueIndex].source) + ", \"" + regexps[valueIndex].flags + "\")";
++            var flags = String(regexps[valueIndex].flags);
++            if (!/^[dgimsuvy]*$/.test(flags)) {
++                throw new TypeError('Invalid RegExp flags');
++            }
++            return "new RegExp(" + serialize(regexps[valueIndex].source) + ", \"" + flags + "\")";
