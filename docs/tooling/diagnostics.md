@@ -2,34 +2,34 @@
 slug: /diagnostics
 ---
 
-# 诊断、Symbol 与自动化
+# Diagnostics, Symbols, and Automation
 
-## 日志格式
+## Log Formats
 
-默认文本适合终端；工具集成使用 JSONL：
+Text output is for terminals; integrations should use JSONL:
 
 ```bash
 skelc --log-format jsonl check --skel-in ./skel
 ```
 
-每行独立包含 `level`、`severity`、稳定的 `code`、精确 `range` 和 `message`；存在关联声明或可自动修复内容时，还会包含 `related` 或 `suggestion`。命令失败返回非零退出码，自动化不应只解析文字判断成功。
+Each line independently contains `level`, `severity`, a stable `code`, an exact `range`, and `message`. Diagnostics also include `related` or `suggestion` when a related declaration or automatic fix is available. Failed commands return a non-zero exit code; automation should not infer success from text alone.
 
-`check` 会在顶层声明、block 成员、右花括号和 decorator 边界恢复语法分析，并在一次运行中为每个 domain 收集最多 50 条相互独立的语法与语义诊断。无效声明会被隔离，依赖它产生的级联错误不会重复报告。warning 也使用同一结构化诊断模型，但不会导致非零退出码。
+`check` recovers syntax analysis at top-level declarations, block members, closing braces, and decorator boundaries, then collects up to 50 independent syntax and semantic diagnostics per domain in one run. Invalid declarations are isolated so dependent errors are not reported as cascades. Warnings use the same structured model without causing a non-zero exit code.
 
-## 查询 symbol
+## Inspect Symbols
 
 ```bash
 skelc symbol list --skel-in ./skel
 skelc symbol get demo.user.User --skel-in ./skel
 ```
 
-加 `--output-format json` 可得到结构化结果。symbol 命令查看当前输入的顶层声明，不解析外部 domain 定义。
+Add `--output-format json` for structured results. Symbol commands inspect top-level declarations in the current input and do not resolve external domain definitions.
 
-## 集成原则
+## Integration Rules
 
-- 固定 skelc 版本。
-- 保留 stderr/stdout 边界和退出码。
-- JSON/JSONL 字段属于工具协议，不依赖人类文本的空格布局。
-- 记录输入路径和 compiler version，便于复现生成问题。
+- Pin the skelc version.
+- Preserve stdout/stderr boundaries and exit codes.
+- Treat JSON/JSONL fields as a protocol; do not depend on human-readable spacing.
+- Record input paths and compiler versions so generation problems are reproducible.
 
-所有参数见[CLI 参考](/docs/cli)。
+See the [CLI reference](/docs/cli) for all flags.

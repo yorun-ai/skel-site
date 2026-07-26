@@ -2,20 +2,20 @@
 slug: /vine-integration
 ---
 
-# 与 Vine 集成
+# Vine Integration
 
-skelc 生成的 Go 代码以 Vine 的公开包作为运行时契约。生成内容包括数据类型、service/client/server spec、Event/Task/Web spec、Actor 与权限辅助以及 domain schema。
+Generated Go code uses Vine public packages as its runtime contract. Output includes data types, service/client/server specs, Event/Task/Web specs, actor and permission helpers, and domain schema metadata.
 
-## 版本关系
+## Version Relationship
 
-`skelc version` 显示默认 Vine 版本。生成 Go module 时，该版本写入输出的 `go.mod`；`--go-vine-version` 只能选择不低于默认值的版本。
+`skelc version` reports the default Vine version. Generated Go modules write that version to `go.mod`; `--go-vine-version` can only select a version at least as new as the default.
 
-## 推荐流程
+## Recommended Workflow
 
-1. 修改 `.skel`。
-2. 运行 format 和 check。
-3. 使用项目固定的 skelc 版本重新生成。
-4. 检查生成 API、module 依赖和 schema diff。
-5. 运行 Vine 应用测试。
+1. Change `.skel`.
+2. Run format and check.
+3. Regenerate with the project-pinned skelc version.
+4. Review generated APIs, module dependencies, and schema diffs.
+5. Run Vine application tests.
 
-生成文件是派生产物，不要直接修补。Vine 的应用生命周期、Rpc/Web/Event/Task 实现方式见 [Vine 文档](https://vine.yorun.ai/docs/)。
+Generated files are derived artifacts; do not patch them directly. See the [Vine documentation](https://vine.yorun.ai/docs/) for application lifecycle and Rpc/Web/Event/Task implementation.

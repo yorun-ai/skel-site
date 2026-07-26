@@ -2,19 +2,19 @@
 slug: /glossary
 ---
 
-# 术语表
+# Glossary
 
-| 术语 | 含义 |
+| Term | Meaning |
 | --- | --- |
-| Domain | 拥有一组共同演进契约的逻辑业务边界 |
-| Skel | 描述 domain 契约的语言与文件格式 |
-| skelc | 解析、检查并生成 Skel 契约的编译器 |
-| regular | 包含完整私有与公开契约的生成输出 |
-| pub | 对消费者公开的声明或只含公开面的生成输出 |
-| Actor | 调用者及其认证/权限模型 |
-| Resource | 权限 action 与 check 的命名空间 |
-| Schema | 生成代码注册的 domain 元数据 |
-| Import mapping | 从逻辑 domain 到文件路径或语言包的构建映射 |
-| Generated artifact | 可由确定输入和编译器版本重新创建的派生文件 |
+| Domain | A logical business boundary that owns contracts evolving together |
+| Skel | The language and file format describing domain contracts |
+| skelc | The compiler that parses, validates, and generates Skel contracts |
+| regular | Generated output containing complete private and public contracts |
+| pub | A consumer-visible declaration or public-only generated output |
+| Actor | A caller plus its authentication and permission model |
+| Resource | A namespace for permission actions and checks |
+| Schema | Domain metadata registered by generated code |
+| Import mapping | A build mapping from a logical domain to a path or language package |
+| Generated artifact | A derived file reproducible from deterministic input and compiler version |
 
-标识符与完整声明规则见[语法参考](/docs/syntax)。
+See the [syntax reference](/docs/syntax) for identifiers and declaration rules.
