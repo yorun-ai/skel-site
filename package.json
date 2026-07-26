@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "license": "Apache-2.0",
-  "packageManager": "pnpm@11.15.1",
+  "packageManager": "pnpm",
   "scripts": {
     "start": "docusaurus serve --build --no-open",
     "dev": "docusaurus start --locale en",
@@ -46,6 +46,7 @@
     "wrangler": "4.114.0"
   },
   "engines": {
-    "node": ">=20.0"
+    "node": ">=20.0",
+    "pnpm": ">=11.15.1 <12"
   }
 }
