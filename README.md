@@ -24,19 +24,15 @@ pnpm build
 
 ## Deployment
 
-Cloudflare Workers Builds deploys the generated Docusaurus site as static
-assets for [skel.yorun.ai](https://skel.yorun.ai). Configure the connected Git
-repository with:
+Production deployments run automatically from `main` through Cloudflare
+Workers Builds.
 
-```text
-Build command: pnpm run build
-Deploy command: pnpm exec wrangler deploy
-```
+`pnpm build` generates the static site in `build`. `wrangler.jsonc` is the
+source of truth for the Worker configuration, 404 fallback, and the
+`skel.yorun.ai` custom domain.
 
-The production branch is `main`. The Wrangler configuration publishes `build`
-and serves Docusaurus's generated `404.html` for unmatched routes. It also owns
-the `skel.yorun.ai` custom domain; update that route here instead of maintaining
-it separately in the Cloudflare dashboard.
+Deploying to production requires authorized Cloudflare credentials.
+Contributors do not need Cloudflare access to build or preview the site locally.
 
 ## Versioning
 

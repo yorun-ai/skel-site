@@ -24,17 +24,13 @@ pnpm build
 
 ## 部署
 
-Cloudflare Workers Builds 将生成的 Docusaurus 站点作为静态资源部署到
-[skel.yorun.ai](https://skel.yorun.ai)。连接 Git 仓库时使用以下配置：
+生产环境通过 Cloudflare Workers Builds 从 `main` 分支自动部署。
 
-```text
-Build command: pnpm run build
-Deploy command: pnpm exec wrangler deploy
-```
+`pnpm build` 会在 `build` 目录生成静态站点。`wrangler.jsonc` 是 Worker
+配置、404 回退页面和 `skel.yorun.ai` 自定义域名的唯一配置来源。
 
-生产分支为 `main`。Wrangler 配置会发布 `build` 目录，为未匹配的路由返回
-Docusaurus 生成的 `404.html`，并管理 `skel.yorun.ai` 自定义域名。域名路由
-应在此配置中更新，不要再在 Cloudflare 控制台中单独维护。
+部署到生产环境需要经过授权的 Cloudflare 凭据。贡献者在本地构建或预览
+站点时不需要 Cloudflare 权限。
 
 ## 版本管理
 
