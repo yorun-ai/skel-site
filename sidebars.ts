@@ -14,34 +14,34 @@ const category = (label: string, items: string[]) => ({
 const sidebars: SidebarsConfig = {
   docsSidebar: [
     'index',
-    category('开始使用', [
+    category('Get Started', [
       'getting-started/overview',
       'getting-started/installation',
       'getting-started/quick-start',
       'getting-started/input-layout',
     ]),
-    category('Skel 语言', [
+    category('Skel Language', [
       'language/overview',
       'language/contract-design',
       'language/syntax',
     ]),
-    category('日常工具', [
+    category('Daily Tooling', [
       'tooling/workflow',
       'tooling/diagnostics',
       'tooling/editor',
     ]),
-    category('代码生成', [
+    category('Code Generation', [
       'generation/overview',
       'generation/go',
       'generation/typescript',
       'generation/public-contracts',
     ]),
-    category('Vine 集成', [
+    category('Vine Integration', [
       'integration/vine',
       'integration/runtime-types',
       'integration/compatibility',
     ]),
-    category('参考', [
+    category('Reference', [
       'reference/cli',
       'reference/troubleshooting',
       'reference/glossary',

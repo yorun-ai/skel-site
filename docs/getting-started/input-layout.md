@@ -2,19 +2,19 @@
 slug: /input-layout
 ---
 
-# 输入、目录与所有权
+# Inputs, Layout, and Ownership
 
-## 单文件模式
+## Single-File Mode
 
-实验或小型契约可直接传入一个 `.skel` 文件：
+Experiments and small contracts can use one `.skel` file directly:
 
 ```bash
 skelc check --skel-in ./user.skel
 ```
 
-## 目录模式
+## Directory Mode
 
-正式 domain 推荐使用目录：
+Use a directory for a production domain:
 
 ```text
 user/
@@ -26,26 +26,26 @@ user/
 └── pub/
 ```
 
-`domain.skel` 只保存 domain 声明及可选说明；其他文件声明相同 domain 并按职责拆分。skelc 按文件名字典序加载，忽略隐藏文件、子目录和非 `.skel` 文件。
+`domain.skel` contains only the domain declaration and optional description. Other files declare the same domain and split contracts by responsibility. skelc loads files in filename order and ignores hidden files, subdirectories, and non-Skel files.
 
-## 外部 domain
+## External Domains
 
-Skel 中先声明逻辑依赖：
+Declare the logical dependency in Skel:
 
 ```skel
 import demo.user as user
 ```
 
-生成时再提供物理映射：
+Provide the physical mapping during generation:
 
 ```bash
 --skel-import demo.user=../user/pub/skel
 ```
 
-逻辑 domain 名保持稳定，路径和语言包名则由构建环境映射。Go 和 TypeScript 生成还分别使用 `--go-import`、`--ts-import`。
+The logical domain name remains stable while build environments map paths and language package names. Go and TypeScript generation additionally use `--go-import` and `--ts-import`.
 
-## 输出所有权
+## Output Ownership
 
-生成器通过 `.skelc-manifest.json` 管理自己的输出，因此可以与手写文件共用目录。未纳入清单的文件不会被删除；但手写文件不能与生成文件使用相同路径，否则下一次生成会覆盖它。
+Generators manage their own output through `.skelc-manifest.json`, so generated and handwritten files can share a directory. Untracked files are not deleted, but a handwritten file must not use the same path as a generated file because the next run will overwrite it.
 
-继续阅读：[校验工作流](/docs/workflow)和[代码生成](/docs/generation)。
+Continue with the [validation workflow](/docs/workflow) and [code generation](/docs/generation).

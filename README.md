@@ -12,15 +12,29 @@ Prerequisites: Node.js 20 or later and pnpm.
 
 ```bash
 pnpm install
-pnpm dev:zh
+pnpm dev
 ```
 
-Use `pnpm dev:en` for English. Validate both locales with:
+Use `pnpm dev:zh` for Simplified Chinese. Validate both locales with:
 
 ```bash
 pnpm typecheck
 pnpm build
 ```
+
+## Deployment
+
+Cloudflare Workers Builds deploys the generated Docusaurus site as static
+assets for [skel.yorun.ai](https://skel.yorun.ai). Configure the connected Git
+repository with:
+
+```text
+Build command: pnpm run build
+Deploy command: pnpm exec wrangler deploy
+```
+
+The production branch is `main`. The Wrangler configuration publishes `build`
+and serves Docusaurus's generated `404.html` for unmatched routes.
 
 ## Versioning
 

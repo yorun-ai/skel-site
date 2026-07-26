@@ -2,49 +2,49 @@
 slug: /runtime-types
 ---
 
-# Skel 运行时类型
+# Skel Runtime Types
 
-Skel 生成的 Go 代码使用 `core/skel` 表达扩展标量、Actor 标记和契约元数据。本页说明这些类型在传输和业务代码中的含义，便于正确保存、比较和跨语言传递数据。
+Generated Skel Go code uses `core/skel` to represent extended scalars, actor markers, and contract metadata. This page explains what these types mean in transport and business code so that applications can store, compare, and exchange data correctly across languages.
 
-## 标量编码
+## Scalar Encoding
 
-Skel 标量扩展遵循一个基本规则：
+Skel's extended scalars follow one basic rule:
 
-> CBOR 是 JSON 的二进制传输形态。除 `Binary` 外，同一个 skel 标量在 JSON 和 CBOR 中尽量保持相同的数据形状。
+> CBOR is the binary transport form of JSON. Except for `Binary`, a Skel scalar should have the same data shape in JSON and CBOR whenever possible.
 
-这样可以让 Go、TypeScript 和其他 runtime 对协议语义有一致理解，也方便调试和回放。
+This gives Go, TypeScript, and other runtimes a consistent understanding of protocol semantics and makes debugging and replay easier.
 
-### Decimal（高精度小数）
+### Decimal (High-Precision Decimal)
 
-`Decimal` 在 JSON 和 CBOR 中都编码为字符串。
+`Decimal` is encoded as a string in both JSON and CBOR.
 
 ```json
 "1.00"
 ```
 
-编码时会保留 decimal scale。也就是说，`1.00` 不会被规范化为 `1`。这对金额、倍率、展示精度等场景很重要。
+Encoding preserves the decimal scale. In other words, `1.00` is not normalized to `1`. This matters for money, ratios, display precision, and similar use cases.
 
-### Timestamp（时间戳）
+### Timestamp (Point in Time)
 
-`Timestamp` 在 JSON 和 CBOR 中都编码为 RFC3339Nano 字符串，并统一转为 UTC。
+`Timestamp` is encoded as an RFC3339Nano string in both JSON and CBOR and is always converted to UTC.
 
 ```json
 "2026-05-04T05:14:15.123456789Z"
 ```
 
-如果业务需要表达“不带时区的本地日期时间”，应使用 `LocalDateTime`，不要用 `Timestamp`。
+Use `LocalDateTime`, not `Timestamp`, when business data represents a local date and time without a time zone.
 
-### Duration（时长）
+### Duration (Time Span)
 
-`Duration` 在 JSON 和 CBOR 中都编码为 Go `time.ParseDuration` 兼容字符串。
+`Duration` is encoded in both JSON and CBOR as a string compatible with Go's `time.ParseDuration`.
 
 ```json
 "1h30m0s"
 ```
 
-### LocalDate / LocalTime / LocalDateTime（本地时间）
+### LocalDate / LocalTime / LocalDateTime (Local Date and Time)
 
-这些类型使用 `cloud.google.com/go/civil` 表达不带时区的本地时间概念。
+These types use `cloud.google.com/go/civil` to represent local date and time concepts without a time zone.
 
 ```json
 "2026-05-04"
@@ -52,49 +52,49 @@ Skel 标量扩展遵循一个基本规则：
 "2026-05-04T13:14:15.123456789"
 ```
 
-它们不会自动转 UTC，也不携带 timezone。
+They are not converted to UTC and do not carry a time zone.
 
-### UUID（唯一标识）
+### UUID (Unique Identifier)
 
-`UUID` 在 JSON 和 CBOR 中都编码为标准 UUID 字符串。
+`UUID` is encoded as a standard UUID string in both JSON and CBOR.
 
 ```json
 "550e8400-e29b-41d4-a716-446655440000"
 ```
 
-### JSON（JSON 文本）
+### JSON (JSON Text)
 
-`JSON` 表示一段 JSON 文本。为了保持 wire shape 简单，它在 JSON 和 CBOR 中都编码为字符串。
+`JSON` represents a JSON document as text. To keep the wire shape simple, it is encoded as a string in both JSON and CBOR.
 
 ```json
 "{\"name\":\"vine\",\"count\":2}"
 ```
 
-### Binary（二进制）
+### Binary (Binary Data)
 
-`Binary` 是唯一有意让 JSON 和 CBOR 形态不同的标量：
+`Binary` is the only scalar intentionally encoded differently in JSON and CBOR:
 
-- JSON 编码为 base64 字符串
-- CBOR 编码为原始 bytes
+- JSON encodes it as a Base64 string.
+- CBOR encodes it as raw bytes.
 
-JSON 没有原生 bytes 类型，因此需要 base64；CBOR 有原生 bytes 类型，因此直接使用二进制 payload。
+JSON has no native byte type and therefore requires Base64. CBOR has a native byte type and carries the binary payload directly.
 
-TypeScript generator 会把 `Binary` 映射为 `Uint8Array`。只有 method arguments 或 result 实际包含 Binary 时，生成的 service spec 才会附带稀疏 `wire` schema；普通 JSON method 不生成额外 metadata。应用需向 `@yorun-ai/vrpc` 注入 CBOR codec。
+The TypeScript generator maps `Binary` to `Uint8Array`. A generated service spec includes sparse `wire` schemas only when method arguments or results actually contain Binary; normal JSON methods receive no extra metadata. Applications inject a CBOR codec into `@yorun-ai/vrpc`.
 
-## Domain Schema 注册表
+## Domain Schema Registry
 
-生成代码会在 init 阶段调用：
+Generated code calls the following function during package initialization:
 
 ```go
 skel.RegisterDomainSchema(schema)
 ```
 
-注册后的 schema 可通过：
+Read registered schemas with:
 
 ```go
 skel.RegisteredDomainSchemas()
 ```
 
-读取。返回结果按 `Domain` 稳定排序，便于 App 注册、测试快照和日志对比保持确定性。
+The result is sorted stably by `Domain`, which keeps application registration, test snapshots, and log comparisons deterministic.
 
-`RegisterDomainSchema` 会检查生成代码里的 skelc 版本，低于 `skel.MinSkelcVersion()` 的 schema 会在启动期失败。
+`RegisterDomainSchema` checks the skelc version recorded in generated code. A schema produced by a version older than `skel.MinSkelcVersion()` fails during application startup.

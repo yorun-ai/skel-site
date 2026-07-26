@@ -2,9 +2,9 @@
 slug: /generation/public-contracts
 ---
 
-# 公开契约与跨 Domain 依赖
+# Public Contracts and Cross-Domain Dependencies
 
-公开契约是 domain 对消费者作出的最小承诺。用 `pub` 标记声明，再导出精简 Skel：
+A public contract is the smallest promise a domain makes to consumers. Mark declarations with `pub`, then export reduced Skel:
 
 ```bash
 skelc gen skel \
@@ -13,17 +13,17 @@ skelc gen skel \
   --skel-out ./pub/skel
 ```
 
-## 闭包规则
+## Closure Rules
 
-公开声明引用的本 domain data、enum、actor 或 resource 也必须显式 `pub`。skelc 不会静默扩大公开面；缺少标记会报错。
+Local data, enums, actors, and resources referenced by a public declaration must also be explicitly `pub`. skelc never silently widens the public surface; missing markers are errors.
 
-## 消费方式
+## Consumption
 
-消费者在源码中 `import` domain，并在生成命令中用 `--skel-import domain=PATH` 指向公开 Skel。不要让消费者读取生产方的完整私有契约目录。
+A consumer declares the domain with `import` and maps `--skel-import domain=PATH` to the public Skel output during generation. Consumers should not read a producer's complete private contract directory.
 
-## 演进规则
+## Evolution Rules
 
-- 增加可选字段通常比修改或删除字段安全。
-- 重命名 symbol、字段、方法或权限码属于兼容性变化。
-- 修改公开声明后重新生成所有语言产物并通知消费者。
-- 用版本化 module/package 传播公开契约，不依赖相邻目录的偶然路径。
+- Adding optional fields is generally safer than changing or removing fields.
+- Renaming symbols, fields, methods, or permission codes is a compatibility change.
+- Regenerate every language output and notify consumers after public changes.
+- Distribute public contracts through versioned modules/packages, not accidental neighboring paths.

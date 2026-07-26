@@ -2,29 +2,29 @@
 slug: /getting-started
 ---
 
-# skelc 使用说明
+# skelc Guide
 
-`skelc` 将 `.skel` 契约编译为 Go、Go module、TypeScript 或仅公开的 skel 定义，并提供校验、格式化和 symbol 查询能力。
+`skelc` compiles `.skel` contracts into Go, Go modules, TypeScript, or public-only Skel definitions. It also provides validation, formatting, and symbol inspection.
 
-## 安装与版本
+## Installation and Versioning
 
-使用 Go 安装：
+Install it with Go:
 
 ```bash
 go install go.yorun.ai/skelc/cmd/skelc@latest
 skelc version
 ```
 
-Vine runtime 对生成器有最低版本要求。发布或升级 Vine 后，使用以下命令查看要求并升级 `skelc`：
+The Vine runtime requires a minimum generator version. After installing or upgrading Vine, use these commands to inspect the requirement and upgrade `skelc`:
 
 ```bash
 vine version
 go install go.yorun.ai/skelc/cmd/skelc@latest
 ```
 
-## 快速工作流
+## Quick Workflow
 
-一个 domain 的推荐目录结构如下：
+The recommended structure for a domain is:
 
 ```text
 user/
@@ -34,13 +34,13 @@ user/
 └── skeled/
 ```
 
-先创建 domain 声明：
+First, create the domain declaration:
 
 ```skel title="skel/domain.skel"
 domain demo.user
 ```
 
-再声明契约：
+Then declare a contract:
 
 ```skel title="skel/user.skel"
 domain demo.user
@@ -60,14 +60,14 @@ pub service UserService {
 }
 ```
 
-在生成代码前先格式化并校验：
+Format and validate it before generating code:
 
 ```bash
 skelc format --skel-in ./skel
 skelc check --skel-in ./skel
 ```
 
-为普通 Go 包生成代码：
+Generate a regular Go package:
 
 ```bash
 skelc gen go \
@@ -75,13 +75,13 @@ skelc gen go \
   --go-out ./skeled
 ```
 
-生成器使用 `.skelc-manifest.json` 跟踪生成文件，不会删除目录中未纳入清单的文件。生成代码仍是派生产物，不要手工修改，应修改 `.skel` 后重新生成；被修改的过期生成文件会被保留，便于人工处理。
+The generator tracks generated files in `.skelc-manifest.json` and does not delete untracked files in the same directory. Generated code is still derived output: edit the `.skel` source and regenerate instead of modifying generated files manually. Modified stale generated files are preserved for manual review.
 
-## 输入目录与跨 domain 引用
+## Input Directories and Cross-Domain References
 
-`--skel-in` 可指向一个 `.skel` 文件或一个目录。目录模式要求包含 `domain.skel`；同一目录下有效 `.skel` 文件按名称排序加载，且都必须声明同一个 domain。
+`--skel-in` can point to one `.skel` file or a directory. Directory mode requires a `domain.skel` file. Valid `.skel` files in the directory are loaded in filename order, and they must all declare the same domain.
 
-当契约引用外部 domain 时，在 `.skel` 中声明 `import`，并在命令中提供路径映射：
+When a contract references an external domain, declare an `import` in the `.skel` file and provide a path mapping on the command line:
 
 ```skel
 domain demo.order
@@ -93,30 +93,30 @@ data Order {
 }
 ```
 
-`check` 可以直接校验当前输入。生成引用外部 domain 的代码时，再通过可重复的 `--skel-import domain=PATH` 提供公开 Skel 路径。导入别名只影响 `.skel` 文件中的类型限定名，不影响生成目录。
+`check` validates the current input directly. When generating code that references an external domain, provide its public Skel path with repeatable `--skel-import domain=PATH` mappings. Import aliases only affect qualified type names in `.skel` files; they do not affect output directories.
 
-## 常用命令
+## Common Commands
 
-| 命令 | 用途 |
+| Command | Purpose |
 | --- | --- |
-| `skelc check --skel-in PATH` | 校验语法、引用、命名和类型约束。 |
-| `skelc format --skel-in PATH` | 原地格式化 Skel 文件。 |
-| `skelc symbol list --skel-in PATH` | 列出本 domain 的顶层 symbol。 |
-| `skelc symbol get NAME --skel-in PATH` | 查询指定 skel 名称。 |
-| `skelc gen go ...` | 生成非 module 的 Go 代码。 |
-| `skelc gen go-module ...` | 生成带 `go.mod` 的 regular / pub Go module。 |
-| `skelc gen ts ...` | 生成 TypeScript data、enum 和适用的 service client。 |
-| `skelc gen skel --pub ...` | 生成裁剪后的公开 `.skel` 契约。 |
+| `skelc check --skel-in PATH` | Validate syntax, references, naming, and type constraints. |
+| `skelc format --skel-in PATH` | Format Skel files in place. |
+| `skelc symbol list --skel-in PATH` | List top-level symbols in the current domain. |
+| `skelc symbol get NAME --skel-in PATH` | Inspect a symbol by its Skel name. |
+| `skelc gen go ...` | Generate Go code without a module. |
+| `skelc gen go-module ...` | Generate regular and public Go modules with `go.mod`. |
+| `skelc gen ts ...` | Generate TypeScript data, enums, and applicable service clients. |
+| `skelc gen skel --pub ...` | Generate a reduced public `.skel` contract. |
 
-`symbol` 支持 `--output-format json`，`version` 支持 `--output-format json`。上层工具需要读取诊断时，可将全局日志格式设为 JSONL：
+`symbol` supports `--output-format json`, and `version` supports `--output-format json`. Set the global log format to JSONL when an upstream tool needs structured diagnostics:
 
 ```bash
 skelc --log-format jsonl check --skel-in ./skel
 ```
 
-## Go module 生成
+## Go Module Generation
 
-模块项目通常同时生成 regular 与 pub 包：
+Module projects usually generate regular and public packages together:
 
 ```bash
 skelc gen go-module \
@@ -127,11 +127,11 @@ skelc gen go-module \
   --go-pub-module example.com/demo/user/skeledpub
 ```
 
-- regular 包包含完整契约、服务端接口和对 pub 符号的 facade。
-- pub 包只包含标记为 `pub` 的契约及其公开依赖，适合被其他 module 导入。
-- 公共契约引用的 data、enum、actor 或 resource 也必须显式标记 `pub`。
+- The regular package contains the complete contract, server interfaces, and facades for public symbols.
+- The public package contains only contracts marked `pub` and their public dependencies. Other modules can safely import it.
+- Data, enums, actors, or resources referenced by a public contract must also be marked `pub` explicitly.
 
-跨 domain 的 Go module 生成还需要传入 skel 与 Go import 映射：
+Cross-domain Go module generation additionally requires Skel and Go import mappings:
 
 ```bash
 skelc gen go-module \
@@ -142,11 +142,11 @@ skelc gen go-module \
   --go-module example.com/demo/order/skeled
 ```
 
-当所有外部 module 遵循同一目录规则时，可用 `--go-module-prefix` 代替多个 `--go-import` 映射。
+When every external module follows the same path convention, use `--go-module-prefix` instead of multiple `--go-import` mappings.
 
-## TypeScript 与 pub skel 生成
+## TypeScript and Public Skel Generation
 
-生成 TypeScript：
+Generate TypeScript with:
 
 ```bash
 skelc gen ts \
@@ -154,9 +154,9 @@ skelc gen ts \
   --ts-out ./pub/skel/typescript
 ```
 
-加上 `--pub` 后，只生成公开的 data、enum，以及带 `via client` actor 的公开 service client。需要输出 npm package 元数据时，可使用 `--ts-as-module`、`--ts-module-scope` 与 `--ts-module`。
+With `--pub`, the output only includes public data, enums, and public service clients associated with an actor that has `via client`. To emit npm package metadata, use `--ts-as-module`, `--ts-module-scope`, and `--ts-module`.
 
-为其他 domain 导出最小契约集：
+Export the smallest contract set for other domains with:
 
 ```bash
 skelc gen skel \
@@ -165,16 +165,16 @@ skelc gen skel \
   --skel-out ./pub/skel
 ```
 
-`gen skel` 必须搭配 `--pub`，输出只保留公开契约及其必要依赖。
+`gen skel` requires `--pub`. Its output only retains public contracts and the dependencies they require.
 
-## 排障
+## Troubleshooting
 
-遇到生成失败时，按下面顺序检查：
+If generation fails, check the following in order:
 
-1. 运行 `skelc check --skel-in ...`，一次查看多个独立诊断，并优先处理每个根因下最早的错误。
-2. 确认目录中存在唯一的 `domain.skel`，且各文件 domain 一致。
-3. 对跨 domain 类型确认同时存在 `import` 和 `--skel-import`。
-4. 对 pub 契约确认其引用的本 domain 依赖也标记为 `pub`。
-5. 升级 `skelc`，使其满足 `vine version` 显示的最低版本。
+1. Run `skelc check --skel-in ...`, review multiple independent diagnostics, and prioritize the earliest error for each root cause.
+2. Confirm that the directory contains exactly one `domain.skel` and that every file declares the same domain.
+3. For cross-domain types, confirm that both the `import` and `--skel-import` mapping are present.
+4. For public contracts, confirm that referenced declarations in the same domain are also marked `pub`.
+5. Upgrade `skelc` so that it satisfies the minimum version displayed by `vine version`.
 
-详细 DSL 规则见 [Skel 语法参考](/docs/syntax)。
+See the [Skel language reference](/docs/syntax) for detailed DSL rules.

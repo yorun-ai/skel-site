@@ -2,38 +2,38 @@
 slug: /installation
 ---
 
-# 安装与升级
+# Installation and Upgrades
 
-## 前提条件
+## Prerequisites
 
-skelc 当前要求 Go 1.26 或更高版本。生成 Go module 时，输出使用 skelc 内置的默认 Vine 版本；当前默认版本为 `v0.10.0`。
+skelc currently requires Go 1.26 or later. Generated Go modules use skelc's built-in default Vine requirement, which is currently `v0.10.0`.
 
-## 安装
+## Install
 
 ```bash
 go install go.yorun.ai/skelc/cmd/skelc@latest
 skelc version
 ```
 
-确认 Go 的 bin 目录位于 `PATH`。如果终端找不到命令，可用 `go env GOBIN` 和 `go env GOPATH` 确认安装位置。
+Ensure the Go binary directory is on `PATH`. If the shell cannot find skelc, inspect `go env GOBIN` and `go env GOPATH`.
 
-## 固定版本
+## Pin a Version
 
-CI 和可重复生成环境应固定版本：
+CI and reproducible generation environments should pin a version:
 
 ```bash
 go install go.yorun.ai/skelc/cmd/skelc@v0.10.0
 ```
 
-项目升级 skelc 后，应重新生成契约并审查 diff；不要让开发机和 CI 静默使用不同版本。
+After upgrading skelc, regenerate contracts and review the diff. Do not let developer machines and CI silently use different compiler versions.
 
-## 查看版本信息
+## Inspect Version Information
 
 ```bash
 skelc version
 skelc version --output-format json
 ```
 
-JSON 输出适合构建脚本读取。生成 Go 代码时可用 `--go-vine-version` 提高目标 Vine 版本，但不能低于 skelc 内置的默认版本。
+JSON output is suitable for build scripts. `--go-vine-version` can raise the target Vine version during Go generation, but it cannot select a version below skelc's built-in default.
 
-下一步：[创建首个契约](/docs/getting-started)。
+Next: [create your first contract](/docs/getting-started).

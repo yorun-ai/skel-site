@@ -2,25 +2,25 @@
 slug: /contract-design
 ---
 
-# Domain 与契约设计
+# Domains and Contract Design
 
-## 用业务边界划分 domain
+## Split by Business Ownership
 
-domain 名应表达稳定的业务所有权，例如 `account.user`，而不是部署单元或临时项目名。一个 domain 内的声明可以共同演进；跨 domain 引用则意味着需要兼容性管理。
+A domain name should express stable business ownership, such as `account.user`, rather than a deployment unit or temporary project. Declarations inside one domain evolve together; a cross-domain reference introduces a compatibility obligation.
 
-## 控制公开面
+## Control the Public Surface
 
-`pub` 是依赖承诺，不是可见性装饰。公开 service 引用的本地 data、enum、actor 或 resource 也必须公开。推荐从最小公开面开始，只导出其他 domain 或客户端确实需要的内容。
+`pub` is a dependency promise, not a visibility decoration. Local data, enums, actors, and resources referenced by a public service must also be public. Start with the smallest public surface and export only what another domain or client needs.
 
-## 避免共享内部模型
+## Do Not Share Internal Models
 
-数据库行、缓存结构和内部状态机通常不应直接成为公开 data。为契约建立专用模型，使存储演进不会无意破坏消费者。
+Database rows, cache layouts, and internal state machines should rarely become public data directly. Create contract-specific models so storage evolution does not accidentally break consumers.
 
-## 保持确定性
+## Preserve Determinism
 
-- 名称表达业务含义，不编码当前技术实现。
-- import 使用完整 domain 名，别名只解决可读性和冲突。
-- 生成产物由固定版本 skelc 创建并纳入可审查流程。
-- 不在同一输出目录混放多个生成任务或手写文件。
+- Names express business meaning, not the current implementation.
+- Imports use full domain names; aliases only improve readability or resolve conflicts.
+- Generated artifacts come from a pinned skelc version and enter a reviewable workflow.
+- One output directory has one generator owner and no handwritten files.
 
-公开边界的具体生成方式见[公开契约](/docs/generation/public-contracts)。
+See [public contracts](/docs/generation/public-contracts) for generation details.

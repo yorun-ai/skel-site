@@ -2,9 +2,9 @@
 slug: /generation/go
 ---
 
-# 生成 Go
+# Generate Go
 
-## 已有 module
+## Existing Module
 
 ```bash
 skelc gen go \
@@ -12,9 +12,9 @@ skelc gen go \
   --go-out ./skeled
 ```
 
-该模式只生成源码，不创建 `go.mod`，适合输出目录已经属于当前 module 的情况。
+This mode writes source without creating `go.mod`. Use it when the output already belongs to the current module.
 
-## 独立 module
+## Standalone Module
 
 ```bash
 skelc gen go-module \
@@ -23,13 +23,13 @@ skelc gen go-module \
   --go-module example.com/demo/user/skeled
 ```
 
-同时需要公开 module 时增加 `--go-pub-out` 和 `--go-pub-module`。regular module 包含完整契约和服务端能力；pub module 只暴露公开 client/listener 与必要类型。
+Add `--go-pub-out` and `--go-pub-module` for a public module. The regular module contains the full contract and server capabilities; the public module exposes public clients/listeners and required types.
 
-## 外部依赖
+## External Dependencies
 
 ```bash
 --skel-import demo.account=../account/pub/skel \
 --go-import demo.account=example.com/demo/account/skeledpub
 ```
 
-统一命名规则下可用 `--go-module-prefix` 推导路径。生成后运行 `gofmt`、`go test`，并审查 `go.mod` 与 API diff。完整参数见[CLI 参考](/docs/cli)。
+Use `--go-module-prefix` when a common naming convention can derive paths. After generation, run `gofmt` and `go test`, then review `go.mod` and API diffs. See the [CLI reference](/docs/cli) for every flag.

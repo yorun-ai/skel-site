@@ -12,15 +12,28 @@ Vine 框架文档由 [`vine-site`](https://github.com/yorun-ai/vine-site) 独立
 
 ```bash
 pnpm install
-pnpm dev:zh
+pnpm dev
 ```
 
-使用 `pnpm dev:en` 启动英文站点。验证两个语言版本：
+使用 `pnpm dev:zh` 启动简体中文站点。验证两个语言版本：
 
 ```bash
 pnpm typecheck
 pnpm build
 ```
+
+## 部署
+
+Cloudflare Workers Builds 将生成的 Docusaurus 站点作为静态资源部署到
+[skel.yorun.ai](https://skel.yorun.ai)。连接 Git 仓库时使用以下配置：
+
+```text
+Build command: pnpm run build
+Deploy command: pnpm exec wrangler deploy
+```
+
+生产分支为 `main`。Wrangler 配置会发布 `build` 目录，并为未匹配的路由
+返回 Docusaurus 生成的 `404.html`。
 
 ## 版本管理
 

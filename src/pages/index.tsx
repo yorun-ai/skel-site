@@ -15,23 +15,24 @@ export default function Home(): ReactNode {
           <p className={styles.eyebrow}>Skel</p>
           <h1>
             <Translate id="homepage.title">
-              描述一次契约，生成可靠的类型安全代码
+              Describe a contract once and generate reliable, type-safe code
             </Translate>
           </h1>
           <p className={styles.lead}>
             <Translate id="homepage.description">
-              使用 Skel
-              描述领域数据和应用能力，通过 skelc 完成校验、格式化和多语言代码生成。
+              Describe domain data and application capabilities with Skel, then
+              use skelc for validation, formatting, and multi-language code
+              generation.
             </Translate>
           </p>
           <div className={styles.actions}>
             <Link className={styles.primaryAction} to="/docs/getting-started">
-              <Translate id="homepage.start">开始使用 Skel</Translate>
+              <Translate id="homepage.start">Get started with Skel</Translate>
             </Link>
             <Link
               className={styles.secondaryAction}
               href="https://vine.yorun.ai">
-              <Translate id="homepage.otherSite">了解 Vine</Translate>
+              <Translate id="homepage.otherSite">Explore Vine</Translate>
             </Link>
           </div>
         </section>
@@ -42,7 +43,8 @@ export default function Home(): ReactNode {
             <h2>Language</h2>
             <p>
               <Translate id="homepage.flow.language">
-                声明 domain、数据类型以及 Rpc、Web、Event 和 Task 契约。
+                Declare domains, data types, and Rpc, Web, Event, and Task
+                contracts.
               </Translate>
             </p>
           </article>
@@ -51,7 +53,8 @@ export default function Home(): ReactNode {
             <h2>skelc</h2>
             <p>
               <Translate id="homepage.flow.compiler">
-                使用同一套编译规则完成格式化、校验、诊断与编辑器支持。
+                Use the same compiler rules for formatting, validation,
+                diagnostics, and editor support.
               </Translate>
             </p>
           </article>
@@ -60,7 +63,8 @@ export default function Home(): ReactNode {
             <h2>Generation</h2>
             <p>
               <Translate id="homepage.flow.generation">
-                生成 Go、TypeScript 和公开 Skel 产物，保持契约一致。
+                Generate Go, TypeScript, and public Skel artifacts while keeping
+                contracts consistent.
               </Translate>
             </p>
           </article>
