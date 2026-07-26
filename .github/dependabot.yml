@@ -39,16 +39,6 @@ updates:
       - dependency-name: lucide-react
         versions:
           - 1.27.0
-      - dependency-name: react
-        update-types:
-          - version-update:semver-major
-      - dependency-name: react-dom
-        update-types:
-          - version-update:semver-major
-      - dependency-name: typescript
-        update-types:
-          - version-update:semver-major
-
   - package-ecosystem: github-actions
     directory: /
     schedule:
