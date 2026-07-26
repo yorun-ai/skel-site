@@ -34,7 +34,9 @@ Deploy command: pnpm exec wrangler deploy
 ```
 
 The production branch is `main`. The Wrangler configuration publishes `build`
-and serves Docusaurus's generated `404.html` for unmatched routes.
+and serves Docusaurus's generated `404.html` for unmatched routes. It also owns
+the `skel.yorun.ai` custom domain; update that route here instead of maintaining
+it separately in the Cloudflare dashboard.
 
 ## Versioning
 

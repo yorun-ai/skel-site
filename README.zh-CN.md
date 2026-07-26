@@ -32,8 +32,9 @@ Build command: pnpm run build
 Deploy command: pnpm exec wrangler deploy
 ```
 
-生产分支为 `main`。Wrangler 配置会发布 `build` 目录，并为未匹配的路由
-返回 Docusaurus 生成的 `404.html`。
+生产分支为 `main`。Wrangler 配置会发布 `build` 目录，为未匹配的路由返回
+Docusaurus 生成的 `404.html`，并管理 `skel.yorun.ai` 自定义域名。域名路由
+应在此配置中更新，不要再在 Cloudflare 控制台中单独维护。
 
 ## 版本管理
 
