@@ -128,7 +128,7 @@ const config: Config = {
         layout: 'dagre',
         htmlLabels: true,
         fontFamily:
-          "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+          "'Geist', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
         flowchart: {
           curve: 'rounded',
           diagramPadding: 16,
