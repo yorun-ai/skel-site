@@ -12,26 +12,7 @@ updates:
           - minor
           - patch
     ignore:
-      # Keep both sites aligned; Docusaurus 3.10.2 breaks Vine Mermaid SSG.
-      - dependency-name: "@docusaurus/core"
-        versions:
-          - 3.10.2
-      - dependency-name: "@docusaurus/plugin-content-docs"
-        versions:
-          - 3.10.2
-      - dependency-name: "@docusaurus/preset-classic"
-        versions:
-          - 3.10.2
-      - dependency-name: "@docusaurus/theme-mermaid"
-        versions:
-          - 3.10.2
-      - dependency-name: "@docusaurus/module-type-aliases"
-        versions:
-          - 3.10.2
-      - dependency-name: "@docusaurus/types"
-        versions:
-          - 3.10.2
-      # Docusaurus 3.10.1 requires the 0.1.x layout adapter.
+      # Docusaurus 3.10.2 requires the 0.1.x layout adapter.
       - dependency-name: "@mermaid-js/layout-elk"
         versions:
           - ">=0.2.0"
