@@ -32,6 +32,11 @@ pnpm docusaurus docs:version 0.10.0
 
 不要手工修改生成的版本快照。
 
+## 参与贡献
+
+文档归属、双语内容要求和验证步骤请参阅
+[CONTRIBUTING.md](CONTRIBUTING.md)。
+
 ## 许可证
 
 Skel Site 使用 [Apache License 2.0](LICENSE) 开源。

@@ -32,6 +32,11 @@ pnpm docusaurus docs:version 0.10.0
 
 Do not edit generated version snapshots manually.
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for documentation ownership, bilingual
+content requirements, and validation steps.
+
 ## License
 
 Skel Site is open source under the [Apache License 2.0](LICENSE).
