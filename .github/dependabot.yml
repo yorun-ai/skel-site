@@ -35,6 +35,10 @@ updates:
       - dependency-name: "@mermaid-js/layout-elk"
         versions:
           - ">=0.2.0"
+      # Let the supply-chain release-age policy expire before reconsidering it.
+      - dependency-name: lucide-react
+        versions:
+          - 1.27.0
       - dependency-name: react
         update-types:
           - version-update:semver-major
