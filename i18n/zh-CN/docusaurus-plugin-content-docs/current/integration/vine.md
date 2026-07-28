@@ -2,7 +2,7 @@
 slug: /vine-integration
 ---
 
-# 与 Vine 集成
+# Vine 集成
 
 skelc 生成的 Go 代码以 Vine 的公开包作为运行时契约。生成内容包括数据类型、service/client/server spec、Event/Task/Web spec、Actor 与权限辅助以及 domain schema。
 

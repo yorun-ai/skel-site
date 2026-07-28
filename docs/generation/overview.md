@@ -2,7 +2,7 @@
 slug: /generation
 ---
 
-# Code Generation Overview
+# Generation Guide
 
 One domain model can produce artifacts for different consumers:
 

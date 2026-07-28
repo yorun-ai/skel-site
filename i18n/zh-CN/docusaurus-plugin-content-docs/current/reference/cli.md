@@ -2,7 +2,7 @@
 slug: /cli
 ---
 
-# skelc CLI 参考
+# CLI 参考
 
 本文档以当前 module 中的 `cli` 实现为准。
 

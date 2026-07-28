@@ -2,7 +2,7 @@
 slug: /diagnostics
 ---
 
-# Diagnostics, Symbols, and Automation
+# Diagnostics & CI
 
 ## Log Formats
 

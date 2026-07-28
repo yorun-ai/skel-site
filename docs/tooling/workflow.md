@@ -2,7 +2,7 @@
 slug: /workflow
 ---
 
-# Format and Validate
+# Daily Workflow
 
 Use this order locally and in CI:
 

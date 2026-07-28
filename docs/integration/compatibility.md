@@ -2,7 +2,7 @@
 slug: /compatibility
 ---
 
-# Versions and Compatibility
+# Compatibility
 
 Skel syntax, CLI flags and exit codes, JSON/JSONL fields, generated filenames, public APIs, and module metadata are compatibility boundaries.
 

@@ -2,9 +2,9 @@
 slug: /runtime-types
 ---
 
-# Skel Runtime Types
+# Runtime Types
 
-Generated Skel Go code uses `core/skel` to represent extended scalars, actor markers, and contract metadata. This page explains what these types mean in transport and business code so that applications can store, compare, and exchange data correctly across languages.
+Generated Skel Go code uses `core/skel` to represent extended scalars, actor markers, and contract metadata. Their transport shapes and comparison rules matter whenever an application stores a value or exchanges it with another language.
 
 ## Scalar Encoding
 

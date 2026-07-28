@@ -66,10 +66,6 @@ const config: Config = {
           path: './docs',
           routeBasePath: 'docs',
           sidebarPath: './sidebars.ts',
-          editUrl: ({locale, docPath}) =>
-            locale === 'zh-CN'
-              ? `https://github.com/yorun-ai/skel-site/tree/main/i18n/zh-CN/docusaurus-plugin-content-docs/current/${docPath}`
-              : `https://github.com/yorun-ai/skel-site/tree/main/docs/${docPath}`,
           showLastUpdateAuthor: false,
           showLastUpdateTime: false,
           versions: {

@@ -2,179 +2,125 @@
 slug: /getting-started
 ---
 
-# skelc 使用说明
+# 第一个契约
 
-`skelc` 将 `.skel` 契约编译为 Go、Go module、TypeScript 或仅公开的 skel 定义，并提供校验、格式化和 symbol 查询能力。
+本节创建一个 domain，完成校验，并生成 Go 与 TypeScript。开始前请先[安装 skelc](/docs/installation)。
 
-## 安装与版本
-
-使用 Go 安装：
-
-```bash
-go install go.yorun.ai/skelc/cmd/skelc@latest
-skelc version
-```
-
-Vine runtime 对生成器有最低版本要求。发布或升级 Vine 后，使用以下命令查看要求并升级 `skelc`：
-
-```bash
-vine version
-go install go.yorun.ai/skelc/cmd/skelc@latest
-```
-
-## 快速工作流
-
-一个 domain 的推荐目录结构如下：
+## 创建输入目录
 
 ```text
-user/
-├── skel/
-│   ├── domain.skel
-│   └── user.skel
-└── skeled/
+demo/
+└── skel/
+    ├── domain.skel
+    └── order.skel
 ```
-
-先创建 domain 声明：
 
 ```skel title="skel/domain.skel"
-domain demo.user
+@desc("订单领域契约")
+domain demo.order
 ```
 
-再声明契约：
+```skel title="skel/order.skel"
+domain demo.order
 
-```skel title="skel/user.skel"
-domain demo.user
+pub actor CustomerActor {
+    via client {}
 
-pub data User {
-    id: int
-    name: string
+    auth {
+        @sensitive
+        credential {
+            token: string
+        }
+        info {
+            customerId: uuid
+        }
+    }
+
+    permission {}
 }
 
-pub service UserService {
+pub enum OrderStatus {
+    PENDING
+    PAID
+}
+
+pub data Order {
+    id: uuid
+    status: OrderStatus
+}
+
+pub resource Order {
+    action read
+}
+
+pub service OrderService {
+    for CustomerActor via client
+    auth
+    require Order:read
+
     method get {
         input {
-            id: int
+            orderId: uuid
         }
-        output User
+        output Order?
     }
 }
 ```
 
-在生成代码前先格式化并校验：
+这份契约不只是“调用一个 method”：
+
+- `CustomerActor` 明确调用者及其 client 入口。
+- credential 被标记为敏感值。
+- service 要求具名权限 `Order:read`。
+- 结果是一个生成的 `Order` 或 null。
+- client 需要的声明全部显式标记为 `pub`。
+
+## 格式化并校验
 
 ```bash
-skelc format --skel-in ./skel
-skelc check --skel-in ./skel
+skelc format --skel-in ./demo/skel
+skelc check --skel-in ./demo/skel
 ```
 
-为普通 Go 包生成代码：
+`format` 把源码改写为标准格式；`check` 解析名称和类型，校验 actor、权限边界与公共契约闭包。
+
+应先通过校验再生成，generator 不会修复无效契约。
+
+## 生成 Go
+
+向已有 Go module 生成源码：
 
 ```bash
 skelc gen go \
-  --skel-in ./skel \
-  --go-out ./skeled
+  --skel-in ./demo/skel \
+  --go-out ./demo/skeled
 ```
 
-生成器使用 `.skelc-manifest.json` 跟踪生成文件，不会删除目录中未纳入清单的文件。生成代码仍是派生产物，不要手工修改，应修改 `.skel` 后重新生成；被修改的过期生成文件会被保留，便于人工处理。
+输出包含 data 与 enum 类型、actor 元数据、权限码、service interface 和 Vine 注册辅助代码。业务代码实现生成的 interface；边界变化时修改 `.skel` 并重新生成，不直接修改生成文件。
 
-## 输入目录与跨 domain 引用
+生成独立 module 时使用 `gen go-module`，详见 [Go 生成](/docs/generation/go)。
 
-`--skel-in` 可指向一个 `.skel` 文件或一个目录。目录模式要求包含 `domain.skel`；同一目录下有效 `.skel` 文件按名称排序加载，且都必须声明同一个 domain。
-
-当契约引用外部 domain 时，在 `.skel` 中声明 `import`，并在命令中提供路径映射：
-
-```skel
-domain demo.order
-
-import demo.user as user
-
-data Order {
-    owner: user.User
-}
-```
-
-`check` 可以直接校验当前输入。生成引用外部 domain 的代码时，再通过可重复的 `--skel-import domain=PATH` 提供公开 Skel 路径。导入别名只影响 `.skel` 文件中的类型限定名，不影响生成目录。
-
-## 常用命令
-
-| 命令 | 用途 |
-| --- | --- |
-| `skelc check --skel-in PATH` | 校验语法、引用、命名和类型约束。 |
-| `skelc format --skel-in PATH` | 原地格式化 Skel 文件。 |
-| `skelc symbol list --skel-in PATH` | 列出本 domain 的顶层 symbol。 |
-| `skelc symbol get NAME --skel-in PATH` | 查询指定 skel 名称。 |
-| `skelc gen go ...` | 生成非 module 的 Go 代码。 |
-| `skelc gen go-module ...` | 生成带 `go.mod` 的 regular / pub Go module。 |
-| `skelc gen ts ...` | 生成 TypeScript data、enum 和适用的 service client。 |
-| `skelc gen skel --pub ...` | 生成裁剪后的公开 `.skel` 契约。 |
-
-`symbol` 支持 `--output-format json`，`version` 支持 `--output-format json`。上层工具需要读取诊断时，可将全局日志格式设为 JSONL：
-
-```bash
-skelc --log-format jsonl check --skel-in ./skel
-```
-
-## Go module 生成
-
-模块项目通常同时生成 regular 与 pub 包：
-
-```bash
-skelc gen go-module \
-  --skel-in ./skel \
-  --go-out ./skeled/golang \
-  --go-module example.com/demo/user/skeled \
-  --go-pub-out ./pub/skeled/golang \
-  --go-pub-module example.com/demo/user/skeledpub
-```
-
-- regular 包包含完整契约、服务端接口和对 pub 符号的 facade。
-- pub 包只包含标记为 `pub` 的契约及其公开依赖，适合被其他 module 导入。
-- 公共契约引用的 data、enum、actor 或 resource 也必须显式标记 `pub`。
-
-跨 domain 的 Go module 生成还需要传入 skel 与 Go import 映射：
-
-```bash
-skelc gen go-module \
-  --skel-in ./order/skel \
-  --skel-import demo.user=./user/pub/skel \
-  --go-import demo.user=example.com/demo/user/skeledpub \
-  --go-out ./order/skeled/golang \
-  --go-module example.com/demo/order/skeled
-```
-
-当所有外部 module 遵循同一目录规则时，可用 `--go-module-prefix` 代替多个 `--go-import` 映射。
-
-## TypeScript 与 pub skel 生成
-
-生成 TypeScript：
+## 生成 TypeScript
 
 ```bash
 skelc gen ts \
-  --skel-in ./skel \
-  --ts-out ./pub/skel/typescript
-```
-
-加上 `--pub` 后，只生成公开的 data、enum，以及带 `via client` actor 的公开 service client。需要输出 npm package 元数据时，可使用 `--ts-as-module`、`--ts-module-scope` 与 `--ts-module`。
-
-为其他 domain 导出最小契约集：
-
-```bash
-skelc gen skel \
   --pub \
-  --skel-in ./skel \
-  --skel-out ./pub/skel
+  --skel-in ./demo/skel \
+  --ts-out ./demo/client
 ```
 
-`gen skel` 必须搭配 `--pub`，输出只保留公开契约及其必要依赖。
+输出包含公共 data、enum、service spec 和基于 `@yorun-ai/vrpc` 的 client factory。`--pub` 防止私有声明进入 client package。
 
-## 排障
+package metadata、跨 domain import 和 binary wire schema 见 [TypeScript 输出](/docs/generation/typescript)。
 
-遇到生成失败时，按下面顺序检查：
+## Review 生成变化
 
-1. 运行 `skelc check --skel-in ...`，一次查看多个独立诊断，并优先处理每个根因下最早的错误。
-2. 确认目录中存在唯一的 `domain.skel`，且各文件 domain 一致。
-3. 对跨 domain 类型确认同时存在 `import` 和 `--skel-import`。
-4. 对 pub 契约确认其引用的本 domain 依赖也标记为 `pub`。
-5. 升级 `skelc`，使其满足 `vine version` 显示的最低版本。
+skelc 使用 `.skelc-manifest.json` 记录受管理文件。未跟踪文件会被保留；过期生成文件只有在内容仍与上次 manifest 一致时才会删除。但手写文件如果占用了当前生成路径，仍可能被覆盖，因此应为生成输出保留独立路径。
 
-详细 DSL 规则见 [Skel 语法参考](/docs/syntax)。
+仓库应记录 `.skel` 源码、项目固定的 skelc 版本，以及仓库策略要求提交的生成产物。CI 中重新生成，并在出现意外 diff 时失败。
+
+下一步：
+
+- [语言模型](/docs/language)解释各类声明的职责。
+- [项目目录](/docs/input-layout)说明多 domain 仓库和 import。
+- [Vine 集成](/docs/vine-integration)把 Go 输出接入应用。

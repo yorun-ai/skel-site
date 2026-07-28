@@ -35,6 +35,13 @@ function iconForHref(href: string): PhosphorIcon {
   if (href.includes('getting-started')) return Play
   if (href.includes('input-layout')) return TreeStructure
   if (href.endsWith('/language')) return BookOpen
+  if (href.includes('files-and-imports')) return TreeStructure
+  if (href.includes('types-and-data')) return BracketsCurly
+  if (href.includes('actors-and-access')) return PlugsConnected
+  if (href.endsWith('/permissions')) return ShareNetwork
+  if (href.endsWith('/services')) return FlowArrow
+  if (href.includes('events-and-tasks')) return ListBullets
+  if (href.endsWith('/metadata')) return BookOpen
   if (href.includes('contract-design')) return BracketsCurly
   if (href.endsWith('/syntax')) return Code
   if (href.endsWith('/workflow')) return FlowArrow

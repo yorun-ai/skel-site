@@ -2,7 +2,7 @@
 slug: /troubleshooting
 ---
 
-# 排障
+# 问题排查
 
 ## 找不到 `domain.skel`
 

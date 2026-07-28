@@ -3,25 +3,25 @@
     "message": "skelc 开发版",
     "description": "The label for version current"
   },
-  "sidebar.docsSidebar.category.Get Started": {
-    "message": "开始使用",
-    "description": "The Get Started category"
+  "sidebar.docsSidebar.category.Start Here": {
+    "message": "从这里开始",
+    "description": "The label for category 'Start Here' in sidebar 'docsSidebar'"
   },
-  "sidebar.docsSidebar.category.Skel Language": {
-    "message": "Skel 语言",
-    "description": "The Skel Language category"
+  "sidebar.docsSidebar.category.Design Contracts": {
+    "message": "设计契约",
+    "description": "The label for category 'Design Contracts' in sidebar 'docsSidebar'"
   },
-  "sidebar.docsSidebar.category.Daily Tooling": {
-    "message": "日常工具",
-    "description": "The Daily Tooling category"
+  "sidebar.docsSidebar.category.Use the Toolchain": {
+    "message": "使用工具链",
+    "description": "The label for category 'Use the Toolchain' in sidebar 'docsSidebar'"
   },
-  "sidebar.docsSidebar.category.Code Generation": {
-    "message": "代码生成",
-    "description": "The Code Generation category"
+  "sidebar.docsSidebar.category.Generate Code": {
+    "message": "生成代码",
+    "description": "The label for category 'Generate Code' in sidebar 'docsSidebar'"
   },
-  "sidebar.docsSidebar.category.Vine Integration": {
-    "message": "Vine 集成",
-    "description": "The Vine Integration category"
+  "sidebar.docsSidebar.category.Use with Vine": {
+    "message": "接入 Vine",
+    "description": "The label for category 'Use with Vine' in sidebar 'docsSidebar'"
   },
   "sidebar.docsSidebar.category.Reference": {
     "message": "参考",

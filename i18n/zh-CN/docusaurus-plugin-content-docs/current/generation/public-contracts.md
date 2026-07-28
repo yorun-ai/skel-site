@@ -2,7 +2,7 @@
 slug: /generation/public-contracts
 ---
 
-# 公开契约与跨 Domain 依赖
+# 公共契约
 
 公开契约是 domain 对消费者作出的最小承诺。用 `pub` 标记声明，再导出精简 Skel：
 

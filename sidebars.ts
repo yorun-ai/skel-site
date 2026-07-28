@@ -4,44 +4,47 @@ const category = (label: string, items: string[]) => ({
   type: 'category' as const,
   label,
   collapsed: false,
-  link: {
-    type: 'generated-index' as const,
-    title: label,
-  },
   items,
 })
 
 const sidebars: SidebarsConfig = {
   docsSidebar: [
     'index',
-    category('Get Started', [
+    category('Start Here', [
       'getting-started/overview',
       'getting-started/installation',
       'getting-started/quick-start',
       'getting-started/input-layout',
     ]),
-    category('Skel Language', [
+    category('Design Contracts', [
       'language/overview',
+      'language/files-and-imports',
+      'language/types-and-data',
+      'language/actors-and-access',
+      'language/permissions',
+      'language/services',
+      'language/events-and-tasks',
+      'language/metadata',
       'language/contract-design',
-      'language/syntax',
     ]),
-    category('Daily Tooling', [
+    category('Use the Toolchain', [
       'tooling/workflow',
       'tooling/diagnostics',
       'tooling/editor',
     ]),
-    category('Code Generation', [
+    category('Generate Code', [
       'generation/overview',
       'generation/go',
       'generation/typescript',
       'generation/public-contracts',
     ]),
-    category('Vine Integration', [
+    category('Use with Vine', [
       'integration/vine',
       'integration/runtime-types',
       'integration/compatibility',
     ]),
     category('Reference', [
+      'language/syntax',
       'reference/cli',
       'reference/troubleshooting',
       'reference/glossary',

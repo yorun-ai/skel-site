@@ -2,7 +2,7 @@
 slug: /diagnostics
 ---
 
-# 诊断、Symbol 与自动化
+# 诊断与 CI
 
 ## 日志格式
 

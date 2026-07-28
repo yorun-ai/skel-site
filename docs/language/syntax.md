@@ -2,291 +2,122 @@
 slug: /syntax
 ---
 
-# Skel Syntax Reference
+# Syntax Index
 
-`.skel` is Vine's contract description language. A domain can declare data models, configuration, actors, permission resources, services, Web entry capabilities, events, and tasks. `skelc` generates the corresponding language runtimes from these declarations.
+Use the tables below to locate a declaration or rule. Follow the linked language guide when the validation behavior depends on context.
 
-## File Structure
-
-Every file starts with a domain declaration. When the input is a directory, `domain.skel` may only contain the domain and an optional description; every other file must declare the same domain.
+## File Form
 
 ```skel
-@desc("User domain")
-domain demo.user
+@desc("Order contracts")
+domain commerce.order
 
-import demo.account as account
+import identity.user
+import commerce.catalog as catalog
+
+// top-level declarations follow
 ```
 
-Use `pub` to mark a top-level declaration as a public contract:
+Every file declares a domain. Imports follow the domain and precede declarations. Directory inputs require `domain.skel`; see [Files & Imports](/docs/files-and-imports).
+
+## Top-Level Declarations
+
+| Form | Required content | `pub` | Guide |
+| --- | --- | :---: | --- |
+| `enum Name { ITEM }` | At least one item | Yes | [Types & Data](/docs/types-and-data#enums) |
+| `data Name { field: Type }` | Fields are optional | Yes | [Types & Data](/docs/types-and-data#data-and-generics) |
+| `config NameConfig eternal { ... }` | `eternal` or `instant` | Yes | [Types & Data](/docs/types-and-data#configuration) |
+| `actor NameActor { via client {} }` | At least one via | Yes | [Actors & Access](/docs/actors-and-access) |
+| `resource Name { action read }` | At least one action | Yes | [Permission Model](/docs/permissions) |
+| `service NameService { method get {} }` | At least one method | Yes | [Service Contracts](/docs/services) |
+| `event NameEvent { payload { ... } }` | One payload | Yes | [Events & Tasks](/docs/events-and-tasks#events) |
+| `web NameWeb { for NameActor }` | At least one actor | No | [Actors & Access](/docs/actors-and-access#declare-web-capabilities) |
+| `task NameTask { trigger run {} }` | At least one trigger | No | [Events & Tasks](/docs/events-and-tasks#tasks-and-triggers) |
+
+`pub` appears before a supported declaration:
 
 ```skel
-pub data User {
-    id: int
-}
-```
-
-The supported top-level declarations are:
-
-| Declaration | Purpose | Supports `pub` |
-| --- | --- | --- |
-| `enum` | Enumeration | Yes |
-| `data` | Data model | Yes |
-| `config` | Application configuration model | Yes |
-| `actor` | Caller and authentication model | Yes |
-| `resource` | Permission resource, action, and check | Yes |
-| `event` | Asynchronous event | Yes |
-| `service` | Rpc service | Yes |
-| `web` | Web entry capability | No |
-| `task` | Task and triggers | No |
-
-Within one domain, all top-level names except `resource` share a namespace and must be unique. Resources use a separate namespace.
-
-## Comments and Descriptions
-
-Use `//` or `/* ... */` for comments. `@desc` adds a description to a declaration. Fields, methods, and similar elements can also use `@example`. An `@example` must be accompanied by an `@desc` at the same location.
-
-```skel
-@desc("Email")
-@example("hello@example.com")
-email: string?
-```
-
-Use `@sensitive` on data that must not appear as plaintext in logs or other diagnostic output:
-
-- It takes no argument and is written as `@sensitive`.
-- It is supported on data and config fields, Event payload fields, Actor credential and info fields, Service input arguments, Resource check arguments, and Task trigger input arguments.
-- It is also supported on an entire data or config declaration, an Event `payload` block, Actor `credential` and `info` blocks, a Service method input or output, a Resource check input, and a Task trigger input. Event declarations and the enclosing Actor `auth` block cannot be marked.
-- It does not require `@desc` and may be combined with `@desc` and `@example`.
-- It does not change the field type or its JSON/CBOR wire format.
-- Generated Go fields receive the `skel:"sensitive"` struct tag, which Vine's `core/redact` package recognizes.
-- Generated types for whole sensitive data/config, Event payloads, and Actor credential/info implement the `SkelSensitive()` marker method from the `skel.Sensitive` interface; whole method/check input and output metadata is written to the generated Rpc `MethodSpec`, while whole Task trigger input metadata is written to the generated Task `TriggerSpec`.
-- Field-level and whole-value sensitivity is also written to the generated Domain Schema for Portal and other contract tooling.
-- `skelSensitive` is reserved as a field name in those structured types to avoid colliding with the generated marker method.
-
-```skel
-@sensitive
-accessToken: string
-
-@sensitive
-data Credential {
-    token: string
-}
-
-service AuthService {
-    method exchange {
-        @sensitive
-        input {
-            credential: Credential
-        }
-
-        @sensitive
-        output string
-    }
-}
-
-event CredentialIssuedEvent {
-    @sensitive
-    payload {
-        credential: Credential
-    }
-}
-```
-
-Use triple quotes for multiline descriptions:
-
-```skel
-@desc("""
-Creates a user.
-The email must be unique within the current tenant.
-""")
-```
-
-## Types
-
-Built-in scalars are `int`, `float`, `bool`, `string`, `decimal`, `binary`, `timestamp`, `duration`, `localdate`, `localtime`, `localdatetime`, `uuid`, and `json`.
-
-Composite types use `list<T>` and `map<K, V>`. A map key can only be `int`, `string`, or an enum. Append `?` to any type to make it nullable.
-
-```skel
-data UserProfile {
+pub data UserSummary {
     id: uuid
-    tags: list<string>
-    attributes: map<string, string>
-    email: string?
 }
 ```
 
-`data` supports generics. Type parameter names must begin with `T`:
+## Type Forms
 
-```skel
-data Page<TItem> {
-    items: list<TItem>
-    nextToken: string?
-}
+```text
+int  float  bool  string
+decimal  binary
+timestamp  duration
+localdate  localtime  localdatetime
+uuid  json
+
+list<T>
+map<int|string|Enum, T>
+Qualified.Type
+Generic<T>
+T?
 ```
 
-Direct data references cannot form cycles. An indirect reference through a nullable, list, or map type can break the cycle.
+`?` applies to any type. Only `data` declares generic parameters. Map keys are non-nullable `int`, `string`, or enum values. See [Types & Data](/docs/types-and-data).
 
-## data, enum, and config
-
-```skel
-enum UserStatus {
-    ACTIVE
-    DISABLED
-}
-
-data User {
-    id: int
-    status: UserStatus
-}
-
-config UserConfig eternal {
-    defaultStatus: UserStatus
-    maxPageSize: int
-}
-```
-
-- Enum items use `SCREAMING_SNAKE_CASE`. `UNSPECIFIED` is reserved and cannot be declared explicitly.
-- Data and config fields, method arguments, and trigger names use `lowerCamelCase`.
-- A `config` name ends with `Config`, and its lifecycle must be either `eternal` or `instant`.
-- Config fields can only use scalars, enums, and their restricted list and map forms. A config cannot reference data, another config, or `binary`.
-
-## Actor and Resource
-
-An actor represents a caller and its authentication methods:
+## Service Method Form
 
 ```skel
-pub actor ClientActor {
-    via client {}
-
-    auth {
-        @sensitive
-        credential {
-            token: string
-        }
-        @sensitive
-        info {
-            userId: int
-        }
-    }
-
-    permission {}
-}
-```
-
-An actor name ends with `Actor` and contains at least one `via`. The available via types are `client`, `agent`, and `openapi`. An `auth` block must define both `credential` and `info`; credential fields must be non-nullable strings. The `credential` and `info` blocks may each be marked `@sensitive`, while the enclosing `auth` block may not. `permission {}` enables the actor permission service.
-
-A resource defines permission codes, actions, and parameterized checks:
-
-```skel
-pub resource User {
-    @desc("Look up a user")
-    check byExists {
-        input {
-            @sensitive
-            accessToken: string
-            userId: int
-        }
-    }
-
-    action read
-
-    action update {
-        check bySelf {
-            input {
-                userId: int
-            }
-        }
-    }
-}
-```
-
-A permission code has the form `<domain>.<Resource>:<action>`, for example `demo.user.User:read`. Every action can use a resource-level check, while an action-level check only belongs to that action.
-Checks use the same `input` field syntax as Service methods and Task triggers. A check supports `@desc`; its `input` supports `@desc` and `@sensitive`; input fields support `@desc`, `@example`, and `@sensitive`. Write a check without user arguments as `check enabled {}`; skelc injects its `PermissionCode` argument internally.
-
-## Service and Permission Requirements
-
-```skel
-pub service UserService {
-    for ClientActor via client
+service OrderService {
+    for CustomerActor via client
     auth
-    require User:read
+    require Order:read
 
     method get {
-        require User:read:byExists(userId)
-
+        noauth
+        require Order:read:exists(orderId)
         input {
-            userId: int
+            orderId: uuid
         }
-        output User?
+        output Order?
     }
 }
 ```
 
-- A service name ends with `Service`, and method names use `lowerCamelCase`.
-- `for Actor [via name]` declares the actors a service serves.
-- A service requires authentication by default. `noauth` disables it, and a method-level `auth` or `noauth` overrides the service setting.
-- Both method `input` and `output` are optional. When both are present, input precedes output.
-- `require` constrains access. Service-level and method-level requirements must both be satisfied.
+Service sections may include audiences, one auth marker, one service requirement, and methods. Method sections occur in this order: auth marker, requirement, input, output.
 
-A method-level requirement supports resource actions, checks, `all(...)`, and `any(...)`:
+## Permission Expressions
+
+```text
+Resource:action
+Resource:action:check(input.path)
+all(item, item)
+any(item, item)
+```
+
+Imported resources use a qualifier, such as `account.User:read`. Check arguments support field traversal and one list wildcard, such as `orders[*].id`. See [Permission Model](/docs/permissions).
+
+## Decorators
 
 ```skel
-method update {
-    require all(
-        User:update:byExists(userId),
-        User:update:bySelf(userId)
-    )
-
-    input {
-        userId: int
-    }
-}
+@desc("Human-readable meaning")
+@example("Example value")
+@sensitive
 ```
 
-Check arguments can reference input field paths such as `update.userId` or `users[*].id`. At most one non-terminal `[*]` is allowed. Array indexes, filters, slices, and recursive JSONPath are not supported.
+Decorator support depends on location. Unsupported placement is an error. See [Metadata & Docs](/docs/metadata) for the location matrix and generated behavior.
 
-## Event, Web, and Task
+## Naming
 
-```skel
-pub event UserCreatedEvent {
-    payload {
-        userId: int
-    }
-}
+| Kind | Form |
+| --- | --- |
+| Domain | dot-separated lower names, such as `commerce.order` |
+| Top-level declaration and type parameter | `CamelCase` |
+| Service, config, event, actor, web, task | matching suffix such as `Service` or `Actor` |
+| Field, method, via, action, check, trigger | `lowerCamelCase` |
+| Enum item | `SCREAMING_SNAKE_CASE` |
 
-web UserPortalWeb {
-    for ClientActor via client
-}
+Identifiers cannot begin with `_`. `UNSPECIFIED` is reserved for enum output, and `skelSensitive` is reserved in generated sensitive structures.
 
-task RebuildIndexTask {
-    trigger manually {}
-
-    trigger atTime {
-        @sensitive
-        input {
-            startedAt: timestamp
-        }
-    }
-}
-```
-
-- An event name ends with `Event` and must contain a `payload`. Events do not support actors or generics.
-- A web name ends with `Web` and must declare at least one `for Actor`. It describes an entry capability; it does not declare HTTP routes.
-- A task name ends with `Task` and contains at least one `trigger`. A trigger has no output, and its input is optional. A trigger `input` supports `@sensitive`; whole-input metadata is written to the generated Task `TriggerSpec`.
-
-## Naming and Public Contract Rules
-
-- A domain is a dot-separated name such as `demo.user`.
-- Top-level types, referenced types, and generic parameters use `CamelCase`.
-- Identifiers cannot begin with an underscore.
-- When a `pub` contract references data, an enum, an actor, or a resource from the same domain, the referenced declaration must also be marked `pub`.
-- External types require an `import` and are referenced with a qualified name or alias, such as `account.Profile`.
-
-After editing, validate the contracts with:
+Validate the current input after every contract change:
 
 ```bash
 skelc check --skel-in ./skel
 ```
 
-See the [skelc guide](/docs/getting-started) for code-generation commands and project organization.
+Command flags are listed in the [CLI Reference](/docs/cli).

@@ -6,6 +6,7 @@
 .linkLabel {
   flex: 1;
   min-width: 0;
+  white-space: nowrap;
 }
 
 :global(.menu__link--active) .itemIcon {

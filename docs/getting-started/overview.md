@@ -2,7 +2,7 @@
 slug: /overview
 ---
 
-# skelc Overview
+# Start with Skel
 
 skelc enables a contract-first workflow: describe domain types, callers, permissions, and capabilities in `.skel`, then validate them once and generate the interfaces each language needs.
 

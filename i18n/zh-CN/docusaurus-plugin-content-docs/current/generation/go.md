@@ -2,7 +2,7 @@
 slug: /generation/go
 ---
 
-# 生成 Go
+# Go 生成
 
 ## 已有 module
 
