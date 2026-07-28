@@ -15,7 +15,12 @@ pnpm install
 pnpm dev
 ```
 
-使用 `pnpm dev:zh` 启动简体中文站点。验证两个语言版本：
+`pnpm dev` 会在同一个本地地址启动两个语言版本并启用热更新，因此修改后页面会
+自动刷新，语言切换器的行为也与生产环境一致。如需占用更少资源，可使用
+`pnpm dev:en` 或 `pnpm dev:zh` 启动单语言服务器；此时不能通过语言切换器
+离开当前编译的语言。
+
+验证两个语言版本：
 
 ```bash
 pnpm typecheck
@@ -34,10 +39,11 @@ pnpm build
 
 ## 版本管理
 
-文档版本跟随 skelc 发布：
+1.0 之前，站点只维护当前的 `next` 文档；版本快照从 `v1.0.0` 开始。
+发布维护者可使用以下命令创建快照：
 
 ```bash
-pnpm docusaurus docs:version 0.10.0
+pnpm docusaurus docs:version 1.0.0
 ```
 
 不要手工修改生成的版本快照。

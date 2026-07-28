@@ -326,25 +326,97 @@
     "message": "标签",
     "description": "The title of the tag list page"
   },
+  "skel.navbar.versionSwitcher.ariaLabel": {
+    "message": "选择文档版本"
+  },
+  "skel.navbar.localeSwitcher.ariaLabel": {
+    "message": "选择语言"
+  },
+  "skel.copyPage.label": {
+    "message": "复制页面"
+  },
+  "skel.copyPage.copied": {
+    "message": "已复制"
+  },
+  "skel.copyPage.error": {
+    "message": "复制失败"
+  },
+  "skel.copyPage.menuAriaLabel": {
+    "message": "复制页面选项"
+  },
+  "skel.copyPage.copyDescription": {
+    "message": "以 Markdown 格式复制页面，供 LLM 使用"
+  },
+  "skel.copyPage.viewMarkdown": {
+    "message": "查看 Markdown ↗"
+  },
+  "skel.copyPage.viewDescription": {
+    "message": "以纯文本方式查看本页"
+  },
   "homepage.title": {
-    "message": "描述一次契约，生成可靠的类型安全代码"
+    "message": "Skel 开发者"
   },
   "homepage.description": {
-    "message": "使用 Skel 描述领域数据和应用能力，通过 skelc 完成校验、格式化和多语言代码生成。"
+    "message": "设计显式应用契约并生成可靠、类型安全的代码。"
   },
-  "homepage.start": {
-    "message": "开始使用 Skel"
+  "homepage.sections.gettingStarted": {
+    "message": "开始使用"
   },
-  "homepage.otherSite": {
-    "message": "了解 Vine"
+  "homepage.sections.guides": {
+    "message": "指南"
   },
-  "homepage.flow.language": {
-    "message": "声明 domain、数据类型以及 Rpc、Web、Event 和 Task 契约。"
+  "homepage.cards.installation.title": {
+    "message": "安装 skelc"
   },
-  "homepage.flow.compiler": {
-    "message": "使用同一套编译规则完成格式化、校验、诊断与编辑器支持。"
+  "homepage.cards.installation.description": {
+    "message": "安装 Skel 编译器并验证本地工具链。"
   },
-  "homepage.flow.generation": {
-    "message": "生成 Go、TypeScript 和公开 Skel 产物，保持契约一致。"
+  "homepage.cards.quickStart.title": {
+    "message": "快速开始"
+  },
+  "homepage.cards.quickStart.description": {
+    "message": "编写并校验第一份契约，然后从中生成代码。"
+  },
+  "homepage.cards.language.title": {
+    "message": "语言概览"
+  },
+  "homepage.cards.language.description": {
+    "message": "了解 Skel 如何描述 domain、数据与应用能力。"
+  },
+  "homepage.cards.contractDesign.title": {
+    "message": "契约设计"
+  },
+  "homepage.cards.contractDesign.description": {
+    "message": "设计能够随应用演进的稳定边界。"
+  },
+  "homepage.cards.workflow.title": {
+    "message": "校验工作流"
+  },
+  "homepage.cards.workflow.description": {
+    "message": "在本地开发与 CI 中格式化并校验契约。"
+  },
+  "homepage.cards.syntax.title": {
+    "message": "语法参考"
+  },
+  "homepage.cards.syntax.description": {
+    "message": "查询声明、类型、注解和语言规则。"
+  },
+  "homepage.cards.generation.title": {
+    "message": "代码生成"
+  },
+  "homepage.cards.generation.description": {
+    "message": "生成 Go、TypeScript、Go module 和公开契约。"
+  },
+  "homepage.cards.editor.title": {
+    "message": "编辑器集成"
+  },
+  "homepage.cards.editor.description": {
+    "message": "在编辑器中使用诊断、格式化和语言功能。"
+  },
+  "homepage.cards.vine.title": {
+    "message": "Vine 集成"
+  },
+  "homepage.cards.vine.description": {
+    "message": "将生成契约接入 Vine 应用与运行时类型。"
   }
 }
