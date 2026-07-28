@@ -354,69 +354,192 @@
     "message": "以纯文本方式查看本页"
   },
   "homepage.title": {
-    "message": "Skel 开发者"
+    "message": "概览"
   },
   "homepage.description": {
-    "message": "设计显式应用契约并生成可靠、类型安全的代码。"
+    "message": "Skel 是 Vine 应用的契约 DSL 与编译器。领域类型、调用者身份、权限，以及 service、event、task 都写在同一套可校验、可生成的契约中。"
   },
-  "homepage.sections.gettingStarted": {
-    "message": "开始使用"
+  "homepage.description.ai": {
+    "message": "AI 生成的代码改动先经过机器可检查的边界，再进入应用代码。"
   },
-  "homepage.sections.guides": {
-    "message": "指南"
+  "homepage.kicker": {
+    "message": "面向 AI 编程治理的契约 DSL"
   },
-  "homepage.cards.installation.title": {
-    "message": "安装 skelc"
+  "homepage.a11y.shortcuts": {
+    "message": "概览快捷入口"
   },
-  "homepage.cards.installation.description": {
-    "message": "安装 Skel 编译器并验证本地工具链。"
+  "homepage.actions.first": {
+    "message": "创建第一个契约"
   },
-  "homepage.cards.quickStart.title": {
-    "message": "快速开始"
+  "homepage.actions.language": {
+    "message": "阅读语言模型"
   },
-  "homepage.cards.quickStart.description": {
-    "message": "编写并校验第一份契约，然后从中生成代码。"
+  "homepage.actions.generate": {
+    "message": "选择生成目标"
   },
-  "homepage.cards.language.title": {
-    "message": "语言概览"
+  "homepage.sections.mechanisms.title": {
+    "message": "编译器明确约束什么"
   },
-  "homepage.cards.language.description": {
-    "message": "了解 Skel 如何描述 domain、数据与应用能力。"
+  "homepage.sections.mechanisms.description": {
+    "message": "Skel 不描述实现算法，只声明领域、生成客户端与 Vine 运行时必须共同遵守的部分。"
   },
-  "homepage.cards.contractDesign.title": {
-    "message": "契约设计"
+  "homepage.sections.loop.title": {
+    "message": "从契约进入应用"
   },
-  "homepage.cards.contractDesign.description": {
-    "message": "设计能够随应用演进的稳定边界。"
+  "homepage.sections.loop.description": {
+    "message": "源码、校验、生成代码和运行时接入彼此分开，每一步都有清晰的检查节点。"
   },
-  "homepage.cards.workflow.title": {
-    "message": "校验工作流"
+  "homepage.sections.guides.title": {
+    "message": "按当前任务继续阅读"
   },
-  "homepage.cards.workflow.description": {
-    "message": "在本地开发与 CI 中格式化并校验契约。"
+  "homepage.sections.guides.description": {
+    "message": "从眼前需要决定的契约问题开始。"
   },
-  "homepage.cards.syntax.title": {
-    "message": "语法参考"
+  "homepage.loop.declare.title": {
+    "message": "声明"
   },
-  "homepage.cards.syntax.description": {
-    "message": "查询声明、类型、注解和语言规则。"
+  "homepage.loop.check.title": {
+    "message": "校验"
   },
-  "homepage.cards.generation.title": {
-    "message": "代码生成"
+  "homepage.loop.generate.title": {
+    "message": "生成"
   },
-  "homepage.cards.generation.description": {
-    "message": "生成 Go、TypeScript、Go module 和公开契约。"
+  "homepage.loop.integrate.title": {
+    "message": "接入"
   },
-  "homepage.cards.editor.title": {
-    "message": "编辑器集成"
+  "homepage.mechanisms.domain.label": {
+    "message": "Domain"
   },
-  "homepage.cards.editor.description": {
-    "message": "在编辑器中使用诊断、格式化和语言功能。"
+  "homepage.mechanisms.domain.title": {
+    "message": "一份模型管理共享词汇"
   },
-  "homepage.cards.vine.title": {
+  "homepage.mechanisms.domain.description": {
+    "message": "domain 名称、import、data、enum 与 config 被解析为一个模型，而不是由服务端和客户端各自维护一套类型。"
+  },
+  "homepage.mechanisms.access.label": {
+    "message": "访问"
+  },
+  "homepage.mechanisms.access.title": {
+    "message": "调用者与权限也是契约数据"
+  },
+  "homepage.mechanisms.access.description": {
+    "message": "actor 表示调用者及入口；resource、action、check 和 require 把授权意图放在受保护的能力旁边。"
+  },
+  "homepage.mechanisms.validation.label": {
+    "message": "校验"
+  },
+  "homepage.mechanisms.validation.title": {
+    "message": "无效边界不会进入生成阶段"
+  },
+  "homepage.mechanisms.validation.description": {
+    "message": "skelc 使用同一套诊断模型检查命名、类型、import、公共闭包、actor 入口、权限路径、decorator 与引用循环。"
+  },
+  "homepage.mechanisms.generation.label": {
+    "message": "生成"
+  },
+  "homepage.mechanisms.generation.title": {
+    "message": "所有目标来自同一模型"
+  },
+  "homepage.mechanisms.generation.description": {
+    "message": "Go 契约、TypeScript 客户端、公共 Skel 和运行时 schema 共享同一组解析结果，输出稳定，差异也便于审查。"
+  },
+  "homepage.links.languageModel": {
+    "message": "语言模型"
+  },
+  "homepage.links.typesData": {
+    "message": "类型与数据"
+  },
+  "homepage.links.actorsAccess": {
+    "message": "调用者与入口"
+  },
+  "homepage.links.permissions": {
+    "message": "权限模型"
+  },
+  "homepage.links.workflow": {
+    "message": "日常工作流"
+  },
+  "homepage.links.diagnostics": {
+    "message": "诊断与 CI"
+  },
+  "homepage.links.generation": {
+    "message": "生成指南"
+  },
+  "homepage.links.publicContracts": {
+    "message": "公共契约"
+  },
+  "homepage.guides.learn": {
+    "message": "学习"
+  },
+  "homepage.guides.design": {
+    "message": "设计"
+  },
+  "homepage.guides.ship": {
+    "message": "交付"
+  },
+  "homepage.guides.first.title": {
+    "message": "第一个契约"
+  },
+  "homepage.guides.first.description": {
+    "message": "编写、校验并生成一个完整的领域契约。"
+  },
+  "homepage.guides.language.title": {
+    "message": "语言模型"
+  },
+  "homepage.guides.language.description": {
+    "message": "理解 Skel 如何划分不同的契约职责。"
+  },
+  "homepage.guides.syntax.title": {
+    "message": "语法速查"
+  },
+  "homepage.guides.syntax.description": {
+    "message": "快速查询声明、类型和命名规则。"
+  },
+  "homepage.guides.types.title": {
+    "message": "类型与数据"
+  },
+  "homepage.guides.types.description": {
+    "message": "选择稳定的标量、集合和数据结构。"
+  },
+  "homepage.guides.access.title": {
+    "message": "调用者与入口"
+  },
+  "homepage.guides.access.description": {
+    "message": "描述调用者、凭据和入口类型。"
+  },
+  "homepage.guides.permissions.title": {
+    "message": "权限模型"
+  },
+  "homepage.guides.permissions.description": {
+    "message": "定义权限码和参数化 check。"
+  },
+  "homepage.guides.workflow.title": {
+    "message": "日常工作流"
+  },
+  "homepage.guides.workflow.description": {
+    "message": "在本地和 CI 中格式化、校验并复现生成。"
+  },
+  "homepage.guides.generation.title": {
+    "message": "生成指南"
+  },
+  "homepage.guides.generation.description": {
+    "message": "选择 Go、TypeScript、module 或公共输出。"
+  },
+  "homepage.guides.vine.title": {
     "message": "Vine 集成"
   },
-  "homepage.cards.vine.description": {
-    "message": "将生成契约接入 Vine 应用与运行时类型。"
+  "homepage.guides.vine.description": {
+    "message": "把生成契约接入 Vine 运行时。"
+  },
+  "homepage.status.label": {
+    "message": "1.0 之前"
+  },
+  "homepage.status.description": {
+    "message": "开发环境与 CI 应固定 skelc 版本；compiler 或公共契约变化后，应 review 生成 diff。"
+  },
+  "homepage.status.installation": {
+    "message": "安装 skelc"
+  },
+  "homepage.status.compatibility": {
+    "message": "版本兼容"
   }
 }

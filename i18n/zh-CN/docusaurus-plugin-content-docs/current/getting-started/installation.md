@@ -2,7 +2,7 @@
 slug: /installation
 ---
 
-# 安装与升级
+# 安装 skelc
 
 ## 前提条件
 

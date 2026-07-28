@@ -2,7 +2,7 @@
 slug: /input-layout
 ---
 
-# Inputs, Layout, and Ownership
+# Project Layout
 
 ## Single-File Mode
 

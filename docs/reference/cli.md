@@ -2,7 +2,7 @@
 slug: /cli
 ---
 
-# skelc CLI Reference
+# CLI Reference
 
 skelc validates, formats, and inspects `.skel` definitions and generates Go, TypeScript, and public Skel contracts.
 

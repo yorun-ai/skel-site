@@ -2,7 +2,7 @@
 slug: /generation/public-contracts
 ---
 
-# Public Contracts and Cross-Domain Dependencies
+# Public Contracts
 
 A public contract is the smallest promise a domain makes to consumers. Mark declarations with `pub`, then export reduced Skel:
 

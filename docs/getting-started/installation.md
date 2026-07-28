@@ -2,7 +2,7 @@
 slug: /installation
 ---
 
-# Installation and Upgrades
+# Install skelc
 
 ## Prerequisites
 

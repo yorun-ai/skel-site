@@ -2,7 +2,7 @@
 slug: /generation/typescript
 ---
 
-# 生成 TypeScript
+# TypeScript 输出
 
 ```bash
 skelc gen ts \

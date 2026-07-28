@@ -2,7 +2,7 @@
 slug: /glossary
 ---
 
-# Glossary
+# Skel Glossary
 
 | Term | Meaning |
 | --- | --- |

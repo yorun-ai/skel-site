@@ -5,6 +5,12 @@ import type {
   DocMetadata,
   LoadedContent,
 } from '@docusaurus/plugin-content-docs'
+import {
+  contractStages,
+  guideGroups,
+  skelMechanisms,
+  type LocalizedCopy,
+} from '../data/developerLanding'
 
 type DocusaurusWebpackConfig = Exclude<
   ReturnType<NonNullable<Plugin['configureWebpack']>>,
@@ -46,91 +52,83 @@ function markdownOutputPath({
 function overviewMarkdown(
   translate: (id: string, fallback: string) => string,
 ): string {
-  const link = (
-    titleId: string,
-    title: string,
-    descriptionId: string,
-    description: string,
-    target: string,
-  ) =>
-    `- [${translate(titleId, title)}](${target}.md) — ${translate(descriptionId, description)}`
+  const copy = ({id, text}: LocalizedCopy) => translate(id, text)
+  const renderStages = contractStages
+    .map((stage) => `**${copy(stage.title)}** \`${stage.artifact}\``)
+    .join(' → ')
+  const renderMechanisms = skelMechanisms
+    .map((mechanism) => {
+      const markers = mechanism.markers
+        .map((marker) => `\`${marker}\``)
+        .join(' · ')
+      const links = mechanism.links
+        .map((link) => `[${copy(link.title)}](${link.to.slice(1)}.md)`)
+        .join(' · ')
+
+      return [
+        `### ${copy(mechanism.title)}`,
+        '',
+        `**${copy(mechanism.label)}** · ${markers}`,
+        '',
+        copy(mechanism.description),
+        '',
+        links,
+      ].join('\n')
+    })
+    .join('\n\n')
+  const renderGuideGroups = guideGroups
+    .map(
+      (group) =>
+        `### ${copy(group.title)}\n\n${group.links
+          .map(
+            (link) =>
+              `- [${copy(link.title)}](${link.to.slice(1)}.md) — ${copy(link.description)}`,
+          )
+          .join('\n')}`,
+    )
+    .join('\n\n')
 
   return [
-    `# ${translate('homepage.title', 'Skel Developers')}`,
+    `# ${translate('homepage.title', 'Overview')}`,
     '',
     translate(
       'homepage.description',
-      'Design explicit application contracts and generate reliable, type-safe code.',
+      'Skel is a contract DSL and compiler for Vine applications. It puts domain types, caller identities, permissions, services, events, and tasks in one source that skelc can validate and generate.',
+    ),
+    `**${translate('homepage.description.ai', 'AI-generated changes meet a machine-checkable boundary before they enter application code.')}**`,
+    '',
+    `[${translate('homepage.actions.first', 'Create the first contract')}](getting-started.md) · [${translate('homepage.actions.language', 'Read the language model')}](language.md) · [${translate('homepage.actions.generate', 'Choose an output')}](generation.md)`,
+    '',
+    `## ${translate('homepage.sections.mechanisms.title', 'What the compiler keeps explicit')}`,
+    '',
+    translate(
+      'homepage.sections.mechanisms.description',
+      'Skel leaves algorithms to application code. It fixes the parts that domains, generated clients, and Vine runtime must agree on.',
     ),
     '',
-    `## ${translate('homepage.sections.gettingStarted', 'Getting started')}`,
+    renderMechanisms,
     '',
-    link(
-      'homepage.cards.installation.title',
-      'Install skelc',
-      'homepage.cards.installation.description',
-      'Install the Skel compiler and verify your local toolchain.',
-      'installation',
-    ),
-    link(
-      'homepage.cards.quickStart.title',
-      'Quick start',
-      'homepage.cards.quickStart.description',
-      'Write, validate, and generate code from your first contract.',
-      'getting-started',
-    ),
-    link(
-      'homepage.cards.language.title',
-      'Language overview',
-      'homepage.cards.language.description',
-      'Learn how Skel models domains, data, and application capabilities.',
-      'language',
-    ),
-    link(
-      'homepage.cards.contractDesign.title',
-      'Contract design',
-      'homepage.cards.contractDesign.description',
-      'Design stable boundaries that can evolve across applications.',
-      'contract-design',
+    `## ${translate('homepage.sections.loop.title', 'From contract to application')}`,
+    '',
+    translate(
+      'homepage.sections.loop.description',
+      'Source, validation, generated code, and runtime integration stay separate, so each change has a clear review point.',
     ),
     '',
-    `## ${translate('homepage.sections.guides', 'Guides')}`,
+    renderStages,
     '',
-    link(
-      'homepage.cards.workflow.title',
-      'Validation workflow',
-      'homepage.cards.workflow.description',
-      'Format and validate contracts locally and in CI.',
-      'workflow',
+    `## ${translate('homepage.sections.guides.title', 'Read by the job at hand')}`,
+    '',
+    translate(
+      'homepage.sections.guides.description',
+      'Start with the contract decision you need to make.',
     ),
-    link(
-      'homepage.cards.syntax.title',
-      'Syntax reference',
-      'homepage.cards.syntax.description',
-      'Look up declarations, types, annotations, and language rules.',
-      'syntax',
-    ),
-    link(
-      'homepage.cards.generation.title',
-      'Code generation',
-      'homepage.cards.generation.description',
-      'Generate Go, TypeScript, Go modules, and public contracts.',
-      'generation',
-    ),
-    link(
-      'homepage.cards.editor.title',
-      'Editor integration',
-      'homepage.cards.editor.description',
-      'Use diagnostics, formatting, and language features in your editor.',
-      'editor',
-    ),
-    link(
-      'homepage.cards.vine.title',
-      'Vine integration',
-      'homepage.cards.vine.description',
-      'Connect generated contracts to Vine applications and runtime types.',
-      'vine-integration',
-    ),
+    '',
+    renderGuideGroups,
+    '',
+    `## ${translate('homepage.status.label', 'Before 1.0')}`,
+    '',
+    `${translate('homepage.status.description', 'Pin skelc in development and CI, then review generated diffs when the compiler or a public contract changes.')} [${translate('homepage.status.installation', 'Install skelc')}](installation.md) · [${translate('homepage.status.compatibility', 'Compatibility')}](compatibility.md)`,
   ].join('\n')
 }
 
@@ -140,6 +138,7 @@ export default function markdownPagesPlugin({
   codeTranslations,
 }: LoadContext): Plugin {
   let docs: DocMetadata[] = []
+  let developmentWrite = Promise.resolve()
   const developmentOutputDir = path.join(
     siteDir,
     '.docusaurus',
@@ -206,11 +205,19 @@ export default function markdownPagesPlugin({
         []
 
       if (isDevelopment) {
-        await rm(developmentOutputDir, {force: true, recursive: true})
-        await writeMarkdownPages({
-          outputBaseUrl: baseUrl,
-          outputDir: developmentOutputDir,
+        developmentWrite = developmentWrite.then(async () => {
+          await rm(developmentOutputDir, {
+            force: true,
+            maxRetries: 4,
+            recursive: true,
+            retryDelay: 80,
+          })
+          await writeMarkdownPages({
+            outputBaseUrl: baseUrl,
+            outputDir: developmentOutputDir,
+          })
         })
+        await developmentWrite
       }
     },
     async postBuild({baseUrl, outDir}) {

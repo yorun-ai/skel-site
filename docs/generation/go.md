@@ -2,7 +2,7 @@
 slug: /generation/go
 ---
 
-# Generate Go
+# Go Generation
 
 ## Existing Module
 

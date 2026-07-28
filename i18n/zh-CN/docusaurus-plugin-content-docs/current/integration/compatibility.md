@@ -2,7 +2,7 @@
 slug: /compatibility
 ---
 
-# 版本与兼容性
+# 版本兼容
 
 Skel 语法、CLI 参数与退出码、JSON/JSONL 字段、生成文件名、公开 API 和 module 元数据都是兼容性边界。
 
