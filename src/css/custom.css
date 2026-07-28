@@ -335,7 +335,9 @@ button:not(:disabled),
   font-weight: 600;
 }
 
-.navbar__items--right > .navbar__item:hover {
+.navbar__items--right > .navbar__item:hover,
+.navbar__items--right
+  > .navbar-control-dropdown.dropdown--show {
   border-color: color-mix(in srgb, var(--border) 60%, var(--foreground));
 }
 
@@ -699,6 +701,7 @@ html[data-theme='dark']
 
 .navbar-sidebar {
   @apply bg-background text-foreground;
+  border-right: 1px solid var(--sidebar-border);
   box-shadow: none;
 }
 
@@ -798,6 +801,7 @@ html.docs-doc-page,
 }
 
 .docs-doc-page {
+  --docs-product-switch-height: 3.25rem;
   --docs-sidebar-section-color: color-mix(
     in srgb,
     var(--foreground) 58%,
@@ -983,6 +987,11 @@ html.docs-doc-page,
     .theme-doc-sidebar-item-category-level-1
   ):not(:first-child) {
   margin-top: 0.8rem;
+}
+
+.theme-doc-sidebar-item-link-level-1:first-child
+  + .theme-doc-sidebar-item-category-level-1 {
+  margin-top: 1rem;
 }
 
 .theme-doc-sidebar-item-category > .menu__list-item-collapsible {
@@ -1356,6 +1365,12 @@ div[class*='codeBlockContainer'] code {
     --ifm-spacing-horizontal: 20px;
   }
 
+  .docs-doc-page .theme-doc-sidebar-container .menu {
+    margin-bottom: var(--docs-product-switch-height);
+    padding-bottom: 1rem;
+    scroll-padding-bottom: 1rem;
+  }
+
   .docs-doc-page .theme-doc-sidebar-container {
     border-right-color: transparent;
   }
@@ -1570,8 +1585,9 @@ div[class*='codeBlockContainer'] code {
   }
 
   .docs-doc-page
-    .navbar-sidebar__item:has(> .navbar-sidebar__back) {
-    padding: 0.75rem 1.1rem 2rem;
+    .navbar-sidebar__items--show-secondary
+    > .navbar-sidebar__item:last-child {
+    padding: 0.75rem 1.1rem 0.75rem;
     scrollbar-width: none;
   }
 
@@ -1584,16 +1600,27 @@ div[class*='codeBlockContainer'] code {
   }
 
   .docs-doc-page
-    .navbar-sidebar__item:has(> .navbar-sidebar__back)::-webkit-scrollbar {
+    .navbar-sidebar__items--show-secondary
+    > .navbar-sidebar__item:last-child::-webkit-scrollbar {
     display: none;
   }
 
   .navbar__toggle {
-    display: inline-flex;
+    display: none;
   }
 
   .navbar__title {
     font-size: 17px;
+  }
+
+  .navbar__inner
+    > .navbar__items--right
+    > .navbar-control-dropdown--locale,
+  .navbar__inner > .navbar__items--right > .navbar-github-link,
+  .navbar__inner
+    > .navbar__items--right
+    > div:has(> button.clean-btn) {
+    display: none;
   }
 
   .navbar__items {
@@ -1601,7 +1628,7 @@ div[class*='codeBlockContainer'] code {
   }
 
   .docs-doc-page main > .container {
-    padding-top: 2rem !important;
+    padding-top: 1rem !important;
     padding-right: 1.25rem;
     padding-left: 1.25rem;
   }
