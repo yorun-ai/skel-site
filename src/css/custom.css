@@ -317,6 +317,8 @@ button:not(:disabled),
 }
 
 .navbar__items--right {
+  --navbar-control-size: 2rem;
+
   gap: 0.35rem;
 }
 
@@ -327,7 +329,7 @@ button:not(:disabled),
 }
 
 .navbar__items--right > .navbar__item > .navbar__link {
-  min-height: 2.25rem;
+  min-height: var(--navbar-control-size);
   padding: 0.45rem 0.7rem;
   font-size: 0.8rem;
   font-weight: 600;
@@ -338,14 +340,17 @@ button:not(:disabled),
 }
 
 .navbar__items--right > .navbar-control-dropdown {
+  display: flex;
+  height: var(--navbar-control-size);
+  align-items: center;
   border-radius: 999px;
 }
 
 .navbar__items--right > .navbar-control--version {
   display: flex;
-  min-height: 2.25rem;
+  height: var(--navbar-control-size);
   align-items: center;
-  padding: 0.45rem 0.65rem;
+  padding: 0 0.65rem;
   border-radius: 999px;
   font-size: 0.8rem;
   font-weight: 600;
@@ -355,9 +360,9 @@ button:not(:disabled),
   > .navbar-control-dropdown
   > .navbar-control {
   display: flex;
-  min-height: 2.25rem;
+  height: var(--navbar-control-size);
   align-items: center;
-  padding: 0.45rem 0.65rem;
+  padding: 0 0.65rem;
   border-radius: 999px;
 }
 
@@ -369,6 +374,7 @@ button:not(:disabled),
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
+  line-height: 1;
 }
 
 .navbar-control__value,
@@ -550,8 +556,8 @@ button:not(:disabled),
 
 .navbar__items--right > .navbar-github-link {
   display: flex;
-  width: 2rem;
-  height: 2rem;
+  width: var(--navbar-control-size);
+  height: var(--navbar-control-size);
   align-items: center;
   justify-content: center;
   padding: 0;
@@ -584,8 +590,8 @@ button:not(:disabled),
 }
 
 .navbar__items--right > div > button.clean-btn {
-  width: 2rem;
-  height: 2rem;
+  width: var(--navbar-control-size);
+  height: var(--navbar-control-size);
   border: 1px solid var(--border);
   border-radius: 50%;
   color: var(--muted-foreground);

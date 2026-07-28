@@ -1,21 +1,29 @@
 import type {SidebarsConfig} from '@docusaurus/plugin-content-docs'
 
-const category = (label: string, items: string[]) => ({
+const category = (
+  label: string,
+  items: string[],
+  collapsed: boolean = true,
+) => ({
   type: 'category' as const,
   label,
-  collapsed: false,
+  collapsed,
   items,
 })
 
 const sidebars: SidebarsConfig = {
   docsSidebar: [
     'index',
-    category('Start Here', [
-      'getting-started/overview',
-      'getting-started/installation',
-      'getting-started/quick-start',
-      'getting-started/input-layout',
-    ]),
+    category(
+      'Start Here',
+      [
+        'getting-started/overview',
+        'getting-started/installation',
+        'getting-started/quick-start',
+        'getting-started/input-layout',
+      ],
+      false,
+    ),
     category('Design Contracts', [
       'language/overview',
       'language/files-and-imports',

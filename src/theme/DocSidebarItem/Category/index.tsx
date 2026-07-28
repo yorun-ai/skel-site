@@ -218,6 +218,7 @@ function DocSidebarItemCategoryCollapsible({
   const {setExpandedItem} = useDocSidebarItemsExpandedState()
 
   const persistCollapsedState = (nextCollapsed: boolean) => {
+    restoredStateIdRef.current = categoryStateId
     categoryStateSlot.set(nextCollapsed ? 'true' : 'false')
   }
 
