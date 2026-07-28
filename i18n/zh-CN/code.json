@@ -345,7 +345,7 @@
     "message": "复制页面选项"
   },
   "skel.copyPage.copyDescription": {
-    "message": "以 Markdown 格式复制页面，供 LLM 使用"
+    "message": "以 Markdown 格式复制页面"
   },
   "skel.copyPage.viewMarkdown": {
     "message": "查看 Markdown ↗"

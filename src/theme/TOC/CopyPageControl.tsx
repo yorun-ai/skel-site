@@ -146,7 +146,7 @@ export default function CopyPageControl(): ReactNode {
               <small>
                 {translate({
                   id: 'skel.copyPage.copyDescription',
-                  message: 'Copy page as Markdown for LLMs',
+                  message: 'Copy page as Markdown',
                 })}
               </small>
             </span>
