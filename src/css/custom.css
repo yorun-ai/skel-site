@@ -1552,6 +1552,11 @@ div[class*='codeBlockContainer'] code {
     padding-inline: 1rem;
   }
 
+  .docs-doc-page .navbar-sidebar,
+  .docs-doc-page .navbar-sidebar__backdrop {
+    height: 100dvh;
+  }
+
   .navbar__toggle {
     display: inline-flex;
   }
