@@ -541,5 +541,8 @@
   },
   "homepage.status.compatibility": {
     "message": "版本兼容"
+  },
+  "skel.navbar.mobileMenu.ariaLabel": {
+    "message": "打开文档菜单"
   }
 }
