@@ -801,7 +801,11 @@ html.docs-doc-page,
 }
 
 .docs-doc-page {
-  --docs-product-switch-height: 3.25rem;
+  --docs-product-switch-height: 2rem;
+  --docs-product-links-height: 6.25rem;
+  --docs-product-links-gap: 0.5rem;
+  --docs-product-links-padding-top: 0.75rem;
+  --docs-product-links-padding-bottom: 1rem;
   --docs-sidebar-section-color: color-mix(
     in srgb,
     var(--foreground) 58%,
@@ -1366,7 +1370,7 @@ div[class*='codeBlockContainer'] code {
   }
 
   .docs-doc-page .theme-doc-sidebar-container .menu {
-    margin-bottom: var(--docs-product-switch-height);
+    margin-bottom: var(--docs-product-links-height);
     padding-bottom: 1rem;
     scroll-padding-bottom: 1rem;
   }
@@ -1587,7 +1591,12 @@ div[class*='codeBlockContainer'] code {
   .docs-doc-page
     .navbar-sidebar__items--show-secondary
     > .navbar-sidebar__item:last-child {
-    padding: 0.75rem 1.1rem 0.75rem;
+    --docs-mobile-sidebar-inline-padding: 1.1rem;
+    --docs-product-links-height: 5.25rem;
+    --docs-product-links-padding-bottom: 0;
+
+    overflow: hidden;
+    padding: 0.75rem var(--docs-mobile-sidebar-inline-padding) 1rem;
     scrollbar-width: none;
   }
 
