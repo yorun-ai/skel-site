@@ -758,8 +758,8 @@ html.docs-doc-page,
 }
 
 .docs-doc-page .main-wrapper {
-  flex: 0 0 calc(100vh - var(--ifm-navbar-height));
-  height: calc(100vh - var(--ifm-navbar-height));
+  flex: 0 0 calc(100dvh - var(--ifm-navbar-height));
+  height: calc(100dvh - var(--ifm-navbar-height));
   min-height: 0;
   overflow-y: auto;
   scrollbar-color: transparent transparent;
