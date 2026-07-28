@@ -86,6 +86,7 @@ const config: Config = {
     ['./src/plugins/tailwind.ts', {}],
     ['./src/plugins/aliases.ts', {}],
     ['./src/plugins/markdown-pages.ts', {}],
+    ['./src/plugins/shared-preferences.ts', {}],
     ...(devWebSocketPath
       ? [
           () => ({
