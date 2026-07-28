@@ -1,0 +1,131 @@
+.switcher {
+  --switcher-edge-offset: 0px;
+
+  position: relative;
+  display: flex;
+  height: 100%;
+  align-items: center;
+}
+
+.switcher:has(.trigger[aria-expanded='true'])::after {
+  position: absolute;
+  z-index: calc(var(--ifm-z-index-fixed) + 3);
+  top: 0;
+  right: var(--switcher-edge-offset);
+  width: 1px;
+  height: calc(100% + var(--ifm-navbar-height));
+  background: var(--border);
+  content: '';
+  pointer-events: none;
+}
+
+.trigger {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  text-align: left;
+}
+
+.switchIcon {
+  width: 0.875rem;
+  height: 0.875rem;
+  flex: 0 0 auto;
+  margin-left: auto;
+  color: var(--muted-foreground);
+  transition: color 140ms ease-out;
+}
+
+.trigger:hover .switchIcon,
+.trigger[aria-expanded='true'] .switchIcon {
+  color: var(--primary);
+}
+
+.menu {
+  position: absolute;
+  z-index: calc(var(--ifm-z-index-fixed) + 2);
+  top: 100%;
+  left: 0;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  background: var(--card);
+  box-shadow: 0 14px 28px -20px rgb(var(--ink-rgb) / 32%);
+}
+
+.option {
+  display: flex;
+  min-height: var(--ifm-navbar-height);
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 1.25rem;
+  border-radius: 0;
+  color: var(--foreground);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.option:hover,
+.option:focus-visible {
+  background: var(--accent);
+  color: var(--foreground);
+  text-decoration: none;
+}
+
+.option:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: -2px;
+}
+
+.optionLogo {
+  display: grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 0.5rem;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font-size: 0.875rem;
+  font-weight: 750;
+  line-height: 1;
+}
+
+.optionTitle {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.optionName {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+.optionMeta {
+  color: var(--muted-foreground);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+@media (min-width: 997px) {
+  :global(.docs-doc-page) .switcher {
+    width: 100%;
+  }
+
+  :global(.docs-doc-page) .menu {
+    right: 0;
+    width: auto;
+  }
+}
+
+:global(.navbar-sidebar__brand) .switcher {
+  min-width: 0;
+  flex: 1;
+}

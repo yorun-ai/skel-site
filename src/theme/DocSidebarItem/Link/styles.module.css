@@ -1,0 +1,13 @@
+.itemIcon {
+  flex: 0 0 16px;
+  opacity: 0.54;
+}
+
+.linkLabel {
+  flex: 1;
+  min-width: 0;
+}
+
+:global(.menu__link--active) .itemIcon {
+  opacity: 1;
+}

@@ -1,0 +1,141 @@
+.tocShell {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+}
+
+.tableOfContents {
+  --toc-scroll-fade-edge: 8px;
+  --toc-scroll-fade-size: 56px;
+
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-color: transparent transparent;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+}
+
+.canScrollUp {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent var(--toc-scroll-fade-edge),
+    #000 var(--toc-scroll-fade-size),
+    #000 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent var(--toc-scroll-fade-edge),
+    #000 var(--toc-scroll-fade-size),
+    #000 100%
+  );
+}
+
+.canScrollDown {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0,
+    #000 calc(100% - var(--toc-scroll-fade-size)),
+    transparent calc(100% - var(--toc-scroll-fade-edge)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0,
+    #000 calc(100% - var(--toc-scroll-fade-size)),
+    transparent calc(100% - var(--toc-scroll-fade-edge)),
+    transparent 100%
+  );
+}
+
+.canScrollUp.canScrollDown {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent var(--toc-scroll-fade-edge),
+    #000 var(--toc-scroll-fade-size),
+    #000 calc(100% - var(--toc-scroll-fade-size)),
+    transparent calc(100% - var(--toc-scroll-fade-edge)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent var(--toc-scroll-fade-edge),
+    #000 var(--toc-scroll-fade-size),
+    #000 calc(100% - var(--toc-scroll-fade-size)),
+    transparent calc(100% - var(--toc-scroll-fade-edge)),
+    transparent 100%
+  );
+}
+
+.tableOfContents::-webkit-scrollbar {
+  width: 10px;
+}
+
+.tableOfContents::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tableOfContents::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  background-clip: padding-box;
+}
+
+.tableOfContents.userScrolling {
+  scrollbar-color: color-mix(
+      in srgb,
+      var(--muted-foreground) 42%,
+      transparent
+    )
+    transparent;
+}
+
+.tableOfContents.userScrolling::-webkit-scrollbar-thumb {
+  background-color: color-mix(
+    in srgb,
+    var(--muted-foreground) 42%,
+    transparent
+  );
+}
+
+.tableOfContents::after {
+  display: block;
+  height: 16px;
+  content: '';
+}
+
+.activeIndicator {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 2px;
+  border-radius: 999px;
+  background: var(--primary);
+  pointer-events: none;
+  transition:
+    top 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    height 180ms ease,
+    opacity 120ms ease;
+  will-change: top, height;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .activeIndicator {
+    transition: none;
+  }
+}
+
+@media (max-width: 996px) {
+  .tableOfContents {
+    display: none;
+  }
+}

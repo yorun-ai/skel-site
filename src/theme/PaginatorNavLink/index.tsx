@@ -15,35 +15,39 @@ export default function PaginatorNavLink({
   return (
     <Link
       className={cn(
-        'pagination-nav__link group h-auto min-h-20 flex-1 items-center gap-3 px-4 py-3',
+        'pagination-nav__link h-auto min-h-20 flex-1 flex-col items-stretch justify-center gap-1 px-4 py-3',
         isNext
-          ? 'pagination-nav__link--next justify-end text-right'
-          : 'pagination-nav__link--prev justify-start text-left',
+          ? 'pagination-nav__link--next text-right'
+          : 'pagination-nav__link--prev text-left',
         buttonVariants({variant: 'outline'}),
       )}
       to={permalink}>
-      {!isNext && (
-        <ArrowLeft
-          aria-hidden="true"
-          className="text-muted-foreground transition-transform group-hover:-translate-x-0.5"
-        />
-      )}
-      <span className="min-w-0">
-        {subLabel && (
-          <span className="block text-xs font-medium text-muted-foreground">
-            {subLabel}
-          </span>
+      <span
+        className={cn(
+          'flex items-center gap-1 text-sm font-normal text-muted-foreground',
+          isNext ? 'justify-end' : 'justify-start',
+        )}>
+        {!isNext && (
+          <ArrowLeft
+            aria-hidden="true"
+            className="size-4"
+            strokeWidth={1.75}
+          />
         )}
-        <span className="mt-1 block truncate text-sm font-semibold text-foreground">
-          {title}
-        </span>
+        {subLabel && (
+          <span>{subLabel}</span>
+        )}
+        {isNext && (
+          <ArrowRight
+            aria-hidden="true"
+            className="size-4"
+            strokeWidth={1.75}
+          />
+        )}
       </span>
-      {isNext && (
-        <ArrowRight
-          aria-hidden="true"
-          className="text-muted-foreground transition-transform group-hover:translate-x-0.5"
-        />
-      )}
+      <span className="line-clamp-2 min-w-0 text-base font-normal leading-5 text-foreground">
+        {title}
+      </span>
     </Link>
   )
 }

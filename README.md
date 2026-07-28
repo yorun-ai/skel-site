@@ -15,7 +15,12 @@ pnpm install
 pnpm dev
 ```
 
-Use `pnpm dev:zh` for Simplified Chinese. Validate both locales with:
+`pnpm dev` starts both locales with hot reload behind one local address, so
+edits refresh automatically and the language switcher works as it does in
+production. Use `pnpm dev:en` or `pnpm dev:zh` for a lower-overhead,
+single-locale server; its language switcher cannot leave the compiled locale.
+
+Validate both locales with:
 
 ```bash
 pnpm typecheck
@@ -36,10 +41,11 @@ Contributors do not need Cloudflare access to build or preview the site locally.
 
 ## Versioning
 
-Documentation versions follow skelc releases:
+Before 1.0, the site maintains only the current `next` documentation.
+Version snapshots begin with `v1.0.0`. Release maintainers can create one with:
 
 ```bash
-pnpm docusaurus docs:version 0.10.0
+pnpm docusaurus docs:version 1.0.0
 ```
 
 Do not edit generated version snapshots manually.
