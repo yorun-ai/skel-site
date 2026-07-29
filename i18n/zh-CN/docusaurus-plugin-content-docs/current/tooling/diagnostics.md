@@ -30,6 +30,6 @@ skelc symbol get demo.user.User --skel-in ./skel
 - 固定 skelc 版本。
 - 保留 stderr/stdout 边界和退出码。
 - JSON/JSONL 字段属于工具协议，不要依赖人类可读文本的空格布局。
-- 记录输入路径和 compiler version，方便复现生成问题。
+- 记录输入路径和 skelc 版本，方便复现生成问题。
 
 所有参数见[CLI 参考](/docs/cli)。

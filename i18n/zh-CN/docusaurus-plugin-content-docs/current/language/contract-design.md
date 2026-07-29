@@ -37,7 +37,7 @@ data UserRecord {
 
 ## 让兼容性变化清晰可见
 
-以下变化需要消费方 review：
+以下变化需要消费方审查：
 
 - 删除或重命名公共声明
 - 改变字段或 method 类型
@@ -58,6 +58,6 @@ data UserRecord {
 - 跨应用访问时明确的调用者和权限规则
 - 契约专用的 request、result 和 event 类型
 - 对单位、约束和边界情况的说明
-- 固定的 compiler 版本和可复现的生成命令
+- 固定的 skelc 版本和可复现的生成命令
 
 导出机制见[公共契约](/docs/generation/public-contracts)，升级步骤见[版本兼容](/docs/compatibility)。

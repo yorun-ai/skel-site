@@ -27,14 +27,14 @@ go install go.yorun.ai/skelc/cmd/skelc@latest
 skelc version --output-format json
 ```
 
-扩展要求 skelc v0.10.1 或更高版本，并从 `PATH` 启动 `skelc lsp`。扩展本身只负责连接语言服务器——解析、格式化、诊断、补全、导航和重命名这些能力全都由编译器的语言服务器提供，扩展里不会再写一套 JavaScript 实现。
+扩展要求 skelc v0.10.1 或更高版本，并从 `PATH` 启动 `skelc lsp`。扩展本身只负责连接语言服务器——解析、格式化、诊断、补全、导航和重命名这些能力全都由 skelc 的语言服务器提供，扩展里不会再写一套 JavaScript 实现。
 
 ## 配置
 
 | 设置 | 默认值 | 用途 |
 | --- | --- | --- |
 | `skelc.path` | `skelc` | 指定 skelc 可执行文件；修改后会重启语言服务器。 |
-| `skelc.trace.server` | `off` | 使用 `off`、`messages` 或 `verbose` 跟踪 LSP 通信。 |
+| `skelc.trace.server` | `off` | 使用 `off`、`messages` 或 `verbose` 记录 LSP 通信。 |
 
 命令面板中提供两个命令：
 
@@ -103,4 +103,4 @@ npm run check
 
 用 VS Code 打开仓库并按 F5，即可启动 Extension Development Host。规范的 TextMate 语法和前端适配器在 `packages/highlight` 目录；VS Code 客户端、语言配置、主题和 Marketplace 包在 `editors/vscode` 目录。
 
-终端和 CI 中仍然应该跑 `skelc check`。编辑器实时诊断复用了编译器的规则，但 CI 才是针对完整输入集的可复现检查——两者各司其职。
+终端和 CI 中仍然应该跑 `skelc check`。编辑器实时诊断复用了 skelc 的规则，但 CI 才是针对完整输入集的可复现检查——两者各司其职。
