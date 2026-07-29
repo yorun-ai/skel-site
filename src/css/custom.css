@@ -620,8 +620,12 @@ button:not(:disabled),
 }
 
 .navbar__items--right > div > button.clean-btn {
+  display: flex;
   width: var(--navbar-control-size);
   height: var(--navbar-control-size);
+  align-items: center;
+  justify-content: center;
+  padding: 0;
   border: 1px solid var(--border);
   border-radius: 50%;
   color: var(--muted-foreground);
@@ -649,7 +653,7 @@ button:not(:disabled),
 
 html[data-theme='light']
   .navbar__items--right
-  > div
+  > div:not(.navbar-search-control)
   > button.clean-btn
   > svg {
   display: none;
@@ -657,7 +661,7 @@ html[data-theme='light']
 
 html[data-theme='light']
   .navbar__items--right
-  > div
+  > div:not(.navbar-search-control)
   > button.clean-btn
   > svg:nth-child(2) {
   display: initial;
@@ -665,7 +669,7 @@ html[data-theme='light']
 
 html[data-theme='dark']
   .navbar__items--right
-  > div
+  > div:not(.navbar-search-control)
   > button.clean-btn
   > svg {
   display: none;
@@ -673,7 +677,7 @@ html[data-theme='dark']
 
 html[data-theme='dark']
   .navbar__items--right
-  > div
+  > div:not(.navbar-search-control)
   > button.clean-btn
   > svg:first-child {
   display: initial;
@@ -1156,19 +1160,19 @@ html.docs-doc-page,
   letter-spacing: -0.005em;
 }
 
-.theme-doc-markdown h1 {
+.theme-doc-markdown h1:not(.developer-landing *) {
   @apply mb-4 text-[2.3rem] font-semibold leading-[1.16] tracking-[-0.035em] text-foreground;
 }
 
-.theme-doc-markdown h2 {
+.theme-doc-markdown h2:not(.developer-landing *) {
   @apply mt-10 mb-3 text-[1.55rem] font-semibold tracking-[-0.025em] text-foreground;
 }
 
-.theme-doc-markdown h3 {
+.theme-doc-markdown h3:not(.developer-landing *) {
   @apply mt-8 mb-2.5 text-xl font-semibold tracking-[-0.015em] text-foreground;
 }
 
-.theme-doc-markdown h4 {
+.theme-doc-markdown h4:not(.developer-landing *) {
   @apply text-base font-semibold text-foreground;
 }
 
@@ -1180,8 +1184,8 @@ html.docs-doc-page,
   scroll-margin-top: 2rem;
 }
 
-.theme-doc-markdown p,
-.theme-doc-markdown li {
+.theme-doc-markdown p:not(.developer-landing *),
+.theme-doc-markdown li:not(.developer-landing *) {
   font-size: 1rem;
   line-height: 1.72;
 }
@@ -1192,7 +1196,8 @@ html.docs-doc-page,
   line-height: 1.65;
 }
 
-.theme-doc-markdown a:not(.hash-link) {
+.theme-doc-markdown
+  a:not(.hash-link):not(.developer-landing *) {
   @apply font-medium text-primary underline-offset-4 hover:underline;
 }
 
@@ -1924,7 +1929,7 @@ div[class*='codeBlockContainer'] code {
   .navbar__inner > .navbar__items--right > .navbar-github-link,
   .navbar__inner
     > .navbar__items--right
-    > div:has(> button.clean-btn) {
+    > div:not(.navbar-search-control):has(> button.clean-btn) {
     display: none;
   }
 

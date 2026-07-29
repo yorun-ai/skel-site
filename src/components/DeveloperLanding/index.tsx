@@ -197,6 +197,14 @@ export default function DeveloperLanding(): React.JSX.Element {
     id: 'homepage.a11y.shortcuts',
     message: 'Overview shortcuts',
   })
+  const heroTitle = translate({
+    id: 'homepage.title',
+    message: 'One contract. Every boundary in sync.',
+  })
+  const heroTitleBreak = Math.max(
+    heroTitle.indexOf('，'),
+    heroTitle.indexOf('.'),
+  )
 
   return (
     <div className={`developer-landing ${styles.landing}`}>
@@ -213,9 +221,14 @@ export default function DeveloperLanding(): React.JSX.Element {
             </span>
           </div>
           <h1>
-            <Translate id="homepage.title">
-              One contract. Every boundary in sync.
-            </Translate>
+            {heroTitleBreak >= 0 ? (
+              <>
+                <span>{heroTitle.slice(0, heroTitleBreak + 1)}</span>
+                <span>{heroTitle.slice(heroTitleBreak + 1).trimStart()}</span>
+              </>
+            ) : (
+              heroTitle
+            )}
           </h1>
           <p className={styles.lede}>
             <Translate id="homepage.description">

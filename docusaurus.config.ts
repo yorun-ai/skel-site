@@ -114,7 +114,29 @@ const config: Config = {
         ]
       : []),
   ],
-  themes: ['@docusaurus/theme-mermaid'],
+  themes: [
+    '@docusaurus/theme-mermaid',
+    [
+      '@easyops-cn/docusaurus-search-local',
+      {
+        hashed: 'filename',
+        indexDocs: true,
+        indexBlog: false,
+        indexPages: false,
+        docsRouteBasePath: 'docs',
+        docsPluginIdForPreferredVersion: 'default',
+        docsDir: [
+          'docs',
+          'i18n/zh-CN/docusaurus-plugin-content-docs',
+        ],
+        language: ['en', 'zh'],
+        searchBarPosition: 'right',
+        searchBarShortcutKeymap: 'mod+k',
+        explicitSearchResultPath: true,
+        removeDefaultStopWordFilter: ['en'],
+      } satisfies import('@easyops-cn/docusaurus-search-local').PluginOptions,
+    ],
+  ],
 
   themeConfig: {
     navbar: {
@@ -130,6 +152,11 @@ const config: Config = {
           href: 'https://vine.yorun.ai',
           label: 'Vine',
           position: 'left',
+        },
+        {
+          type: 'search',
+          className: 'navbar-search-control',
+          position: 'right',
         },
         {
           type: 'docsVersionDropdown',
