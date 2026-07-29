@@ -8,6 +8,9 @@ auditConfig:
   ignoreGhsas:
     - GHSA-5c6j-r48x-rmvq
 
+minimumReleaseAgeExclude:
+  - '@easyops-cn/docusaurus-search-local@0.55.3'
+
 overrides:
   brace-expansion: 5.0.8
   fast-uri: 3.1.4
