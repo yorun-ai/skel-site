@@ -4,7 +4,7 @@ slug: /metadata
 
 # 描述与标记
 
-decorator 给契约附加文档和处理规则，不影响类型语法。skelc 目前支持 `@desc`、`@example` 和 `@sensitive`。
+decorator 给契约附加文档和处理规则，不影响类型语法。skelc 目前支持 `@desc`、`@example`、`@sensitive` 和 `@deprecated`。
 
 ## 描述
 
@@ -67,18 +67,37 @@ data AccessCredential {
 
 敏感标记是处理要求，不是访问规则。谁能拿到这个值仍然由 actor、认证和权限来控制。
 
+## 弃用
+
+```skel
+@deprecated("请改用 Profile")
+data User {
+    @deprecated("请改用 id")
+    legacyId: string
+}
+```
+
+`@deprecated` 必须带一个非空字符串，说明消费者应该改用什么或如何迁移。它可以标记顶层的 enum、data、config、event、actor、resource、service、task 和 web，也可以标记 enum item、data-like 字段、resource action/check、service method、task trigger，以及 resource check、service method、task trigger 的 input 参数。
+
+弃用只作用于被标记的元素，不会向子元素传递。domain 以及 `input`、`output`、`payload`、`credential`、`info` 等结构 block 不能被弃用。
+
+生成的 Go 声明会使用标准的 `Deprecated:` 文档段落，生成的 TypeScript 会使用 `@deprecated` JSDoc tag，公开 Skel 输出会保留 decorator；生成的 domain schema 同时携带布尔标记和解释文本。skelc 会记录并暴露这些元数据，但目前不会在其他声明引用弃用元素时发出警告。
+
+生成的 TypeScript 会把 Skel enum 表示为字符串联合类型。enum item 的弃用说明会保留在对应联合分支旁边，但该分支不是独立的具名符号，因此 TypeScript 无法给出 item 级弃用警告。
+
 ## 支持位置
 
-| 契约位置 | `@desc` | `@example` | `@sensitive` |
-| --- | :---: | :---: | :---: |
-| Domain 与顶层声明 | 支持 | 不支持 | 仅 data/config |
-| Enum item | 支持 | 不支持 | 不支持 |
-| Data-like 字段或 input 参数 | 支持 | 支持 | 支持 |
-| Service method | 支持 | 不支持 | 不支持 |
-| Method input/output block | 支持 | 仅 output | 支持 |
-| Event payload block | 不支持 | 不支持 | 支持 |
-| Actor credential/info block | 不支持 | 不支持 | 支持 |
-| Resource action/check 或 task trigger | 支持 | 不支持 | 不支持 |
+| 契约位置 | `@desc` | `@example` | `@sensitive` | `@deprecated` |
+| --- | :---: | :---: | :---: | :---: |
+| Domain | 支持 | 不支持 | 不支持 | 不支持 |
+| 顶层声明 | 支持 | 不支持 | 仅 data/config | 支持 |
+| Enum item | 支持 | 不支持 | 不支持 | 支持 |
+| Data-like 字段或 input 参数 | 支持 | 支持 | 支持 | 支持 |
+| Service method | 支持 | 不支持 | 不支持 | 支持 |
+| Method input/output block | 支持 | 仅 output | 支持 | 不支持 |
+| Event payload block | 不支持 | 不支持 | 支持 | 不支持 |
+| Actor credential/info block | 不支持 | 不支持 | 支持 | 不支持 |
+| Resource action/check 或 task trigger | 支持 | 不支持 | 不支持 | 支持 |
 
 移动 decorator 后记得运行 `skelc check`。不支持的位置会报错，不会被静默忽略。
 

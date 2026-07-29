@@ -98,9 +98,10 @@ any(item, item)
 @desc("供人阅读的含义")
 @example("示例值")
 @sensitive
+@deprecated("请改用替代声明")
 ```
 
-decorator 能不能用取决于所在位置，不支持的位置会报错。位置表和生成行为见[描述与标记](/docs/metadata)。
+`@deprecated` 必须带有非空的解释文本。decorator 能不能用取决于所在位置，不支持的位置会报错。位置表和生成行为见[描述与标记](/docs/metadata)。
 
 ## 命名
 

@@ -98,9 +98,10 @@ Imported resources use a qualifier, such as `account.User:read`. Check arguments
 @desc("Human-readable meaning")
 @example("Example value")
 @sensitive
+@deprecated("Use the replacement declaration instead")
 ```
 
-Where you can place a decorator depends on the declaration. Unsupported placement is an error. See [Metadata & Docs](/docs/metadata) for the location matrix and generated behavior.
+`@deprecated` always requires a non-empty explanation string. Where you can place a decorator depends on the declaration. Unsupported placement is an error. See [Metadata & Docs](/docs/metadata) for the location matrix and generated behavior.
 
 ## Naming
 

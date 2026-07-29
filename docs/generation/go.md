@@ -25,6 +25,10 @@ skelc gen go-module \
 
 Add `--go-pub-out` and `--go-pub-module` to produce a public module alongside the regular one. The regular module carries the full contract and server capabilities; the public module exposes public clients, listeners, and the types they depend on.
 
+## Deprecation Output
+
+`@deprecated` becomes a standard `Deprecated:` paragraph on generated Go declarations, methods, constants, and fields, so Go-aware editors can present the symbol as obsolete. The generated domain schema also carries `Deprecated` and `DeprecatedReason` for Vine tooling. Multiline explanations remain valid Go documentation.
+
 ## External Dependencies
 
 ```bash
