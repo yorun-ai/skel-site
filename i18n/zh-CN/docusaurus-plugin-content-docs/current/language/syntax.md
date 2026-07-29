@@ -4,7 +4,7 @@ slug: /syntax
 
 # 语法速查
 
-先用下表定位声明或规则；校验行为与上下文有关时，再进入对应的语言指南。
+先用下表定位声明或规则；校验行为跟上下文有关的时候，再翻对应的语言指南。
 
 ## 文件结构
 
@@ -18,7 +18,7 @@ import commerce.catalog as catalog
 // 后续为顶层声明
 ```
 
-每个文件都声明 domain。import 位于 domain 之后、顶层声明之前。目录输入必须包含 `domain.skel`，详见[文件与导入](/docs/files-and-imports)。
+每个文件都声明 domain。import 放在 domain 之后、顶层声明之前。目录输入必须包含 `domain.skel`，详见[文件与导入](/docs/files-and-imports)。
 
 ## 顶层声明
 
@@ -58,7 +58,7 @@ Generic<T>
 T?
 ```
 
-`?` 可以附加在任意类型上。只有 `data` 能声明泛型参数。map key 必须是非 nullable 的 `int`、`string` 或 enum。详见[类型与数据](/docs/types-and-data)。
+`?` 能加在任意类型上。只有 `data` 能声明泛型参数。map key 必须是非 nullable 的 `int`、`string` 或 enum。详见[类型与数据](/docs/types-and-data)。
 
 ## Service Method 形式
 
@@ -100,7 +100,7 @@ any(item, item)
 @sensitive
 ```
 
-decorator 是否可用取决于所在位置，不支持的位置会报错。位置表和生成行为见[描述与标记](/docs/metadata)。
+decorator 能不能用取决于所在位置，不支持的位置会报错。位置表和生成行为见[描述与标记](/docs/metadata)。
 
 ## 命名
 
@@ -114,7 +114,7 @@ decorator 是否可用取决于所在位置，不支持的位置会报错。位�
 
 标识符不能以 `_` 开头。`UNSPECIFIED` 为 enum 输出保留，`skelSensitive` 为生成的敏感结构保留。
 
-每次修改契约后都运行：
+每次修改契约后都运行一下：
 
 ```bash
 skelc check --skel-in ./skel

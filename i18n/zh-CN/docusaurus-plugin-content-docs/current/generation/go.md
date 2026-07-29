@@ -12,7 +12,7 @@ skelc gen go \
   --go-out ./skeled
 ```
 
-该模式只生成源码，不创建 `go.mod`，适合输出目录已经属于当前 module 的情况。
+这个模式只生成源码文件。如果你已经有一个 `go.mod`，输出目录直接放进当前 module 就能用——不需要额外初始化。
 
 ## 独立 module
 
@@ -23,7 +23,7 @@ skelc gen go-module \
   --go-module example.com/demo/user/skeled
 ```
 
-同时需要公开 module 时增加 `--go-pub-out` 和 `--go-pub-module`。regular module 包含完整契约和服务端能力；pub module 只暴露公开 client/listener 与必要类型。
+如果还需要对外暴露 module，加上 `--go-pub-out` 和 `--go-pub-module` 就行。regular module 包含完整契约和服务端能力，pub module 则只暴露公开的 client/listener 和必要的类型。
 
 ## 外部依赖
 
@@ -32,4 +32,4 @@ skelc gen go-module \
 --go-import demo.account=example.com/demo/account/skeledpub
 ```
 
-统一命名规则下可用 `--go-module-prefix` 推导路径。生成后运行 `gofmt`、`go test`，并审查 `go.mod` 与 API diff。完整参数见[CLI 参考](/docs/cli)。
+如果用的是统一的命名规则，用 `--go-module-prefix` 就能自动推导路径，无需逐个配置。生成完后运行 `gofmt` 和 `go test`，检查 `go.mod` 和 API diff。完整参数清单见 [CLI 参考](/docs/cli)。

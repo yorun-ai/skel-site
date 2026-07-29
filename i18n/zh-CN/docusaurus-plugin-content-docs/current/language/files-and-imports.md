@@ -4,7 +4,7 @@ slug: /files-and-imports
 
 # 文件与导入
 
-skelc 的输入可以是单个 `.skel` 文件，也可以是代表一个 domain 的目录。实际项目通常使用目录：声明可以按职责拆开，但仍属于同一个契约。
+skelc 的输入接受单个 `.skel` 文件，或代表一个 domain 的目录。实际项目用目录：声明按职责拆开，但仍然属于同一个契约。
 
 ## 每个文件都先声明 Domain
 
@@ -12,7 +12,7 @@ skelc 的输入可以是单个 `.skel` 文件，也可以是代表一个 domain 
 domain commerce.order
 ```
 
-同一次输入加载到的所有文件必须声明同一个 domain。目录模式必须包含 `domain.skel`，而且这个文件只能放 domain 声明和可选的 `@desc`：
+同一次输入加载的所有文件必须声明同一个 domain。目录模式下必须包含 `domain.skel`，而且这个文件只能放 domain 声明和可选的 `@desc`：
 
 ```skel title="skel/domain.skel"
 @desc("订单领域契约")
@@ -29,7 +29,7 @@ skel/
 └── service.skel
 ```
 
-skelc 按文件名顺序读取可见的 `.skel` 文件，忽略隐藏文件、子目录和其他扩展名。文件顺序只影响稳定的诊断与输出顺序，不决定声明之间的可见性。
+skelc 按文件名顺序读取可见的 `.skel` 文件，隐藏文件、子目录和其他扩展名会被忽略。文件顺序只影响诊断与输出的稳定顺序，不影响声明之间的可见性。
 
 ## 导入其他 Domain
 
@@ -47,9 +47,9 @@ data Order {
 }
 ```
 
-没有 `as` 时，domain 的最后一段就是引用前缀：`identity.user` 使用 `user`。当两个 domain 的末段同名，或者一个类型使用很频繁时，可以显式设置别名。
+没有 `as` 的时候，domain 的最后一段就是引用前缀：`identity.user` 用 `user`。当两个 domain 的末段同名，或者某个类型使用很频繁，显式设置别名就行。
 
-`import` 表达逻辑依赖，不包含文件系统路径。检查或生成时再提供物理映射：
+`import` 表达的是逻辑依赖，不包含文件系统路径。检查或生成时再提供物理映射：
 
 ```bash
 skelc check \
@@ -58,7 +58,7 @@ skelc check \
   --skel-import commerce.catalog=./catalog/pub/skel
 ```
 
-每个 `--skel-import` 指向的契约必须声明与映射键相同的 domain。需要提供完整的传递依赖图；domain 之间的循环导入会被拒绝。
+每个 `--skel-import` 指向的契约必须声明跟映射键相同的 domain。你需要提供完整的传递依赖图；domain 之间的循环导入会被拒绝。
 
 ## 分开管理语言包路径
 
@@ -79,10 +79,10 @@ skelc gen go-module \
 | 源码映射 | `identity.user=./user/pub/skel` | skelc 输入加载 |
 | 包映射 | `identity.user=example.com/contracts/user` | 生成代码的 import |
 
-不要把仓库目录结构写进 domain 名。文件移动或构建环境变化时，domain 应保持稳定。
+仓库目录结构不要写进 domain 名。文件移动或构建环境变化时，domain 应该保持稳定。
 
 ## 依赖公共契约
 
-消费方应读取生产方生成的公共 Skel，而不是完整的内部源码。跨 domain 引用会受到公共边界约束，私有声明不会意外进入另一个 domain。
+消费方应该读取生产方生成的公共 Skel，而不是完整的内部源码。跨 domain 引用会受到公共边界约束，私有声明不会意外漏到另一个 domain 里去。
 
-接下来阅读[类型与数据](/docs/types-and-data)，生成可导入契约则参考[公共契约](/docs/generation/public-contracts)。
+接下来阅读[类型与数据](/docs/types-and-data)，生成可导入契约的话参考[公共契约](/docs/generation/public-contracts)。

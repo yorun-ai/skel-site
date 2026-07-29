@@ -16,27 +16,27 @@ This gives Go, TypeScript, and other runtimes a consistent understanding of prot
 
 ### Decimal (High-Precision Decimal)
 
-`Decimal` is encoded as a string in both JSON and CBOR.
+`Decimal` encodes as a string in both JSON and CBOR.
 
 ```json
 "1.00"
 ```
 
-Encoding preserves the decimal scale. In other words, `1.00` is not normalized to `1`. This matters for money, ratios, display precision, and similar use cases.
+The encoding preserves the decimal scale -- `1.00` is not normalized to `1`. This matters for money, ratios, display precision, and similar use cases.
 
 ### Timestamp (Point in Time)
 
-`Timestamp` is encoded as an RFC3339Nano string in both JSON and CBOR and is always converted to UTC.
+`Timestamp` encodes as an RFC3339Nano string in both JSON and CBOR and is always converted to UTC.
 
 ```json
 "2026-05-04T05:14:15.123456789Z"
 ```
 
-Use `LocalDateTime`, not `Timestamp`, when business data represents a local date and time without a time zone.
+Reach for `LocalDateTime`, not `Timestamp`, when business data represents a local date and time without a time zone.
 
 ### Duration (Time Span)
 
-`Duration` is encoded in both JSON and CBOR as a string compatible with Go's `time.ParseDuration`.
+`Duration` encodes in both JSON and CBOR as a string compatible with Go's `time.ParseDuration`.
 
 ```json
 "1h30m0s"
@@ -52,11 +52,11 @@ These types use `cloud.google.com/go/civil` to represent local date and time con
 "2026-05-04T13:14:15.123456789"
 ```
 
-They are not converted to UTC and do not carry a time zone.
+They aren't converted to UTC and carry no time zone.
 
 ### UUID (Unique Identifier)
 
-`UUID` is encoded as a standard UUID string in both JSON and CBOR.
+`UUID` encodes as a standard UUID string in both JSON and CBOR.
 
 ```json
 "550e8400-e29b-41d4-a716-446655440000"
@@ -64,7 +64,7 @@ They are not converted to UTC and do not carry a time zone.
 
 ### JSON (JSON Text)
 
-`JSON` represents a JSON document as text. To keep the wire shape simple, it is encoded as a string in both JSON and CBOR.
+`JSON` represents a JSON document as text. To keep the wire shape simple, it encodes as a string in both JSON and CBOR.
 
 ```json
 "{\"name\":\"vine\",\"count\":2}"
@@ -77,13 +77,13 @@ They are not converted to UTC and do not carry a time zone.
 - JSON encodes it as a Base64 string.
 - CBOR encodes it as raw bytes.
 
-JSON has no native byte type and therefore requires Base64. CBOR has a native byte type and carries the binary payload directly.
+JSON has no native byte type, so Base64 is required. CBOR has a native byte type and carries the binary payload directly.
 
-The TypeScript generator maps `Binary` to `Uint8Array`. A generated service spec includes sparse `wire` schemas only when method arguments or results actually contain Binary; normal JSON methods receive no extra metadata. Applications inject a CBOR codec into `@yorun-ai/vrpc`.
+The TypeScript generator maps `Binary` to `Uint8Array`. A generated service spec includes sparse `wire` schemas only when method arguments or results actually contain Binary; normal JSON methods get no extra metadata. Applications inject a CBOR codec into `@yorun-ai/vrpc`.
 
 ## Domain Schema Registry
 
-Generated code calls the following function during package initialization:
+Generated code calls this function during package initialization:
 
 ```go
 skel.RegisterDomainSchema(schema)

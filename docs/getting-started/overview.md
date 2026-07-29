@@ -4,7 +4,7 @@ slug: /overview
 
 # Start with Skel
 
-skelc enables a contract-first workflow: describe domain types, callers, permissions, and capabilities in `.skel`, then validate them once and generate the interfaces each language needs.
+skelc enables a contract-first workflow: you describe domain types, callers, permissions, and capabilities in `.skel`, validate everything once, and generate the interfaces each language needs.
 
 ## Compilation Pipeline
 
@@ -22,8 +22,8 @@ skelc enables a contract-first workflow: describe domain types, callers, permiss
 - Vine Web entry capabilities
 - Public boundaries shared between domains
 
-Route implementations, database models, business algorithms, and deployment configuration remain application concerns. Do not force them into Skel merely to make everything declarative.
+Route implementations, database models, business algorithms, and deployment configuration are application concerns. Don't force them into Skel just to make everything declarative.
 
 ## Next
 
-[Install skelc](/docs/installation), then complete the [quick start](/docs/getting-started). For an existing project, go directly to [inputs and layout](/docs/input-layout).
+[Install skelc](/docs/installation), then work through the [quick start](/docs/getting-started). If you're adding Skel to an existing project, jump straight to [inputs and layout](/docs/input-layout).

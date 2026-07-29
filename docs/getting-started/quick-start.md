@@ -67,13 +67,13 @@ pub service OrderService {
 }
 ```
 
-The contract says more than “call a method”:
+The contract says more than "call a method":
 
-- `CustomerActor` identifies the caller and its client entry.
+- `CustomerActor` identifies the caller and its client entry point.
 - The credential is marked for sensitive-value handling.
-- `Order:read` is a named permission required by the service.
+- `Order:read` is a named permission the service requires.
 - The result is either one generated `Order` value or null.
-- Every declaration needed by a client is explicitly `pub`.
+- Every declaration a client needs is explicitly `pub`.
 
 ## Format and Check
 
@@ -84,11 +84,11 @@ skelc check --skel-in ./demo/skel
 
 `format` rewrites the source in canonical form. `check` resolves names and types, validates the actor and permission boundary, and verifies that the public contract is closed.
 
-Run these before generation. A generator does not repair an invalid contract.
+A generator won't fix an invalid contract — `check` catches problems with clearer diagnostics than a failed generation.
 
 ## Generate Go
 
-For code inside an existing Go module:
+When the code lives inside an existing Go module:
 
 ```bash
 skelc gen go \
@@ -96,9 +96,9 @@ skelc gen go \
   --go-out ./demo/skeled
 ```
 
-The output includes data and enum types, actor metadata, permission codes, the service interface, and Vine registration helpers. Implement the generated interface in handwritten application code; edit `.skel` and regenerate when the boundary changes.
+The output covers data and enum types, actor metadata, permission codes, the service interface, and Vine registration helpers. Implement the generated interface in handwritten application code; edit `.skel` and regenerate when the boundary changes.
 
-Use `gen go-module` instead when the generated contract is published as an independent module. See [Go Generation](/docs/generation/go).
+Use `gen go-module` instead when publishing the generated contract as an independent module. See [Go Generation](/docs/generation/go).
 
 ## Generate TypeScript
 
@@ -109,15 +109,15 @@ skelc gen ts \
   --ts-out ./demo/client
 ```
 
-The output contains public data and enums, a service specification, and a client factory using `@yorun-ai/vrpc`. `--pub` prevents private declarations from entering the client package.
+The output contains public data and enums, a service specification, and a client factory backed by `@yorun-ai/vrpc`. `--pub` keeps private declarations out of the client package.
 
 See [TypeScript Output](/docs/generation/typescript) for package metadata, cross-domain imports, and binary wire schemas.
 
 ## Review What Changed
 
-skelc records managed files in `.skelc-manifest.json`. It preserves untracked files and removes a stale generated file only when the file still matches the previous manifest. A handwritten file at a currently generated path can still be overwritten, so keep generated output paths reserved.
+skelc records managed files in `.skelc-manifest.json`. It preserves untracked files and removes a stale generated file only when the file still matches the previous manifest. A handwritten file that shares a path with a current generated file can still be overwritten, so keep generated output paths reserved.
 
-Commit the `.skel` source, the pinned skelc version used by the project, and whichever generated artifacts the repository policy requires. In CI, regenerate and fail on an unexpected diff.
+Commit the `.skel` source, the pinned skelc version the project uses, and whichever generated artifacts your repository policy requires. In CI, regenerate and fail on an unexpected diff.
 
 Next:
 

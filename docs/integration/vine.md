@@ -18,4 +18,4 @@ Generated Go code uses Vine public packages as its runtime contract. Output incl
 4. Review generated APIs, module dependencies, and schema diffs.
 5. Run Vine application tests.
 
-Generated files are derived artifacts; do not patch them directly. See the [Vine documentation](https://vine.yorun.ai/docs/) for application lifecycle and Rpc/Web/Event/Task implementation.
+Generated files are derived artifacts -- don't patch them directly. See the [Vine documentation](https://vine.yorun.ai/docs/) for application lifecycle and Rpc/Web/Event/Task implementation.
