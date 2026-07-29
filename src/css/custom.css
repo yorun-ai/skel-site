@@ -1222,24 +1222,17 @@ div[class*='codeBlockContainer'] code {
   padding: 0;
 }
 
-.theme-doc-markdown table {
-  --ifm-table-background: transparent;
-  --ifm-table-stripe-background: transparent;
-
-  display: block;
+.docs-table-scroll {
+  position: relative;
   width: 100%;
   max-width: 100%;
   margin: 1.5rem 0;
   overflow-x: auto;
+  overflow-y: hidden;
   border: 1px solid var(--docs-table-border-strong);
   border-radius: 0.7rem;
-  border-collapse: separate;
-  border-spacing: 0;
   background: var(--docs-table-surface);
   box-shadow: 0 12px 32px -30px rgb(var(--ink-rgb) / 55%);
-  color: var(--foreground);
-  font-size: 0.9rem;
-  line-height: 1.55;
   overscroll-behavior-inline: contain;
   scrollbar-color: color-mix(
       in srgb,
@@ -1249,6 +1242,37 @@ div[class*='codeBlockContainer'] code {
     transparent;
   scrollbar-width: thin;
   -webkit-overflow-scrolling: touch;
+}
+
+.docs-table-scroll__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.theme-doc-markdown .docs-table-scroll table {
+  --ifm-table-background: transparent;
+  --ifm-table-stripe-background: transparent;
+
+  display: table;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--foreground);
+  font-size: 0.9rem;
+  line-height: 1.55;
 }
 
 .theme-doc-markdown table thead {
@@ -1496,7 +1520,7 @@ div[class*='codeBlockContainer'] code {
   font-family: var(--ifm-font-family-base) !important;
 }
 
-.theme-doc-markdown table:focus-visible,
+.docs-table-scroll:focus-visible,
 .docusaurus-mermaid-container:focus-visible {
   outline: 2px solid color-mix(in srgb, var(--primary) 72%, transparent);
   outline-offset: 2px;
@@ -1916,5 +1940,11 @@ div[class*='codeBlockContainer'] code {
 
   .theme-doc-markdown h1 {
     font-size: 2rem;
+  }
+
+  .theme-doc-markdown p,
+  .theme-doc-markdown li {
+    text-align: start;
+    text-wrap: pretty;
   }
 }
