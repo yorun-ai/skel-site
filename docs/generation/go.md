@@ -12,7 +12,7 @@ skelc gen go \
   --go-out ./skeled
 ```
 
-This mode writes source without creating `go.mod`. Use it when the output already belongs to the current module.
+This mode writes Go source without creating a `go.mod`. Use it when the output lives inside the current module.
 
 ## Standalone Module
 
@@ -23,7 +23,7 @@ skelc gen go-module \
   --go-module example.com/demo/user/skeled
 ```
 
-Add `--go-pub-out` and `--go-pub-module` for a public module. The regular module contains the full contract and server capabilities; the public module exposes public clients/listeners and required types.
+Add `--go-pub-out` and `--go-pub-module` to produce a public module alongside the regular one. The regular module carries the full contract and server capabilities; the public module exposes public clients, listeners, and the types they depend on.
 
 ## External Dependencies
 
@@ -32,4 +32,4 @@ Add `--go-pub-out` and `--go-pub-module` for a public module. The regular module
 --go-import demo.account=example.com/demo/account/skeledpub
 ```
 
-Use `--go-module-prefix` when a common naming convention can derive paths. After generation, run `gofmt` and `go test`, then review `go.mod` and API diffs. See the [CLI reference](/docs/cli) for every flag.
+When a shared naming convention can derive import paths, `--go-module-prefix` saves you from enumerating every mapping. After generation, run `gofmt` and `go test`, then review `go.mod` and any API diffs. The [CLI reference](/docs/cli) documents every flag.

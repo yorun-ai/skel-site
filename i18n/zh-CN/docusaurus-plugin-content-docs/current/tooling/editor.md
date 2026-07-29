@@ -19,14 +19,14 @@ slug: /editor
 - 顶层声明及其引用的重命名
 - 当前文档存在语法错误时的尽力导航
 
-打开 `.skel` 文件前先安装 `skelc`：
+打开 `.skel` 文件前，先装好 `skelc`：
 
 ```bash
 go install go.yorun.ai/skelc/cmd/skelc@latest
 skelc version --output-format json
 ```
 
-扩展要求 skelc v0.10.0 或更高版本，并从 `PATH` 启动 `skelc lsp`。它只负责连接语言服务器；解析、格式化、诊断、补全、导航和重命名都由编译器的语言服务器实现，不在 JavaScript 中另写一套。
+扩展要求 skelc v0.10.0 或更高版本，并从 `PATH` 启动 `skelc lsp`。扩展本身只负责连接语言服务器——解析、格式化、诊断、补全、导航和重命名这些能力全都由编译器的语言服务器提供，扩展里不会再写一套 JavaScript 实现。
 
 ## 配置
 
@@ -40,19 +40,19 @@ skelc version --output-format json
 - `Skel: Restart Language Server`
 - `Skel: Show Language Server Output`
 
-语言服务器无法启动时，先在 VS Code 扩展宿主所在的环境中运行 `skelc version --output-format json`。如果该环境的 `PATH` 找不到 skelc，将 `skelc.path` 设置为绝对路径，然后重启语言服务器并查看输出频道。
+语言服务器启动失败时，先在 VS Code 扩展宿主所在的环境中运行 `skelc version --output-format json`。如果该环境的 `PATH` 找不到 skelc，把 `skelc.path` 设为绝对路径，然后重启语言服务器，再去输出频道查看。
 
 ## 远程工作区
 
 扩展运行在工作区一侧。使用 Remote SSH、WSL 或 Dev Container 时，需要在对应的远程环境中安装 skelc，或者为 `skelc.path` 配置远程值。
 
-扩展需要访问文件系统并启动已配置的可执行文件，因此不支持虚拟工作区和不受信任的工作区；未保存的 Skel 文档可以使用语言服务。
+扩展需要访问文件系统并启动已配置的可执行文件，因此不支持虚拟工作区和不受信任的工作区。未保存的 Skel 文档仍然能使用语言服务。
 
 ## JavaScript 语法高亮
 
 [`@yorun-ai/skel-highlight`](https://github.com/yorun-ai/skel-editor-support/tree/main/packages/highlight) 是 Skel 的 JavaScript 语法高亮包。它提供共享的 Skel 语法定义，以及面向文档站、代码查看器和浏览器编辑器的适配器。
 
-安装时只需要同时加入项目正在使用的高亮器。各高亮器都是可选的 peer dependency，不需要全部安装。以 PrismJS 为例：
+安装时，只需要同时加上项目正在使用的高亮器。各个高亮器都是可选的 peer dependency，按需安装即可。以 PrismJS 为例：
 
 ```bash
 npm install prismjs @yorun-ai/skel-highlight
@@ -87,7 +87,7 @@ const html = Prism.highlight(
 | CodeMirror 6 | `@codemirror/language` 和 `@codemirror/view` | `@yorun-ai/skel-highlight/codemirror` |
 | TextMate 兼容工具 | 不需要适配器 peer dependency | `@yorun-ai/skel-highlight/textmate` |
 
-该包识别 Skel 声明、内置类型、decorator、注释和字符串，但只负责词法高亮。类型错误、未解析的 import、格式化、补全、导航和重命名仍需要接入 `skelc lsp`。
+这个包能识别 Skel 声明、内置类型、decorator、注释和字符串，但只负责词法高亮。类型错误、未解析的 import、格式化、补全、导航和重命名这些能力，还是得通过 `skelc lsp` 来获取。
 
 [包 README](https://github.com/yorun-ai/skel-editor-support/tree/main/packages/highlight) 提供了所有适配器的注册示例。
 
@@ -100,6 +100,6 @@ npm ci
 npm run check
 ```
 
-使用 VS Code 打开仓库并按 F5，即可启动 Extension Development Host。规范的 TextMate 语法和前端适配器位于 `packages/highlight`；VS Code 客户端、语言配置、主题和 Marketplace 包位于 `editors/vscode`。
+用 VS Code 打开仓库并按 F5，即可启动 Extension Development Host。规范的 TextMate 语法和前端适配器在 `packages/highlight` 目录；VS Code 客户端、语言配置、主题和 Marketplace 包在 `editors/vscode` 目录。
 
-终端和 CI 中仍应运行 `skelc check`。编辑器实时诊断复用了编译器规则，但 CI 才是针对完整输入集的可复现检查。
+终端和 CI 中仍然应该跑 `skelc check`。编辑器实时诊断复用了编译器的规则，但 CI 才是针对完整输入集的可复现检查——两者各司其职。

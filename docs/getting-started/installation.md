@@ -6,7 +6,7 @@ slug: /installation
 
 ## Prerequisites
 
-skelc currently requires Go 1.26 or later. Generated Go modules use skelc's built-in default Vine requirement, which is currently `v0.10.0`.
+skelc needs Go 1.26 or later. Generated Go modules pick up skelc's built-in Vine default, which is `v0.10.0` at the time of writing.
 
 ## Install
 
@@ -15,17 +15,17 @@ go install go.yorun.ai/skelc/cmd/skelc@latest
 skelc version
 ```
 
-Ensure the Go binary directory is on `PATH`. If the shell cannot find skelc, inspect `go env GOBIN` and `go env GOPATH`.
+Make sure the Go binary directory is on `PATH`. If the shell can't find skelc, check `go env GOBIN` and `go env GOPATH`.
 
 ## Pin a Version
 
-CI and reproducible generation environments should pin a version:
+CI and reproducible generation environments should pin an exact version:
 
 ```bash
 go install go.yorun.ai/skelc/cmd/skelc@v0.10.0
 ```
 
-After upgrading skelc, regenerate contracts and review the diff. Do not let developer machines and CI silently use different compiler versions.
+After upgrading skelc, regenerate contracts and review the diff. Don't let developer machines and CI run different compiler versions without noticing.
 
 ## Inspect Version Information
 
@@ -34,6 +34,6 @@ skelc version
 skelc version --output-format json
 ```
 
-JSON output is suitable for build scripts. `--go-vine-version` can raise the target Vine version during Go generation, but it cannot select a version below skelc's built-in default.
+JSON output works well in build scripts. `--go-vine-version` can raise the target Vine version during Go generation, but it won't go below skelc's built-in default.
 
 Next: [create your first contract](/docs/getting-started).

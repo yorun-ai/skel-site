@@ -4,7 +4,7 @@ slug: /syntax
 
 # Syntax Index
 
-Use the tables below to locate a declaration or rule. Follow the linked language guide when the validation behavior depends on context.
+The tables below help you locate a declaration or rule. Follow the linked language guide when validation behavior depends on context.
 
 ## File Form
 
@@ -79,7 +79,7 @@ service OrderService {
 }
 ```
 
-Service sections may include audiences, one auth marker, one service requirement, and methods. Method sections occur in this order: auth marker, requirement, input, output.
+Service sections may include audiences, one auth marker, one service requirement, and methods. Method sections appear in this order: auth marker, requirement, input, output.
 
 ## Permission Expressions
 
@@ -90,7 +90,7 @@ all(item, item)
 any(item, item)
 ```
 
-Imported resources use a qualifier, such as `account.User:read`. Check arguments support field traversal and one list wildcard, such as `orders[*].id`. See [Permission Model](/docs/permissions).
+Imported resources use a qualifier, such as `account.User:read`. Check arguments support field traversal and one list wildcard, like `orders[*].id`. See [Permission Model](/docs/permissions).
 
 ## Decorators
 
@@ -100,7 +100,7 @@ Imported resources use a qualifier, such as `account.User:read`. Check arguments
 @sensitive
 ```
 
-Decorator support depends on location. Unsupported placement is an error. See [Metadata & Docs](/docs/metadata) for the location matrix and generated behavior.
+Where you can place a decorator depends on the declaration. Unsupported placement is an error. See [Metadata & Docs](/docs/metadata) for the location matrix and generated behavior.
 
 ## Naming
 
@@ -112,7 +112,7 @@ Decorator support depends on location. Unsupported placement is an error. See [M
 | Field, method, via, action, check, trigger | `lowerCamelCase` |
 | Enum item | `SCREAMING_SNAKE_CASE` |
 
-Identifiers cannot begin with `_`. `UNSPECIFIED` is reserved for enum output, and `skelSensitive` is reserved in generated sensitive structures.
+Identifiers can't begin with `_`. `UNSPECIFIED` is reserved for enum output, and `skelSensitive` is reserved in generated sensitive structures.
 
 Validate the current input after every contract change:
 

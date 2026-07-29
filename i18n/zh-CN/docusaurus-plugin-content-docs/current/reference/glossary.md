@@ -10,7 +10,7 @@ slug: /glossary
 | Skel | 描述 domain 契约的语言与文件格式 |
 | skelc | 解析、检查并生成 Skel 契约的编译器 |
 | regular | 包含完整私有与公开契约的生成输出 |
-| pub | 对消费者公开的声明或只含公开面的生成输出 |
+| pub | 对消费者公开的声明，或只含公开面的生成输出 |
 | Actor | 调用者及其认证/权限模型 |
 | Resource | 权限 action 与 check 的命名空间 |
 | Schema | 生成代码注册的 domain 元数据 |

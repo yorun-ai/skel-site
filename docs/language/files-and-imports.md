@@ -29,7 +29,7 @@ skel/
 └── service.skel
 ```
 
-skelc reads visible `.skel` files in filename order. It ignores hidden files, subdirectories, and other extensions. File order keeps diagnostics and formatted output deterministic; it does not create visibility between files.
+skelc reads visible `.skel` files in filename order. It ignores hidden files, subdirectories, and other extensions. File order keeps diagnostics and formatted output deterministic; it doesn't create visibility between files.
 
 ## Import a Domain
 
@@ -47,9 +47,9 @@ data Order {
 }
 ```
 
-Without `as`, the final segment becomes the qualifier: `identity.user` is referenced as `user`. An explicit alias is useful when two domains end with the same segment or when a shorter name improves a frequently used type.
+Without `as`, the final segment becomes the qualifier: `identity.user` is referenced as `user`. An explicit alias helps when two domains end with the same segment or when a shorter name improves a frequently used type.
 
-An import is a logical dependency. The source file does not contain a filesystem path. Supply the path when checking or generating:
+An import is a logical dependency. The source file doesn't contain a filesystem path. Supply the path when checking or generating:
 
 ```bash
 skelc check \
@@ -81,10 +81,10 @@ The three names serve different purposes:
 | Source mapping | `identity.user=./user/pub/skel` | skelc input loading |
 | Package mapping | `identity.user=example.com/contracts/user` | Generated language imports |
 
-Do not encode repository layout into a domain name. A domain should remain stable when files move or build environments change.
+Don't encode repository layout into a domain name. A domain should remain stable when files move or build environments change.
 
 ## Import Public Contracts
 
-Consumers should read a producer's generated public Skel rather than its complete internal source. Cross-domain references are checked against the producer's public boundary, and private declarations cannot be pulled into another domain accidentally.
+Consumers should read a producer's generated public Skel rather than its complete internal source. Cross-domain references are checked against the producer's public boundary, and private declarations can't leak into another domain by accident.
 
 Continue with [Types & Data](/docs/types-and-data), or see [Public Contracts](/docs/generation/public-contracts) for producing importable contracts.

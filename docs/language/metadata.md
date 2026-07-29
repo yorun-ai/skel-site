@@ -4,7 +4,7 @@ slug: /metadata
 
 # Metadata & Docs
 
-Decorators attach documentation and handling rules to a contract without changing its type syntax. skelc currently supports `@desc`, `@example`, and `@sensitive`.
+Decorators attach documentation and handling rules to a contract without changing its type syntax. skelc supports `@desc`, `@example`, and `@sensitive`.
 
 ## Descriptions
 
@@ -13,7 +13,7 @@ Decorators attach documentation and handling rules to a contract without changin
 reference: string
 ```
 
-Use a triple-quoted string for longer text:
+Reach for a triple-quoted string when you need more room:
 
 ```skel
 @desc("""
@@ -27,9 +27,9 @@ method cancel {
 }
 ```
 
-The opening and closing `"""` use standalone lines. skelc removes the common indentation from non-empty content lines, so descriptions can follow the surrounding source indentation.
+The opening and closing `"""` sit on their own lines. skelc strips the common indentation from non-empty content lines, so descriptions follow the surrounding source indentation naturally.
 
-Descriptions are part of generated metadata and schemas. Write what a consumer needs to understand the contract: meaning, units, constraints, and edge cases. Avoid repeating the field name in prose.
+Descriptions flow into generated metadata and schemas. Write what a consumer needs to understand the contract: meaning, units, constraints, and edge cases. Skip restating the field name in prose.
 
 ## Examples
 
@@ -39,9 +39,9 @@ Descriptions are part of generated metadata and schemas. Write what a consumer n
 currency: string
 ```
 
-`@example` requires a value and must accompany `@desc` at the same location. It is supported on data-like fields, service inputs, service output, resource-check inputs, task-trigger inputs, and actor credential/info fields.
+`@example` needs a value and must appear alongside `@desc` at the same location. You can use it on data-like fields, service inputs, service output, resource-check inputs, task-trigger inputs, and actor credential/info fields.
 
-Examples are documentation values, not validation expressions. A field still accepts every value allowed by its type unless application code enforces a narrower rule.
+Examples are documentation values, not validation expressions. A field still accepts every value its type allows unless application code enforces a narrower rule.
 
 ## Sensitive Values
 
@@ -52,7 +52,7 @@ data AccessCredential {
 }
 ```
 
-`@sensitive` takes no argument. It records that a value must not appear as plaintext in logs or diagnostics. It does not encrypt the value and does not change its JSON or CBOR representation.
+`@sensitive` takes no argument. It records that a value must not appear as plaintext in logs or diagnostics. It doesn't encrypt the value and doesn't change its JSON or CBOR representation.
 
 The marker can apply to:
 
@@ -80,6 +80,6 @@ Sensitivity is a handling instruction, not an access rule. Use actors, authentic
 | Actor credential/info block | No | No | Yes |
 | Resource action/check or task trigger | Yes | No | No |
 
-Run `skelc check` after moving a decorator. Unsupported placement is an error rather than silently ignored metadata.
+Run `skelc check` after moving a decorator. Unsupported placement is an error — metadata is never silently ignored.
 
 Continue with [Contract Boundaries](/docs/contract-design) or use the [Syntax Index](/docs/syntax) for a compact declaration reference.

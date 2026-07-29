@@ -4,7 +4,7 @@ slug: /generation
 
 # Generation Guide
 
-One domain model can produce artifacts for different consumers:
+A single domain model produces artifacts for different consumers:
 
 | Target | Command | Typical consumer |
 | --- | --- | --- |
@@ -15,11 +15,11 @@ One domain model can produce artifacts for different consumers:
 
 ## Shared Rules
 
-Every generation command requires `--skel-in` and an output directory. skelc tracks its files in `.skelc-manifest.json`: it never deletes untracked handwritten files and removes stale generated files only when their contents are unchanged. A handwritten file at the same path as a current generated file is still overwritten. External domains need `--skel-import`, plus language-specific import mappings.
+Every generation command needs `--skel-in` and an output directory. skelc tracks the files it owns in `.skelc-manifest.json`: it never touches untracked handwritten files, and it removes stale generated files only when their contents haven't changed since the last generation. A handwritten file at the same path as a current generated file is still overwritten. External domains need `--skel-import`, plus language-specific import mappings.
 
 ## Choose a Path
 
-- Server implementation inside an existing Go module: use `gen go` in [Go generation](/docs/generation/go).
-- Independently versioned contracts: use `gen go-module`.
-- Browser or Node consumer: use [TypeScript generation](/docs/generation/typescript).
-- Minimal sharing between domains: generate a [public contract](/docs/generation/public-contracts) first.
+- Implementing a server inside an existing Go module? Use `gen go` -- see [Go generation](/docs/generation/go).
+- Independently versioned contracts? Use `gen go-module`.
+- A browser or Node consumer? Head to [TypeScript generation](/docs/generation/typescript).
+- Minimal sharing between domains? Generate a [public contract](/docs/generation/public-contracts) first.

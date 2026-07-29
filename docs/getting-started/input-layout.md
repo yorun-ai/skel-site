@@ -6,7 +6,7 @@ slug: /input-layout
 
 ## Single-File Mode
 
-Experiments and small contracts can use one `.skel` file directly:
+Experiments and small contracts can live in one `.skel` file:
 
 ```bash
 skelc check --skel-in ./user.skel
@@ -14,7 +14,7 @@ skelc check --skel-in ./user.skel
 
 ## Directory Mode
 
-Use a directory for a production domain:
+Reach for a directory when you're building a production domain:
 
 ```text
 user/
@@ -26,7 +26,7 @@ user/
 └── pub/
 ```
 
-`domain.skel` contains only the domain declaration and optional description. Other files declare the same domain and split contracts by responsibility. skelc loads files in filename order and ignores hidden files, subdirectories, and non-Skel files.
+`domain.skel` holds the domain declaration and an optional description. Other files declare the same domain and split contracts by responsibility. skelc loads files in filename order, skipping hidden files, subdirectories, and anything that isn't a `.skel` file.
 
 ## External Domains
 
@@ -36,16 +36,16 @@ Declare the logical dependency in Skel:
 import demo.user as user
 ```
 
-Provide the physical mapping during generation:
+Then supply the physical mapping during generation:
 
 ```bash
 --skel-import demo.user=../user/pub/skel
 ```
 
-The logical domain name remains stable while build environments map paths and language package names. Go and TypeScript generation additionally use `--go-import` and `--ts-import`.
+The logical domain name stays stable while build environments map paths and language package names. Go and TypeScript generation layers on `--go-import` and `--ts-import` respectively.
 
 ## Output Ownership
 
-Generators manage their own output through `.skelc-manifest.json`, so generated and handwritten files can share a directory. Untracked files are not deleted, but a handwritten file must not use the same path as a generated file because the next run will overwrite it.
+Generators track their own output through `.skelc-manifest.json`, so generated and handwritten files can share a directory. Untracked files are left alone, but if a handwritten file lands on a path that a generator owns, the next run will overwrite it.
 
 Continue with the [validation workflow](/docs/workflow) and [code generation](/docs/generation).

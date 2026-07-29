@@ -26,7 +26,7 @@ go install go.yorun.ai/skelc/cmd/skelc@latest
 skelc version --output-format json
 ```
 
-The extension requires skelc v0.10.0 or newer and starts `skelc lsp` from `PATH`. It is a thin language-server client: parsing, formatting, diagnostics, completion, navigation, and rename behavior come from the compiler's language server rather than a second JavaScript implementation.
+The extension requires skelc v0.10.0 or newer and starts `skelc lsp` from `PATH`. It's a thin language-server client: parsing, formatting, diagnostics, completion, navigation, and rename behavior come from the compiler's language server, not a second JavaScript implementation.
 
 ## Configuration
 
@@ -40,19 +40,19 @@ Two commands are available from the Command Palette:
 - `Skel: Restart Language Server`
 - `Skel: Show Language Server Output`
 
-If the server does not start, first run `skelc version --output-format json` in the same environment as the VS Code extension host. Set `skelc.path` to an absolute path when skelc is not on that environment's `PATH`, then restart the language server and inspect its output channel.
+If the server doesn't start, first run `skelc version --output-format json` in the same environment as the VS Code extension host. Set `skelc.path` to an absolute path when skelc isn't on that environment's `PATH`, then restart the language server and inspect its output channel.
 
 ## Remote Workspaces
 
 The extension runs on the workspace side. In Remote SSH, WSL, or a Dev Container, install skelc in that remote environment or configure a remote value for `skelc.path`.
 
-Virtual and untrusted workspaces are not supported because the extension needs filesystem access and starts the configured executable. Untitled Skel documents are supported.
+Virtual and untrusted workspaces aren't supported because the extension needs filesystem access and starts the configured executable. Untitled Skel documents are supported.
 
 ## JavaScript Syntax Highlighting
 
 [`@yorun-ai/skel-highlight`](https://github.com/yorun-ai/skel-editor-support/tree/main/packages/highlight) is the JavaScript syntax-highlighting package for Skel. It provides the shared Skel grammar plus adapters for documentation sites, code viewers, and browser editors.
 
-Install the package together with the highlighter already used by the application. The peer integrations are optional, so an application does not need to install every supported highlighter. For PrismJS:
+Install the package together with the highlighter your application already uses. The peer integrations are optional -- you don't need to install every supported highlighter. For PrismJS:
 
 ```bash
 npm install prismjs @yorun-ai/skel-highlight
@@ -75,7 +75,7 @@ const html = Prism.highlight(
 )
 ```
 
-Choose the entry point that matches the host:
+Choose the entry point that matches your host:
 
 | Host | Install with the package | Import |
 | --- | --- | --- |

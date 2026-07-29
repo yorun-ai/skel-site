@@ -6,9 +6,9 @@ slug: /cli
 
 本文档以当前 module 中的 `cli` 实现为准。
 
-`skelc` 用来读取 `.skel` 定义，进行校验，或生成 Go / Go module / TypeScript / pub skel 代码。
+`skelc` 读取 `.skel` 定义、进行校验，或生成 Go / Go module / TypeScript / pub skel 代码。
 
-本文档只说明 CLI 操作、输入输出路径、参数和生成行为；`.skel` 文件本身的语法见 [Skel 语法参考](/docs/syntax)。
+本文档只说明 CLI 操作、输入输出路径、参数和生成行为。`.skel` 文件本身的语法见 [Skel 语法参考](/docs/syntax)。
 
 查看帮助：
 
@@ -33,14 +33,14 @@ skelc version
 skelc version --output-format json
 ```
 
-`skelc` 的诊断日志默认使用文本格式。需要被上层工具读取时，可以使用全局参数 `--log-format jsonl`：
+`skelc` 的诊断日志默认使用文本格式。如果上层工具需要读取，加上全局参数 `--log-format jsonl` 就行：
 
 ```bash
 skelc --log-format jsonl check --skel-in ./domain/user/skel
 skelc --log-format jsonl gen go-module --skel-in ./domain/user/skel --go-out ./domain/user/skeled/golang --go-module go.yorun.ai/app/demo/user
 ```
 
-普通日志仍只包含 `level` 与 `message`；结构化诊断还包含 `code`、`severity`、`range`，并可带 `related` 与 `suggestion`：
+普通日志只包含 `level` 和 `message`；结构化诊断还会带上 `code`、`severity`、`range`，有时还有 `related` 和 `suggestion`：
 
 ```json
 {"level":"warn","code":"loader.ignored-hidden-file","severity":"warning","range":{"start":{"file":"/path/.hidden.skel","line":1,"column":1},"end":{"file":"/path/.hidden.skel","line":1,"column":1}},"message":"/path/.hidden.skel ignored (HIDDEN_FILE)"}
@@ -48,7 +48,7 @@ skelc --log-format jsonl gen go-module --skel-in ./domain/user/skel --go-out ./d
 
 ## 1. 输入与依赖
 
-`--skel-in` 可以是一个 `.skel` 文件，也可以是一个目录。
+`--skel-in` 接受一个 `.skel` 文件或目录。
 
 单文件模式：
 
@@ -80,27 +80,27 @@ skelc check --skel-in ./domain/user/skel
 skelc check --skel-in ./domain/user/skel
 ```
 
-`check` 检查当前输入中的语法、命名、类型和引用规则；该命令只接受 `--skel-in`。语法分析会在声明、block 成员、右花括号和 decorator 边界恢复，单次运行可为每个 domain 报告最多 50 条相互独立的语法与语义诊断。使用 `--log-format jsonl` 时，每条诊断分别占一行，并包含 code、severity、range、related location 和可选 suggestion。
+`check` 检查当前输入中的语法、命名、类型和引用规则；这个命令只接受 `--skel-in`。语法分析会在声明、block 成员、右花括号和 decorator 边界处恢复，单次运行可为每个 domain 报告最多 50 条相互独立的语法与语义诊断。使用 `--log-format jsonl` 时，每条诊断独占一行，包含 code、severity、range、related location，以及可选的 suggestion。
 
 ## 3. 格式化 skel
 
-原地格式化单个 `.skel` 文件或目录中被 loader 接受的全部 `.skel` 文件：
+原地格式化单个 `.skel` 文件，或者目录中被 loader 接受的全部 `.skel` 文件：
 
 ```bash
 skelc format --skel-in ./domain/user/skel
 ```
 
-格式化会统一换行、缩进、空行和行尾空白，不会重排声明或修改三引号字符串内容。命令会先验证全部输入，全部验证成功后才写入文件。
+格式化会统一换行、缩进、空行和行尾空白，不会重排声明，也不会修改三引号字符串内容。命令会先验证全部输入，只有全部通过验证后才会写入文件。
 
 ## 4. 运行语言服务器
 
-编辑器和其它开发工具可以通过标准输入输出启动 Skel Language Server：
+编辑器和其它开发工具通过标准输入输出启动 Skel Language Server：
 
 ```bash
 skelc lsp
 ```
 
-该命令使用 Language Server Protocol，提供多条实时语法与工作区语义诊断、诊断快速修复、关联位置、文档符号、跨文件定义跳转和引用查找。语义分析直接使用未保存的内存内容，合并同一 domain 的文件，并以 workspace 中 `.skel` 文件声明的 domain 和 import alias 解析跨 domain 引用；协议消息独占标准输入输出，因此不要手动向该命令的 stdout 写入日志。
+这个命令使用 Language Server Protocol，提供以下能力：多条实时语法与工作区语义诊断、诊断快速修复、关联位置、文档符号、跨文件定义跳转和引用查找。语义分析直接使用未保存的内存内容，合并同一 domain 的文件，并以 workspace 中 `.skel` 文件声明的 domain 和 import alias 来解析跨 domain 引用。协议消息独占标准输入输出，请注意不要手动向该命令的 stdout 写入日志。
 
 ## 5. 查看 symbol
 
@@ -121,8 +121,8 @@ pub  service  demo.user.UserService
 ---  web      demo.user.UserPortalWeb
 ```
 
-`symbol list` 只列当前 skel 中声明的顶层 symbol，不解析跨 domain 引用，因此不需要传 `--skel-import`。
-需要机器读取时可以使用 `--output-format json`：
+`symbol list` 只列当前 skel 中声明的顶层 symbol，不解析跨 domain 引用，因此无需传 `--skel-import`。
+需要机器读取时加上 `--output-format json`：
 
 ```bash
 skelc symbol list --output-format json --skel-in ./domain/user/skel
@@ -222,8 +222,8 @@ skelc gen go-module \
 生成行为：
 
 - `gen go` 只生成非 module Go 代码；只接受 `--skel-in`、`--go-out`、`--go-vine-version`
-- `gen go` 不接收 `--skel-import`、`--go-module-prefix`、`--go-module`、`--go-import` 或 `--pub`
-- 所有生成命令都通过 `.skelc-manifest.json` 管理输出；未纳入清单的文件不会被删除，内容被修改的过期生成文件也会保留
+- `gen go` 不接受 `--skel-import`、`--go-module-prefix`、`--go-module`、`--go-import` 或 `--pub`
+- 所有生成命令都通过 `.skelc-manifest.json` 管理输出；没进清单的文件不会被删，内容被改动过的过期生成文件也会保留
 - 未指定 `--go-pub-out` 时，Go module 输出完整的 data / enum / config / actor / resource / service / event / web / task
 - 指定 `--go-pub-out` 时，会同时生成 pub module 和 regular module；schema 只跟随 pub 的 client/listener 或非 pub 的完整定义生成一次
 - pub service 在 pub module 中生成 client spec，在 regular module 中生成 server spec
@@ -233,8 +233,8 @@ skelc gen go-module \
 - pub resource 在 pub module 中生成权限码常量、check service server 和 schema；regular module 会在 `pub.go` 里生成 facade
 - regular module 会 require pub module，并通过 `pub.go` 暴露 pub 符号的 type alias / facade；regular 包是符号超集
 - pub service / method 的 `require` 引用本 domain resource 时，该 resource 必须标 `pub`
-- 公开契约引用到未标 `pub` 的 data / enum / actor / resource 时会报错，不会隐式带出依赖
-- schema 只在 pub 或 regular/full 一侧出现，不会两边同时注册同一个非 full schema；regular/full schema 可以覆盖 pub schema
+- 公开契约引用了没标 `pub` 的 data / enum / actor / resource 时会直接报错，不会隐式带出依赖
+- schema 只在 pub 或 regular/full 一侧出现，不会两边同时注册同一个非 full schema；regular/full schema 能覆盖 pub schema
 - `web` 不支持 `pub`，普通 Go 生成会为每个 `web` 生成 `web.WebSpec`
 - `web` 生成的 server interface 形如 `UserPortalWebServer`
 - `web` 生成的默认实现形如 `DefaultUserPortalWebServer`

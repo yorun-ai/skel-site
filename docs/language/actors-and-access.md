@@ -15,7 +15,7 @@ pub actor CustomerActor {
 }
 ```
 
-An actor name ends in `Actor` and declares at least one `via`. The supported transports are:
+An actor name ends in `Actor` and declares at least one `via`. The supported transports:
 
 | Via | Typical caller |
 | --- | --- |
@@ -45,12 +45,12 @@ pub actor CustomerActor {
 }
 ```
 
-An `auth` block contains both `credential` and `info`:
+An `auth` block holds both `credential` and `info`:
 
-- `credential` is what the caller presents. It has at least one field; every field is a non-nullable `string`.
+- `credential` is what the caller presents. It needs at least one field; every field is a non-nullable `string`.
 - `info` is the authenticated identity returned to application code. It can use normal Skel field types.
 
-skelc generates actor-specific credential and info data models together with the authentication service metadata. Mark credentials or identity fields `@sensitive` when logs and schema consumers must treat them as confidential.
+skelc generates actor-specific credential and info data models along with the authentication service metadata. Mark credentials or identity fields `@sensitive` when logs and schema consumers must treat them as confidential.
 
 ## Enable Permission Lookup
 
@@ -61,7 +61,7 @@ actor StaffActor {
 }
 ```
 
-`permission {}` enables the generated actor permission service. It does not define permissions; `resource` declarations define the available permission codes and checks. See [Permission Model](/docs/permissions).
+`permission {}` enables the generated actor permission service. It doesn't define permissions; `resource` declarations control the available permission codes and checks. See [Permission Model](/docs/permissions).
 
 ## Bind Actors to Services
 
@@ -79,9 +79,9 @@ service OrderService {
 }
 ```
 
-Each `for` line declares an allowed actor. Add `via` when the contract must select one of the actor's transports. Omitting it leaves the transport unspecified.
+Each `for` line declares an allowed actor. Add `via` when the contract must pin a specific transport from the actor's options. Leave it off to keep the transport unspecified.
 
-Services may omit `for` when they are only used inside an application boundary. Do not add a public actor merely to satisfy a diagram; add one when a real caller needs a generated entry contract.
+A service doesn't have to declare `for` at all when it's only used inside an application boundary. Don't add a public actor just to fill in a diagram — add one when a real caller needs a generated entry contract.
 
 ## Declare Web Capabilities
 
@@ -91,10 +91,10 @@ web CustomerPortalWeb {
 }
 ```
 
-A `web` name ends in `Web` and declares at least one actor. It describes who may enter a web capability; it does not define HTTP methods, paths, or handler code. Web declarations are local runtime capabilities and cannot be marked `pub`.
+A `web` name ends in `Web` and declares at least one actor. It describes who may enter a web capability; it doesn't define HTTP methods, paths, or handler code. Web declarations are local runtime capabilities and can't be marked `pub`.
 
 ## Keep Actor Scope Deliberate
 
-Use separate actors when callers have meaningfully different credentials, identity data, transports, or permission behavior. Do not create a new actor for every UI screen or service method. A stable actor represents a caller role across several capabilities.
+Create separate actors when callers have meaningfully different credentials, identity data, transports, or permission behavior. Don't spin up a new actor for every UI screen or service method. A stable actor represents a caller role that spans several capabilities.
 
 Next: [Permission Model](/docs/permissions) or [Service Contracts](/docs/services).
