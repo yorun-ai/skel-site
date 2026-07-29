@@ -8,7 +8,7 @@ Generated Go code uses Vine public packages as its runtime contract. Output incl
 
 ## Version Relationship
 
-`skelc version` reports the default Vine version. Generated Go modules write that version to `go.mod`; `--go-vine-version` can only select a version at least as new as the default.
+`skelc version` reports both the minimum supported and default Vine versions. Generated Go modules write the default version to `go.mod`; `--go-vine-version` may select another version as long as it is not older than the minimum. Deprecation metadata in generated domain schemas requires Vine v0.10.1 or newer.
 
 ## Recommended Workflow
 

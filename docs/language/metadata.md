@@ -4,7 +4,7 @@ slug: /metadata
 
 # Metadata & Docs
 
-Decorators attach documentation and handling rules to a contract without changing its type syntax. skelc supports `@desc`, `@example`, and `@sensitive`.
+Decorators attach documentation and handling rules to a contract without changing its type syntax. skelc supports `@desc`, `@example`, `@sensitive`, and `@deprecated`.
 
 ## Descriptions
 
@@ -67,18 +67,37 @@ Generated Go fields receive the `skel:"sensitive"` tag. Whole generated values i
 
 Sensitivity is a handling instruction, not an access rule. Use actors, authentication, and permissions to control who may receive the value.
 
+## Deprecation
+
+```skel
+@deprecated("Use Profile instead")
+data User {
+    @deprecated("Use id instead")
+    legacyId: string
+}
+```
+
+`@deprecated` requires one non-empty string that explains what consumers should use or do instead. It can mark top-level enum, data, config, event, actor, resource, service, task, and web declarations. It can also mark enum items, data-like fields, resource actions and checks, service methods, task triggers, and the input arguments of resource checks, service methods, and task triggers.
+
+Deprecation applies only to the decorated element; it does not cascade to children. A domain and structural blocks such as `input`, `output`, `payload`, `credential`, and `info` cannot be deprecated.
+
+Generated Go declarations use the standard `Deprecated:` doc paragraph, generated TypeScript uses the `@deprecated` JSDoc tag, public Skel output preserves the decorator, and the generated domain schema carries both the boolean marker and explanation. skelc records and exposes the metadata but does not currently warn when another declaration references a deprecated element.
+
+Generated TypeScript represents a Skel enum as a string union. An enum item's deprecation remains visible beside its union branch, but TypeScript cannot issue an item-level deprecation warning because that branch is not a separately named symbol.
+
 ## Supported Locations
 
-| Contract location | `@desc` | `@example` | `@sensitive` |
-| --- | :---: | :---: | :---: |
-| Domain and top-level declaration | Yes | No | Data/config only |
-| Enum item | Yes | No | No |
-| Data-like field or input argument | Yes | Yes | Yes |
-| Service method | Yes | No | No |
-| Method input/output block | Yes | Output only | Yes |
-| Event payload block | No | No | Yes |
-| Actor credential/info block | No | No | Yes |
-| Resource action/check or task trigger | Yes | No | No |
+| Contract location | `@desc` | `@example` | `@sensitive` | `@deprecated` |
+| --- | :---: | :---: | :---: | :---: |
+| Domain | Yes | No | No | No |
+| Top-level declaration | Yes | No | Data/config only | Yes |
+| Enum item | Yes | No | No | Yes |
+| Data-like field or input argument | Yes | Yes | Yes | Yes |
+| Service method | Yes | No | No | Yes |
+| Method input/output block | Yes | Output only | Yes | No |
+| Event payload block | No | No | Yes | No |
+| Actor credential/info block | No | No | Yes | No |
+| Resource action/check or task trigger | Yes | No | No | Yes |
 
 Run `skelc check` after moving a decorator. Unsupported placement is an error — metadata is never silently ignored.
 

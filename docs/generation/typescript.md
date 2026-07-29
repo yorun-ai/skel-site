@@ -12,6 +12,10 @@ skelc gen ts \
 
 skelc generates data, enums, and eligible service clients for the current domain. A service produces a client when an actor has `via client`.
 
+## Deprecation Output
+
+Generated declarations, fields, services, methods, and parameters use the `@deprecated` JSDoc tag. A Skel enum is generated as a string union, so an enum item's explanation remains beside its union branch but cannot produce an item-level TypeScript warning.
+
 ## vRPC Binary and CBOR
 
 When methods contain `binary`, the TypeScript service client emits sparse vRPC wire schemas so `@yorun-ai/vrpc` can select CBOR automatically:

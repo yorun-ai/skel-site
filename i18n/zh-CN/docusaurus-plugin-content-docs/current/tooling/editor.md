@@ -14,6 +14,7 @@ slug: /editor
 - 可恢复的语法诊断与工作区语义诊断
 - 诊断关联位置与快速修复
 - 格式化、补全和悬停信息
+- 在补全、悬停和符号视图中展示弃用声明与元素
 - 层级文档符号与工作区符号搜索
 - 跨工作区 `.skel` 文件的定义跳转和引用查找
 - 顶层声明及其引用的重命名
@@ -26,7 +27,7 @@ go install go.yorun.ai/skelc/cmd/skelc@latest
 skelc version --output-format json
 ```
 
-扩展要求 skelc v0.10.0 或更高版本，并从 `PATH` 启动 `skelc lsp`。扩展本身只负责连接语言服务器——解析、格式化、诊断、补全、导航和重命名这些能力全都由编译器的语言服务器提供，扩展里不会再写一套 JavaScript 实现。
+扩展要求 skelc v0.10.1 或更高版本，并从 `PATH` 启动 `skelc lsp`。扩展本身只负责连接语言服务器——解析、格式化、诊断、补全、导航和重命名这些能力全都由编译器的语言服务器提供，扩展里不会再写一套 JavaScript 实现。
 
 ## 配置
 
@@ -87,7 +88,7 @@ const html = Prism.highlight(
 | CodeMirror 6 | `@codemirror/language` 和 `@codemirror/view` | `@yorun-ai/skel-highlight/codemirror` |
 | TextMate 兼容工具 | 不需要适配器 peer dependency | `@yorun-ai/skel-highlight/textmate` |
 
-这个包能识别 Skel 声明、内置类型、decorator、注释和字符串，但只负责词法高亮。类型错误、未解析的 import、格式化、补全、导航和重命名这些能力，还是得通过 `skelc lsp` 来获取。
+这个包能识别 Skel 声明、内置类型、`@deprecated` 等 decorator、注释和字符串，但只负责词法高亮。类型错误、未解析的 import、格式化、补全、导航和重命名这些能力，还是得通过 `skelc lsp` 来获取。
 
 [包 README](https://github.com/yorun-ai/skel-editor-support/tree/main/packages/highlight) 提供了所有适配器的注册示例。
 

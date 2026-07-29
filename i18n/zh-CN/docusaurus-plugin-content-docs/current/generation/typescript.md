@@ -12,6 +12,10 @@ skelc gen ts \
 
 默认会生成当前 domain 的 data、enum，以及符合条件的 service client。注意：只有面向 `via client` actor 的 service，才会生成客户端代码。
 
+## 弃用输出
+
+生成的声明、字段、service、method 和参数会使用 `@deprecated` JSDoc tag。Skel enum 会生成字符串联合类型，因此 enum item 的解释会保留在对应联合分支旁边，但无法触发 item 级 TypeScript 弃用警告。
+
 ## vRPC Binary 与 CBOR
 
 TypeScript service client 会为包含 `binary` 的 method 生成稀疏的 vRPC wire schema，方便 `@yorun-ai/vrpc` 自动选择 CBOR：

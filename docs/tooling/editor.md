@@ -14,6 +14,7 @@ The extension provides:
 - Recoverable syntax and workspace semantic diagnostics
 - Related diagnostic locations and quick fixes
 - Formatting, completion, and hover details
+- Deprecated declarations and elements in completion, hover, and symbol views
 - Hierarchical document symbols and workspace symbol search
 - Go to Definition and Find All References across workspace `.skel` files
 - Rename for top-level declarations and their references
@@ -26,7 +27,7 @@ go install go.yorun.ai/skelc/cmd/skelc@latest
 skelc version --output-format json
 ```
 
-The extension requires skelc v0.10.0 or newer and starts `skelc lsp` from `PATH`. It's a thin language-server client: parsing, formatting, diagnostics, completion, navigation, and rename behavior come from the compiler's language server, not a second JavaScript implementation.
+The extension requires skelc v0.10.1 or newer and starts `skelc lsp` from `PATH`. It's a thin language-server client: parsing, formatting, diagnostics, completion, navigation, and rename behavior come from the compiler's language server, not a second JavaScript implementation.
 
 ## Configuration
 
@@ -87,7 +88,7 @@ Choose the entry point that matches your host:
 | CodeMirror 6 | `@codemirror/language` and `@codemirror/view` | `@yorun-ai/skel-highlight/codemirror` |
 | TextMate-compatible tools | No adapter peer | `@yorun-ai/skel-highlight/textmate` |
 
-The package recognizes Skel declarations, built-in types, decorators, comments, and strings. It only performs lexical highlighting: type errors, unresolved imports, formatting, completion, navigation, and rename require an integration with `skelc lsp`.
+The package recognizes Skel declarations, built-in types, decorators such as `@deprecated`, comments, and strings. It only performs lexical highlighting: type errors, unresolved imports, formatting, completion, navigation, and rename require an integration with `skelc lsp`.
 
 The [package README](https://github.com/yorun-ai/skel-editor-support/tree/main/packages/highlight) contains registration examples for every adapter.
 

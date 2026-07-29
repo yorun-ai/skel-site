@@ -8,7 +8,7 @@ skelc 生成的 Go 代码以 Vine 的公开包作为运行时契约。生成内�
 
 ## 版本关系
 
-`skelc version` 会显示默认的 Vine 版本。生成 Go module 时，这个版本会写入输出的 `go.mod`。`--go-vine-version` 只能选择不低于默认值的版本，但它不保证更高版本一定兼容——升级时仍需固定具体版本、重新生成并跑测试。
+`skelc version` 会同时显示最低支持版本和默认 Vine 版本。生成 Go module 时，默认版本会写入输出的 `go.mod`。`--go-vine-version` 可以选择其它版本，但不能低于最低支持版本；它也不保证更高版本一定兼容——升级时仍需固定具体版本、重新生成并跑测试。生成 domain schema 中的弃用元数据要求 Vine v0.10.1 或更高版本。
 
 ## 推荐流程
 
