@@ -1917,4 +1917,10 @@ div[class*='codeBlockContainer'] code {
   .theme-doc-markdown h1 {
     font-size: 2rem;
   }
+
+  .theme-doc-markdown p,
+  .theme-doc-markdown li {
+    text-align: start;
+    text-wrap: pretty;
+  }
 }
