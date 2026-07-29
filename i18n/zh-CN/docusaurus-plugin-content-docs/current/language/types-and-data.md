@@ -29,10 +29,11 @@ data UserProfile {
     email: string?
     roles: list<string>
     attributes: map<string, string>
+    labelsByUserId: map<uuid, string>
 }
 ```
 
-在任意类型后面加 `?` 就表示可为空。`list<T>` 是有序集合；`map<K, V>` 的 key 必须是非空的 `int`、`string` 或 enum。
+在任意类型后面加 `?` 就表示可为空。`list<T>` 是有序集合；`map<K, V>` 的 key 必须是非空的 `int`、`string`、`uuid` 或 enum。
 
 一个结构有明确的业务含义时，应该声明为具名 `data`。`json` 适合刻意保持开放的边界，但校验责任会从 skelc 转到应用代码身上。
 

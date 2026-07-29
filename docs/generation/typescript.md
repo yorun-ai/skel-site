@@ -57,7 +57,7 @@ How generation works:
 - Normal JSON methods still emit string method names without any empty configuration.
 - Binary arguments emit only `wire.<method>.arguments`.
 - Binary results emit only `wire.<method>.result`.
-- Schemas support nested data, nullable values, lists, `map<int|string, T>`, generics, and recursive references.
+- Schemas support nested data, nullable values, lists, every legal map key, generics, and recursive references. UUID and enum keys use the string-key wire shape.
 - Generated schemas use `satisfies VrpcWireSchema` to preserve literal inference and enforce type checking.
 - The business-facing type of `binary` stays `Uint8Array`, and map types stay `Record`.
 

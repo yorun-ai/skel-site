@@ -62,6 +62,8 @@ They aren't converted to UTC and carry no time zone.
 "550e8400-e29b-41d4-a716-446655440000"
 ```
 
+When `uuid` is a map key, generated Go uses `map[skel.UUID]T`, generated TypeScript uses `Record<string, T>`, and the UUID string is the key in both JSON and CBOR.
+
 ### JSON (JSON Text)
 
 `JSON` represents a JSON document as text. To keep the wire shape simple, it encodes as a string in both JSON and CBOR.

@@ -52,13 +52,13 @@ localdate  localtime  localdatetime
 uuid  json
 
 list<T>
-map<int|string|Enum, T>
+map<int|string|uuid|Enum, T>
 Qualified.Type
 Generic<T>
 T?
 ```
 
-`?` applies to any type. Only `data` declares generic parameters. Map keys are non-nullable `int`, `string`, or enum values. See [Types & Data](/docs/types-and-data).
+`?` applies to any type. Only `data` declares generic parameters. Map keys are non-nullable `int`, `string`, `uuid`, or enum values. See [Types & Data](/docs/types-and-data).
 
 ## Service Method Form
 

@@ -52,13 +52,13 @@ localdate  localtime  localdatetime
 uuid  json
 
 list<T>
-map<int|string|Enum, T>
+map<int|string|uuid|Enum, T>
 Qualified.Type
 Generic<T>
 T?
 ```
 
-`?` 能加在任意类型上。只有 `data` 能声明泛型参数。map key 必须是非 nullable 的 `int`、`string` 或 enum。详见[类型与数据](/docs/types-and-data)。
+`?` 能加在任意类型上。只有 `data` 能声明泛型参数。map key 必须是非 nullable 的 `int`、`string`、`uuid` 或 enum。详见[类型与数据](/docs/types-and-data)。
 
 ## Service Method 形式
 
