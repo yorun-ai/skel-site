@@ -354,58 +354,100 @@
     "message": "以纯文本方式查看本页"
   },
   "homepage.title": {
-    "message": "概览"
+    "message": "一份契约，让每个边界保持一致"
   },
   "homepage.description": {
-    "message": "Skel 是 Vine 应用的契约 DSL 与编译器。领域类型、调用者身份、权限，以及 service、event、task 都写在同一套可校验、可生成的契约中。"
+    "message": "使用 Skel 描述领域类型、调用者、权限、service、event 与 task。skelc 只需校验一次契约，就能为每个消费方生成所需的类型化边界。"
   },
   "homepage.description.ai": {
     "message": "AI 生成的代码改动先经过机器可检查的边界，再进入应用代码。"
   },
   "homepage.kicker": {
-    "message": "面向 AI 编程治理的契约 DSL"
+    "message": "契约 DSL 与编译器"
   },
   "homepage.a11y.shortcuts": {
     "message": "概览快捷入口"
   },
   "homepage.actions.first": {
-    "message": "创建第一个契约"
+    "message": "构建第一个契约"
   },
   "homepage.actions.language": {
-    "message": "阅读语言模型"
+    "message": "探索 Skel 语言"
   },
   "homepage.actions.generate": {
     "message": "选择生成目标"
   },
   "homepage.sections.mechanisms.title": {
-    "message": "编译器明确约束什么"
+    "message": "从头到尾稳定一致的边界"
   },
   "homepage.sections.mechanisms.description": {
-    "message": "Skel 不描述实现算法，只声明领域、生成客户端与 Vine 运行时必须共同遵守的部分。"
+    "message": "Skel 把实现细节留在应用代码中，并让每一个跨语言决策都明确、可校验、可审查。"
+  },
+  "homepage.sections.mechanisms.eyebrow": {
+    "message": "核心能力"
   },
   "homepage.sections.loop.title": {
-    "message": "从契约进入应用"
+    "message": "每一步都有清晰的审查节点"
   },
   "homepage.sections.loop.description": {
-    "message": "源码、校验、生成代码和运行时接入彼此分开，每一步都有清晰的检查节点。"
+    "message": "源码、校验、生成代码和运行时接入彼此分开。契约进入应用代码之前，你始终可以先检查边界。"
+  },
+  "homepage.sections.loop.eyebrow": {
+    "message": "编译器工作流"
+  },
+  "homepage.sections.loop.action": {
+    "message": "查看日常工作流"
   },
   "homepage.sections.guides.title": {
-    "message": "按当前任务继续阅读"
+    "message": "从眼前的任务开始"
   },
   "homepage.sections.guides.description": {
-    "message": "从眼前需要决定的契约问题开始。"
+    "message": "先完成一份可工作的契约，再深入设计边界，或把编译器纳入日常交付。"
+  },
+  "homepage.sections.guides.eyebrow": {
+    "message": "文档路径"
+  },
+  "homepage.visual.ariaLabel": {
+    "message": "一份 Skel 源契约经过一次校验，再被编译成类型化的 Go、TypeScript 与运行时产物。"
+  },
+  "homepage.visual.validated": {
+    "message": "已校验"
+  },
+  "homepage.visual.model": {
+    "message": "已解析模型"
+  },
+  "homepage.visual.outputs.go": {
+    "message": "Go 契约"
+  },
+  "homepage.visual.outputs.typescript": {
+    "message": "TypeScript 客户端"
+  },
+  "homepage.visual.outputs.schema": {
+    "message": "Domain schema"
   },
   "homepage.loop.declare.title": {
     "message": "声明"
   },
+  "homepage.loop.declare.description": {
+    "message": "用易读的 Skel 一次写清领域边界。"
+  },
   "homepage.loop.check.title": {
     "message": "校验"
+  },
+  "homepage.loop.check.description": {
+    "message": "解析 import，尽早阻止无效契约。"
   },
   "homepage.loop.generate.title": {
     "message": "生成"
   },
+  "homepage.loop.generate.description": {
+    "message": "为每个消费方产出确定性的 artifact。"
+  },
   "homepage.loop.integrate.title": {
     "message": "接入"
+  },
+  "homepage.loop.integrate.description": {
+    "message": "把生成边界接入 Vine 与测试。"
   },
   "homepage.mechanisms.domain.label": {
     "message": "Domain"
@@ -470,11 +512,20 @@
   "homepage.guides.learn": {
     "message": "学习"
   },
+  "homepage.guides.learn.description": {
+    "message": "先完成一份契约，再理解它背后的语言模型。"
+  },
   "homepage.guides.design": {
     "message": "设计"
   },
+  "homepage.guides.design.description": {
+    "message": "设计稳定的类型、调用者与授权边界。"
+  },
   "homepage.guides.ship": {
     "message": "交付"
+  },
+  "homepage.guides.ship.description": {
+    "message": "让校验与生成成为日常交付的一部分。"
   },
   "homepage.guides.first.title": {
     "message": "第一个契约"
