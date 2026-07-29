@@ -1,6 +1,7 @@
 import type {Config, Plugin} from '@docusaurus/types'
 import type * as Preset from '@docusaurus/preset-classic'
 import {themes as prismThemes} from 'prism-react-renderer'
+import remarkRemoveCjkSoftBreaks from './src/remark/remove-cjk-soft-breaks'
 
 const devLocale = process.env.YORUN_DEV_LOCALE
 const devWebSocketPath = devLocale
@@ -66,6 +67,7 @@ const config: Config = {
           path: './docs',
           routeBasePath: 'docs',
           sidebarPath: './sidebars.ts',
+          remarkPlugins: [remarkRemoveCjkSoftBreaks],
           showLastUpdateAuthor: false,
           showLastUpdateTime: false,
           versions: {
