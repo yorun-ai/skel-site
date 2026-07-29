@@ -1,4 +1,8 @@
 {
+  "theme.MDXComponents.Table.scrollRegionLabel": {
+    "message": "可横向滚动的表格",
+    "description": "The accessible label for a horizontally scrollable Markdown table"
+  },
   "theme.ErrorPageContent.title": {
     "message": "页面已崩溃。",
     "description": "The title of the fallback page when the page crashed"
