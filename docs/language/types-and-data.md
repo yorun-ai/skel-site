@@ -29,10 +29,11 @@ data UserProfile {
     email: string?
     roles: list<string>
     attributes: map<string, string>
+    labelsByUserId: map<uuid, string>
 }
 ```
 
-Append `?` to any type to make the value nullable. `list<T>` describes an ordered collection. `map<K, V>` accepts `int`, `string`, or an enum as its non-nullable key type.
+Append `?` to any type to make the value nullable. `list<T>` describes an ordered collection. `map<K, V>` accepts `int`, `string`, `uuid`, or an enum as its non-nullable key type.
 
 Prefer a named `data` declaration when a structure carries business meaning. `json` works at an intentionally open boundary, but it shifts validation from skelc into application code.
 

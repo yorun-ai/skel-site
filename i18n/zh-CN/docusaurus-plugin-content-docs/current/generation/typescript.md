@@ -57,7 +57,7 @@ export const FileServiceSpec = {
 - 普通 JSON method 仍然只生成字符串形式的 method name，不会有多余的空配置。
 - arguments 包含 Binary 时，只生成 `wire.<method>.arguments`。
 - result 包含 Binary 时，只生成 `wire.<method>.result`。
-- schema 支持嵌套 data、nullable、list、`map<int|string, T>`、泛型和递归引用。
+- schema 支持嵌套 data、nullable、list、所有合法 map key、泛型和递归引用；UUID 与 enum key 使用 string-key wire shape。
 - 生成的 schema 用 `satisfies VrpcWireSchema` 保留字面量推导，同时执行类型校验。
 - `binary` 的业务类型仍然是 `Uint8Array`，map 的业务类型仍然是 `Record`。
 

@@ -62,6 +62,8 @@ Skel 标量扩展遵循一个基本原则：
 "550e8400-e29b-41d4-a716-446655440000"
 ```
 
+`uuid` 作为 map key 时，Go 生成类型为 `map[skel.UUID]T`，TypeScript 生成类型为 `Record<string, T>`，JSON 和 CBOR 都使用 UUID 字符串作为 key。
+
 ### JSON（JSON 文本）
 
 `JSON` 表示一段 JSON 文本。为了保持 wire shape 简洁，它在 JSON 和 CBOR 中都编码为字符串。
