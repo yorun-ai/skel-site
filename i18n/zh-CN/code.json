@@ -361,13 +361,13 @@
     "message": "一份契约，让每个边界保持一致"
   },
   "homepage.description": {
-    "message": "使用 Skel 描述领域类型、调用者、权限、service、event 与 task。skelc 只需校验一次契约，就能为每个消费方生成所需的类型化边界。"
+    "message": "使用 Skel 描述领域类型、调用者、权限、服务、事件与任务。只需运行一次 skelc 校验，就能为每个消费方生成带类型的边界。"
   },
   "homepage.description.ai": {
     "message": "AI 生成的代码改动先经过机器可检查的边界，再进入应用代码。"
   },
   "homepage.kicker": {
-    "message": "契约 DSL 与编译器"
+    "message": "契约 DSL 与 skelc"
   },
   "homepage.a11y.shortcuts": {
     "message": "概览快捷入口"
@@ -397,7 +397,7 @@
     "message": "源码、校验、生成代码和运行时接入彼此分开。契约进入应用代码之前，你始终可以先检查边界。"
   },
   "homepage.sections.loop.eyebrow": {
-    "message": "编译器工作流"
+    "message": "skelc 工作流"
   },
   "homepage.sections.loop.action": {
     "message": "查看日常工作流"
@@ -406,7 +406,7 @@
     "message": "从眼前的任务开始"
   },
   "homepage.sections.guides.description": {
-    "message": "先完成一份可工作的契约，再深入设计边界，或把编译器纳入日常交付。"
+    "message": "先完成一份可工作的契约，再深入设计边界，或把 skelc 纳入日常交付。"
   },
   "homepage.sections.guides.eyebrow": {
     "message": "文档路径"
@@ -427,7 +427,7 @@
     "message": "TypeScript 客户端"
   },
   "homepage.visual.outputs.schema": {
-    "message": "Domain schema"
+    "message": "Domain Schema"
   },
   "homepage.loop.declare.title": {
     "message": "声明"
@@ -445,7 +445,7 @@
     "message": "生成"
   },
   "homepage.loop.generate.description": {
-    "message": "为每个消费方产出确定性的 artifact。"
+    "message": "为每个消费方产出确定性的产物。"
   },
   "homepage.loop.integrate.title": {
     "message": "接入"
@@ -589,7 +589,7 @@
     "message": "1.0 之前"
   },
   "homepage.status.description": {
-    "message": "开发环境与 CI 应固定 skelc 版本；compiler 或公共契约变化后，应 review 生成 diff。"
+    "message": "开发环境与 CI 应固定 skelc 版本；skelc 或公共契约变化后，应审查生成 diff。"
   },
   "homepage.status.installation": {
     "message": "安装 skelc"

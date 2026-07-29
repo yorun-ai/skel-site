@@ -113,7 +113,7 @@ skelc gen ts \
 
 package metadata、跨 domain import 和 binary wire schema 见 [TypeScript 输出](/docs/generation/typescript)。
 
-## Review 生成变化
+## 审查生成变化
 
 skelc 用 `.skelc-manifest.json` 记录受管理的文件。没被跟踪的文件会原样保留；过期的生成文件只有在内容跟上次 manifest 完全一致时才会被清理。但要注意：如果手写文件占用了当前的生成路径，还是会被覆盖，所以给生成输出留独立路径是个好习惯。
 

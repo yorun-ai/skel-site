@@ -4,7 +4,7 @@ slug: /language
 
 # 语言模型
 
-Skel 描述的是跨实现、生成语言和运行时装配都必须成立的边界。在任何 generator 跑起来之前，编译器就会把全部声明解析成一个 domain model。
+Skel 描述的是跨实现、生成语言和运行时装配都必须成立的边界。在任何 generator 跑起来之前，skelc 就会把全部声明解析成一个 domain model。
 
 ## Domain 是所有权单元
 
