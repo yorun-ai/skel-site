@@ -127,6 +127,20 @@
   --machine-raised: #3a2b5c;
   --brand-rgb: 124 72 253;
   --ink-rgb: 20 22 26;
+  --docs-table-surface: #ffffff;
+  --docs-table-head: #f4f1fb;
+  --docs-table-stripe: #fafaf8;
+  --docs-table-hover: #f5f1ff;
+  --docs-table-border-strong: #d9d5e4;
+  --docs-diagram-surface: #faf9fc;
+  --docs-diagram-node: #ffffff;
+  --docs-diagram-node-accent: #f1edfb;
+  --docs-diagram-border: #a58bdc;
+  --docs-diagram-line: #6f697a;
+  --docs-diagram-cluster: #f4f2f8;
+  --docs-diagram-label: #fcfcfb;
+  --docs-diagram-note: #fff8df;
+  --docs-diagram-note-border: #c9aa59;
 
   --ifm-color-primary: #7c48fd;
   --ifm-color-primary-dark: #6a38f0;
@@ -192,6 +206,20 @@ html[data-theme='dark'] {
   --sidebar-ring: var(--ring);
   --code-block-background: #151022;
   --code-block-accent: #6d50a3;
+  --docs-table-surface: #14181d;
+  --docs-table-head: #292238;
+  --docs-table-stripe: #191e25;
+  --docs-table-hover: #272235;
+  --docs-table-border-strong: #403849;
+  --docs-diagram-surface: #111419;
+  --docs-diagram-node: #191d23;
+  --docs-diagram-node-accent: #251e34;
+  --docs-diagram-border: #846cc0;
+  --docs-diagram-line: #a39aaf;
+  --docs-diagram-cluster: #151920;
+  --docs-diagram-label: #111419;
+  --docs-diagram-note: #2b2619;
+  --docs-diagram-note-border: #9b824a;
 
   --ifm-color-primary: #a996ff;
   --ifm-color-primary-dark: #987fff;
@@ -1195,16 +1223,101 @@ div[class*='codeBlockContainer'] code {
 }
 
 .theme-doc-markdown table {
-  @apply overflow-hidden rounded-md border border-border text-sm;
+  --ifm-table-background: transparent;
+  --ifm-table-stripe-background: transparent;
+
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  border: 1px solid var(--docs-table-border-strong);
+  border-radius: 0.7rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--docs-table-surface);
+  box-shadow: 0 12px 32px -30px rgb(var(--ink-rgb) / 55%);
+  color: var(--foreground);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  overscroll-behavior-inline: contain;
+  scrollbar-color: color-mix(
+      in srgb,
+      var(--muted-foreground) 68%,
+      transparent
+    )
+    transparent;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
 }
 
-.theme-doc-markdown th {
-  @apply bg-muted font-semibold text-foreground;
+.theme-doc-markdown table thead {
+  background: var(--docs-table-head);
 }
 
-.theme-doc-markdown td,
-.theme-doc-markdown th {
-  border-color: var(--border);
+.theme-doc-markdown table tr,
+.theme-doc-markdown table tr:nth-child(2n) {
+  border: 0;
+  background: transparent;
+}
+
+.theme-doc-markdown table tbody tr {
+  transition: background-color 140ms ease;
+}
+
+.theme-doc-markdown table tbody tr:nth-child(even) {
+  background: var(--docs-table-stripe);
+}
+
+.theme-doc-markdown table th,
+.theme-doc-markdown table td {
+  min-width: 7.5rem;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  padding: 0.72rem 0.9rem;
+  vertical-align: top;
+}
+
+.theme-doc-markdown table th {
+  border-bottom-color: var(--docs-table-border-strong);
+  color: var(--foreground);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.015em;
+  line-height: 1.45;
+  vertical-align: bottom;
+  white-space: nowrap;
+}
+
+.theme-doc-markdown table tbody td:first-child {
+  color: var(--foreground);
+  font-weight: 500;
+}
+
+.theme-doc-markdown table tbody:last-child tr:last-child td {
+  border-bottom: 0;
+}
+
+.theme-doc-markdown table :is(th, td):first-child {
+  padding-left: 1rem;
+}
+
+.theme-doc-markdown table :is(th, td):last-child {
+  padding-right: 1rem;
+}
+
+.theme-doc-markdown table td > :first-child {
+  margin-top: 0;
+}
+
+.theme-doc-markdown table td > :last-child {
+  margin-bottom: 0;
+}
+
+@media (hover: hover) {
+  .theme-doc-markdown table tbody tr:hover {
+    background: var(--docs-table-hover);
+  }
 }
 
 .theme-admonition,
@@ -1350,14 +1463,173 @@ div[class*='codeBlockContainer'] code {
 }
 
 .docusaurus-mermaid-container {
-  @apply my-7 overflow-x-auto rounded-md border border-border bg-card p-5 shadow-xs;
+  position: relative;
+  max-width: 100%;
+  margin: 1.75rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border: 1px solid var(--docs-table-border-strong);
+  border-radius: 0.75rem;
+  padding: clamp(1.15rem, 3vw, 1.75rem);
+  background: var(--docs-diagram-surface);
+  box-shadow: 0 12px 32px -30px rgb(var(--ink-rgb) / 55%);
+  color: var(--foreground);
+  overscroll-behavior-inline: contain;
+  scrollbar-color: color-mix(
+      in srgb,
+      var(--muted-foreground) 68%,
+      transparent
+    )
+    transparent;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
 }
 
 .docusaurus-mermaid-container svg {
   display: block;
+  width: 100%;
   max-width: 100%;
   height: auto;
   margin: 0 auto;
+  background: transparent !important;
+  color: var(--foreground);
+  font-family: var(--ifm-font-family-base) !important;
+}
+
+.theme-doc-markdown table:focus-visible,
+.docusaurus-mermaid-container:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--primary) 72%, transparent);
+  outline-offset: 2px;
+}
+
+.docusaurus-mermaid-container .node .label-container,
+.docusaurus-mermaid-container .classGroup rect,
+.docusaurus-mermaid-container .entityBox {
+  fill: var(--docs-diagram-node);
+  stroke: var(--docs-diagram-border);
+  stroke-width: 1.25px;
+  stroke-linejoin: round;
+}
+
+.docusaurus-mermaid-container .nodeLabel,
+.docusaurus-mermaid-container .nodeLabel p,
+.docusaurus-mermaid-container .classGroup text,
+.docusaurus-mermaid-container .entityLabel {
+  fill: var(--foreground);
+  color: var(--foreground);
+  font-weight: 500;
+}
+
+.docusaurus-mermaid-container .flowchart-link,
+.docusaurus-mermaid-container .edgePath path,
+.docusaurus-mermaid-container .relation,
+.docusaurus-mermaid-container .transition,
+.docusaurus-mermaid-container .relationshipLine,
+.docusaurus-mermaid-container .mindmap-edge {
+  stroke: var(--docs-diagram-line);
+  stroke-width: 1.4px;
+}
+
+.docusaurus-mermaid-container marker path,
+.docusaurus-mermaid-container .arrowheadPath {
+  fill: var(--docs-diagram-line);
+  stroke: var(--docs-diagram-line);
+}
+
+.docusaurus-mermaid-container .edgeLabel,
+.docusaurus-mermaid-container .edgeLabel p {
+  background: var(--docs-diagram-label);
+  color: var(--muted-foreground);
+}
+
+.docusaurus-mermaid-container .edgeLabel rect,
+.docusaurus-mermaid-container .labelBkg,
+.docusaurus-mermaid-container .relationshipLabelBox {
+  fill: var(--docs-diagram-label);
+  opacity: 0.96;
+}
+
+.docusaurus-mermaid-container .cluster rect,
+.docusaurus-mermaid-container .cluster polygon {
+  fill: var(--docs-diagram-cluster);
+  stroke: var(--docs-diagram-border);
+  stroke-width: 1px;
+  stroke-dasharray: 4 4;
+}
+
+.docusaurus-mermaid-container .cluster-label text,
+.docusaurus-mermaid-container .cluster-label span,
+.docusaurus-mermaid-container .cluster-label p {
+  fill: var(--muted-foreground);
+  color: var(--muted-foreground);
+  font-weight: 500;
+}
+
+.docusaurus-mermaid-container rect.actor {
+  fill: var(--docs-diagram-node);
+  stroke: var(--docs-diagram-border);
+  stroke-width: 1.25px;
+}
+
+.docusaurus-mermaid-container text.actor,
+.docusaurus-mermaid-container .messageText,
+.docusaurus-mermaid-container .labelText,
+.docusaurus-mermaid-container .loopText {
+  fill: var(--foreground);
+}
+
+.docusaurus-mermaid-container .actor-line {
+  stroke: var(--docs-diagram-line);
+  stroke-dasharray: 4 5;
+  opacity: 0.72;
+}
+
+.docusaurus-mermaid-container .messageLine0,
+.docusaurus-mermaid-container .messageLine1,
+.docusaurus-mermaid-container .loopLine {
+  stroke: var(--docs-diagram-line);
+  stroke-width: 1.25px;
+}
+
+.docusaurus-mermaid-container rect.labelBox,
+.docusaurus-mermaid-container rect.activation0,
+.docusaurus-mermaid-container rect.activation1,
+.docusaurus-mermaid-container rect.activation2,
+.docusaurus-mermaid-container .attributeBoxEven {
+  fill: var(--docs-diagram-node-accent);
+  stroke: var(--docs-diagram-border);
+}
+
+.docusaurus-mermaid-container .attributeBoxOdd {
+  fill: var(--docs-diagram-node);
+  stroke: var(--docs-diagram-border);
+}
+
+.docusaurus-mermaid-container rect.note,
+.docusaurus-mermaid-container polygon.note {
+  fill: var(--docs-diagram-note);
+  stroke: var(--docs-diagram-note-border);
+}
+
+.docusaurus-mermaid-container .noteText,
+.docusaurus-mermaid-container .noteText tspan {
+  fill: var(--foreground);
+}
+
+@media (max-width: 640px) {
+  .theme-doc-markdown table th,
+  .theme-doc-markdown table td {
+    padding: 0.65rem 0.75rem;
+  }
+
+  .docusaurus-mermaid-container {
+    padding: 1rem;
+  }
+
+  .docusaurus-mermaid-container svg {
+    width: 48rem;
+    max-width: none;
+  }
 }
 
 .docs-sidebar-resizer {

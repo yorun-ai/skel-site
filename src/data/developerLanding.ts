@@ -10,6 +10,7 @@ export type DocLink = {
 
 export type ContractStage = {
   title: LocalizedCopy
+  description: LocalizedCopy
   artifact: string
 }
 
@@ -27,24 +28,41 @@ export type GuideLink = DocLink & {
 
 export type GuideGroup = {
   title: LocalizedCopy
+  description: LocalizedCopy
   links: GuideLink[]
 }
 
 export const contractStages: ContractStage[] = [
   {
     title: {id: 'homepage.loop.declare.title', text: 'Declare'},
+    description: {
+      id: 'homepage.loop.declare.description',
+      text: 'Write the domain boundary once in readable Skel.',
+    },
     artifact: '.skel',
   },
   {
     title: {id: 'homepage.loop.check.title', text: 'Check'},
+    description: {
+      id: 'homepage.loop.check.description',
+      text: 'Resolve imports and stop invalid contracts early.',
+    },
     artifact: 'skelc check',
   },
   {
     title: {id: 'homepage.loop.generate.title', text: 'Generate'},
+    description: {
+      id: 'homepage.loop.generate.description',
+      text: 'Produce deterministic artifacts for each consumer.',
+    },
     artifact: 'skelc gen',
   },
   {
     title: {id: 'homepage.loop.integrate.title', text: 'Integrate'},
+    description: {
+      id: 'homepage.loop.integrate.description',
+      text: 'Wire the generated boundary into Vine and tests.',
+    },
     artifact: 'Vine + tests',
   },
 ]
@@ -143,6 +161,10 @@ export const skelMechanisms: SkelMechanism[] = [
 export const guideGroups: GuideGroup[] = [
   {
     title: {id: 'homepage.guides.learn', text: 'Learn'},
+    description: {
+      id: 'homepage.guides.learn.description',
+      text: 'Build a complete contract, then learn the language beneath it.',
+    },
     links: [
       {
         title: {id: 'homepage.guides.first.title', text: 'First Contract'},
@@ -172,6 +194,10 @@ export const guideGroups: GuideGroup[] = [
   },
   {
     title: {id: 'homepage.guides.design', text: 'Design'},
+    description: {
+      id: 'homepage.guides.design.description',
+      text: 'Model stable types, callers, and authorization boundaries.',
+    },
     links: [
       {
         title: {id: 'homepage.guides.types.title', text: 'Types & Data'},
@@ -201,6 +227,10 @@ export const guideGroups: GuideGroup[] = [
   },
   {
     title: {id: 'homepage.guides.ship', text: 'Ship'},
+    description: {
+      id: 'homepage.guides.ship.description',
+      text: 'Make checks and generation part of everyday delivery.',
+    },
     links: [
       {
         title: {id: 'homepage.guides.workflow.title', text: 'Daily Workflow'},
