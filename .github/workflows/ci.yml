@@ -38,7 +38,7 @@ jobs:
         run: pnpm build
 
   ci-checks:
-    name: CI / Checks
+    name: CI / Required Checks
     if: ${{ always() }}
     needs: [build]
     runs-on: ubuntu-latest
