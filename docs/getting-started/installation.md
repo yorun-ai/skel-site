@@ -6,7 +6,7 @@ slug: /installation
 
 ## Prerequisites
 
-skelc needs Go 1.26 or later. Generated Go modules pick up skelc's built-in Vine default, which is `v0.10.0` at the time of writing.
+skelc needs Go 1.26 or later. Generated Go modules pick up skelc's built-in Vine default, which is `v0.10.1` at the time of writing.
 
 ## Install
 
@@ -22,7 +22,7 @@ Make sure the Go binary directory is on `PATH`. If the shell can't find skelc, c
 CI and reproducible generation environments should pin an exact version:
 
 ```bash
-go install go.yorun.ai/skelc/cmd/skelc@v0.10.0
+go install go.yorun.ai/skelc/cmd/skelc@v0.10.3
 ```
 
 After upgrading skelc, regenerate contracts and review the diff. Don't let developer machines and CI run different compiler versions without noticing.
@@ -35,5 +35,13 @@ skelc version --output-format json
 ```
 
 JSON output works well in build scripts. `--go-vine-version` can raise the target Vine version during Go generation, but it won't go below skelc's built-in default.
+
+## Add Editor Support
+
+For authoring `.skel` files in VS Code, install [Skeleton DSL Support](https://marketplace.visualstudio.com/items?itemName=yorun.skeleton). The extension starts `skelc lsp` with the skelc executable on your `PATH` and requires skelc v0.10.3 or newer.
+
+For documentation sites, code viewers, and browser editors, install [`@yorun-ai/skel-highlight`](https://www.npmjs.com/package/@yorun-ai/skel-highlight) together with the highlighter used by your application.
+
+See [Editor and Syntax Highlighting](/docs/editor) for setup instructions and a guide to the available integrations.
 
 Next: [create your first contract](/docs/getting-started).

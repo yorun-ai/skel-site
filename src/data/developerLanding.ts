@@ -45,7 +45,7 @@ export const contractStages: ContractStage[] = [
     title: {id: 'homepage.loop.check.title', text: 'Check'},
     description: {
       id: 'homepage.loop.check.description',
-      text: 'Resolve imports and stop invalid contracts early.',
+      text: 'Validate the local input and stop invalid contracts early.',
     },
     artifact: 'skelc check',
   },
@@ -255,6 +255,17 @@ export const guideGroups: GuideGroup[] = [
           text: 'Connect generated contracts to the Vine runtime.',
         },
         to: '/vine-integration',
+      },
+      {
+        title: {
+          id: 'homepage.guides.editor.title',
+          text: 'Editor & Highlighting',
+        },
+        description: {
+          id: 'homepage.guides.editor.description',
+          text: 'Set up VS Code or add Skel highlighting to a web UI.',
+        },
+        to: '/editor',
       },
     ],
   },
