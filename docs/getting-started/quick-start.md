@@ -115,9 +115,9 @@ See [TypeScript Output](/docs/generation/typescript) for package metadata, cross
 
 ## Review What Changed
 
-skelc records managed files in `.skelc-manifest.json`. It preserves untracked files and removes a stale generated file only when the file still matches the previous manifest. A handwritten file that shares a path with a current generated file can still be overwritten, so keep generated output paths reserved.
+Keep generated artifacts in dedicated output directories, and review the changes after each generation. Do not maintain handwritten files in those directories because a later generation may overwrite them.
 
-Commit the `.skel` source, the pinned skelc version the project uses, and whichever generated artifacts your repository policy requires. In CI, regenerate and fail on an unexpected diff.
+Commit the `.skel` source and generated artifacts so application development can build on the generated types and interfaces.
 
 Next:
 
