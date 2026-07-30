@@ -47,6 +47,7 @@ function iconForHref(href: string): PhosphorIcon {
   if (href.endsWith('/workflow')) return FlowArrow
   if (href.endsWith('/diagnostics')) return WarningCircle
   if (href.endsWith('/editor')) return GearSix
+  if (href.endsWith('/syntax-highlighting')) return Code
   if (href === '/docs/generation') return Package
   if (href.includes('/generation/go')) return FileCode
   if (href.includes('/generation/typescript')) return Code

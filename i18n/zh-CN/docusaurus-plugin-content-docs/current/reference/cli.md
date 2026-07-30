@@ -100,7 +100,11 @@ skelc format --skel-in ./domain/user/skel
 skelc lsp
 ```
 
-这个命令使用 Language Server Protocol，提供以下能力：多条实时语法与工作区语义诊断、诊断快速修复、关联位置、文档符号、跨文件定义跳转和引用查找。语义分析直接使用未保存的内存内容，合并同一 domain 的文件，并以 workspace 中 `.skel` 文件声明的 domain 和 import alias 来解析跨 domain 引用。协议消息独占标准输入输出，请注意不要手动向该命令的 stdout 写入日志。
+语言服务器会在编辑过程中报告多条语法和语义问题，同时提供快速修复、诊断关联位置、文档符号、跨文件定义跳转和引用查找。
+
+分析会包含尚未保存的修改，但每个源目录都是一份独立输入。只有位于同一目录且声明同一 domain 的文件才会合并，因此不同目录中的同名 domain 互不冲突。这与 `check` 的行为一致：校验时不解析 import；生成命令则根据显式的 `--skel-import` 映射校验完整的 import 图。
+
+LSP 通信独占标准输入和标准输出，集成方不能向服务器的 stdout 写入日志。
 
 ## 5. 查看 symbol
 

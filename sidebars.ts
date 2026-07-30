@@ -39,6 +39,7 @@ const sidebars: SidebarsConfig = {
       'tooling/workflow',
       'tooling/diagnostics',
       'tooling/editor',
+      'tooling/syntax-highlighting',
     ]),
     category('Generate Code', [
       'generation/overview',
