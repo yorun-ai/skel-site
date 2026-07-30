@@ -73,7 +73,11 @@ Editors and other development tools can start the Skel language server over stan
 skelc lsp
 ```
 
-The Language Server Protocol endpoint provides multiple live syntax and workspace semantic diagnostics, diagnostic quick fixes and related locations, document symbols, cross-file Go to Definition, and Find All References. Semantic analysis uses unsaved in-memory contents, merges files in the same domain, and resolves cross-domain references from domain declarations and import aliases in workspace `.skel` files. Protocol messages own standard input and output, so integrations must not write logs to the server's stdout.
+The language server reports multiple syntax and semantic issues as you edit. It also provides quick fixes, related diagnostic locations, document symbols, cross-file Go to Definition, and Find All References.
+
+Analysis includes unsaved changes but treats each source directory as an independent input. Files that declare the same domain are merged only when they are in the same directory, so the same domain name can appear in separate directories without conflict. This matches `check`: imports remain unresolved during validation, while generation commands validate the complete import graph from explicit `--skel-import` mappings.
+
+LSP traffic has exclusive use of standard input and output. Integrations must not write logs to the server's stdout.
 
 ## Inspect symbols
 

@@ -13,7 +13,7 @@ slug: /editor
 - Skel 语法高亮和可选的 Skel Dark 主题
 - 可恢复的语法诊断与工作区语义诊断
 - 诊断关联位置与快速修复
-- 格式化、补全和悬停信息
+- 格式化、悬停信息，以及按被修饰对象过滤并去重的 decorator 补全
 - 在补全、悬停和符号视图中展示弃用声明与元素
 - 层级文档符号与工作区符号搜索
 - 跨工作区 `.skel` 文件的定义跳转和引用查找
@@ -27,7 +27,7 @@ go install go.yorun.ai/skelc/cmd/skelc@latest
 skelc version --output-format json
 ```
 
-扩展要求 skelc v0.10.1 或更高版本，并从 `PATH` 启动 `skelc lsp`。扩展本身只负责连接语言服务器——解析、格式化、诊断、补全、导航和重命名这些能力全都由 skelc 的语言服务器提供，扩展里不会再写一套 JavaScript 实现。
+扩展要求 skelc v0.10.3 或更高版本，并从 `PATH` 启动 `skelc lsp`。扩展本身只是一个轻量客户端：解析、格式化、诊断、补全、导航和重命名全部由 skelc 的语言服务器提供，不会在 JavaScript 中重复实现。
 
 ## 配置
 
@@ -88,7 +88,7 @@ const html = Prism.highlight(
 | CodeMirror 6 | `@codemirror/language` 和 `@codemirror/view` | `@yorun-ai/skel-highlight/codemirror` |
 | TextMate 兼容工具 | 不需要适配器 peer dependency | `@yorun-ai/skel-highlight/textmate` |
 
-这个包能识别 Skel 声明、内置类型、`@deprecated` 等 decorator、注释和字符串，但只负责词法高亮。类型错误、未解析的 import、格式化、补全、导航和重命名这些能力，还是得通过 `skelc lsp` 来获取。
+这个包能识别 Skel 声明、内置类型、`@deprecated` 等 decorator、注释和字符串，但只提供词法高亮。语义诊断以及格式化、补全、导航和重命名等语言能力需要接入 `skelc lsp`。
 
 [包 README](https://github.com/yorun-ai/skel-editor-support/tree/main/packages/highlight) 提供了所有适配器的注册示例。
 
@@ -103,4 +103,4 @@ npm run check
 
 用 VS Code 打开仓库并按 F5，即可启动 Extension Development Host。规范的 TextMate 语法和前端适配器在 `packages/highlight` 目录；VS Code 客户端、语言配置、主题和 Marketplace 包在 `editors/vscode` 目录。
 
-终端和 CI 中仍然应该跑 `skelc check`。编辑器实时诊断复用了 skelc 的规则，但 CI 才是针对完整输入集的可复现检查——两者各司其职。
+终端和 CI 中仍然应该运行 `skelc check`。编辑器实时诊断遵循相同的按目录校验规则，CI 则负责对完整输入集执行可复现检查。

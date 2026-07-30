@@ -13,7 +13,7 @@ The extension provides:
 - Skel syntax highlighting and the optional Skel Dark theme
 - Recoverable syntax and workspace semantic diagnostics
 - Related diagnostic locations and quick fixes
-- Formatting, completion, and hover details
+- Formatting, hover details, and decorator completion filtered for the element being decorated
 - Deprecated declarations and elements in completion, hover, and symbol views
 - Hierarchical document symbols and workspace symbol search
 - Go to Definition and Find All References across workspace `.skel` files
@@ -27,7 +27,7 @@ go install go.yorun.ai/skelc/cmd/skelc@latest
 skelc version --output-format json
 ```
 
-The extension requires skelc v0.10.1 or newer and starts `skelc lsp` from `PATH`. It's a thin language-server client: parsing, formatting, diagnostics, completion, navigation, and rename behavior come from the compiler's language server, not a second JavaScript implementation.
+The extension requires skelc v0.10.3 or newer and starts `skelc lsp` from `PATH`. It is a thin client: parsing, formatting, diagnostics, completion, navigation, and rename are all provided by the compiler's language server rather than reimplemented in JavaScript.
 
 ## Configuration
 
@@ -88,7 +88,7 @@ Choose the entry point that matches your host:
 | CodeMirror 6 | `@codemirror/language` and `@codemirror/view` | `@yorun-ai/skel-highlight/codemirror` |
 | TextMate-compatible tools | No adapter peer | `@yorun-ai/skel-highlight/textmate` |
 
-The package recognizes Skel declarations, built-in types, decorators such as `@deprecated`, comments, and strings. It only performs lexical highlighting: type errors, unresolved imports, formatting, completion, navigation, and rename require an integration with `skelc lsp`.
+The package recognizes Skel declarations, built-in types, decorators such as `@deprecated`, comments, and strings. It provides lexical highlighting only. Semantic diagnostics and language operations such as formatting, completion, navigation, and rename require `skelc lsp`.
 
 The [package README](https://github.com/yorun-ai/skel-editor-support/tree/main/packages/highlight) contains registration examples for every adapter.
 
@@ -103,4 +103,4 @@ npm run check
 
 Open the repository in VS Code and press F5 to launch the Extension Development Host. The canonical TextMate grammar and frontend adapters live in `packages/highlight`; the VS Code client, language configuration, theme, and Marketplace package live in `editors/vscode`.
 
-Continue to run `skelc check` in terminals and CI. Live editor diagnostics use the same compiler rules, but CI remains the reproducible check for the complete input set.
+Continue to run `skelc check` in terminals and CI. Live editor diagnostics follow the same per-directory validation rules, while CI remains the reproducible check for the complete input set.
