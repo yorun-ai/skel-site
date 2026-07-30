@@ -42,6 +42,6 @@ For authoring `.skel` files in VS Code, install [Skeleton DSL Support](https://m
 
 For documentation sites, code viewers, and browser editors, install [`@yorun-ai/skel-highlight`](https://www.npmjs.com/package/@yorun-ai/skel-highlight) together with the highlighter used by your application.
 
-See [Editor and Syntax Highlighting](/docs/editor) for setup instructions and a guide to the available integrations.
+Continue with the [VS Code Extension](/docs/editor) or [Syntax Highlighting Package](/docs/syntax-highlighting) guide.
 
 Next: [create your first contract](/docs/getting-started).

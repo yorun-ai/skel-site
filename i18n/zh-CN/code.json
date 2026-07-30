@@ -586,10 +586,16 @@
     "message": "把生成契约接入 Vine 运行时。"
   },
   "homepage.guides.editor.title": {
-    "message": "编辑器与语法高亮"
+    "message": "VS Code 扩展"
   },
   "homepage.guides.editor.description": {
-    "message": "配置 VS Code，或在 Web 界面中接入 Skel 语法高亮。"
+    "message": "在 VS Code 中接入实时诊断、补全和导航。"
+  },
+  "homepage.guides.highlighting.title": {
+    "message": "语法高亮"
+  },
+  "homepage.guides.highlighting.description": {
+    "message": "在文档和 Web 界面中展示 Skel 源码。"
   },
   "homepage.status.label": {
     "message": "1.0 之前"

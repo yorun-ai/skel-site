@@ -42,6 +42,6 @@ JSON 输出适合给构建脚本读。生成 Go 代码时用 `--go-vine-version`
 
 如果要在文档站、代码查看器或浏览器编辑器中展示 Skel，安装 [`@yorun-ai/skel-highlight`](https://www.npmjs.com/package/@yorun-ai/skel-highlight)，并按需搭配项目正在使用的高亮器。
 
-具体配置步骤和集成方式见[编辑器与语法高亮](/docs/editor)。
+接下来阅读 [VS Code 扩展](/docs/editor)或[语法高亮包](/docs/syntax-highlighting)指南。
 
 下一步：[创建首个契约](/docs/getting-started)。

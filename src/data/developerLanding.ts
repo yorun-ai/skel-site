@@ -259,13 +259,24 @@ export const guideGroups: GuideGroup[] = [
       {
         title: {
           id: 'homepage.guides.editor.title',
-          text: 'Editor & Highlighting',
+          text: 'VS Code Extension',
         },
         description: {
           id: 'homepage.guides.editor.description',
-          text: 'Set up VS Code or add Skel highlighting to a web UI.',
+          text: 'Add live diagnostics, completion, and navigation to VS Code.',
         },
         to: '/editor',
+      },
+      {
+        title: {
+          id: 'homepage.guides.highlighting.title',
+          text: 'Syntax Highlighting',
+        },
+        description: {
+          id: 'homepage.guides.highlighting.description',
+          text: 'Render Skel source in documentation and web interfaces.',
+        },
+        to: '/syntax-highlighting',
       },
     ],
   },
