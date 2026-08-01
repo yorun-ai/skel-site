@@ -63,7 +63,7 @@ Format accepted files in place:
 skelc format --skel-in ./domain/user/skel
 ```
 
-Formatting validates all input before writing. It normalizes whitespace without reordering declarations or changing triple-quoted string content.
+Formatting validates all input and stages every changed file before writing. If a later write fails, files already replaced by the command are restored. Formatting normalizes whitespace without reordering declarations or changing triple-quoted string content.
 
 ## Run the language server
 
