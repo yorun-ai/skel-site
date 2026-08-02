@@ -63,7 +63,23 @@ Format accepted files in place:
 skelc format --skel-in ./domain/user/skel
 ```
 
-Formatting validates all input before writing. It normalizes whitespace without reordering declarations or changing triple-quoted string content.
+Check formatting in CI without modifying files:
+
+```bash
+skelc format --check --skel-in ./domain/user/skel
+skelc format --check --output-format json --skel-in ./domain/user/skel
+```
+
+`--check` exits nonzero and lists absolute paths when any accepted file requires formatting. JSON output has a stable `changed` boolean and ordered `files` array:
+
+```json
+{
+  "changed": true,
+  "files": ["/workspace/domain/user/skel/domain.skel"]
+}
+```
+
+Formatting validates all input and stages every changed file before writing. It preserves ownership, mode, and supported extended metadata, then synchronizes parent directories before reporting success. If a later write or durability sync fails, files already replaced by the command are restored. Formatting normalizes whitespace without reordering declarations or changing multiline comment indentation or triple-quoted string values.
 
 ## Run the language server
 

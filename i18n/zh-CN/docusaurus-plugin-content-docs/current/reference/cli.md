@@ -90,7 +90,23 @@ skelc check --skel-in ./domain/user/skel
 skelc format --skel-in ./domain/user/skel
 ```
 
-格式化会统一换行、缩进、空行和行尾空白，不会重排声明，也不会修改三引号字符串内容。命令会先验证全部输入，只有全部通过验证后才会写入文件。
+在 CI 中只检查格式、不修改文件：
+
+```bash
+skelc format --check --skel-in ./domain/user/skel
+skelc format --check --output-format json --skel-in ./domain/user/skel
+```
+
+如果存在需要格式化的文件，`--check` 会按顺序输出其绝对路径并以非零状态退出。JSON 输出包含稳定的 `changed` 布尔值和有序 `files` 数组：
+
+```json
+{
+  "changed": true,
+  "files": ["/workspace/domain/user/skel/domain.skel"]
+}
+```
+
+格式化会统一换行、缩进、空行和行尾空白，不会重排声明，也不会改变多行注释的相对缩进或三引号字符串值。命令会先验证全部输入并暂存所有待修改文件，保留所有者、mode 和平台支持的扩展元数据，再同步父目录后才报告成功；如果后续写入或持久化同步失败，已经替换的文件会被恢复。
 
 ## 4. 运行语言服务器
 
