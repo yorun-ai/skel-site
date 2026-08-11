@@ -2,7 +2,7 @@
 slug: /syntax-highlighting
 ---
 
-# 语法高亮包
+# 语法高亮
 
 [`@yorun-ai/skel-highlight`](https://www.npmjs.com/package/@yorun-ai/skel-highlight) 为文档站、代码查看器和浏览器编辑器提供 Skel 语法高亮。它包含规范的 Skel TextMate grammar，以及面向常用 JavaScript 高亮器的适配器。
 

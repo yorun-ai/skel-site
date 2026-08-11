@@ -94,7 +94,7 @@
 
 :root {
   --radius: 0.375rem;
-  --background: #fcfcfb;
+  --background: #ffffff;
   --foreground: #14161a;
   --card: oklch(1 0 0);
   --card-foreground: var(--foreground);
@@ -102,25 +102,25 @@
   --popover-foreground: var(--foreground);
   --primary: #7c48fd;
   --primary-foreground: #ffffff;
-  --secondary: #f4f4f2;
+  --secondary: #f6f4fb;
   --secondary-foreground: #2b3038;
-  --muted: #f4f4f2;
-  --muted-foreground: #6b717a;
-  --accent: #f6f4fe;
-  --accent-foreground: #50495d;
+  --muted: #f6f4fb;
+  --muted-foreground: #5d6370;
+  --accent: #f3efff;
+  --accent-foreground: #4f4762;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: #e4e6e9;
+  --border: #e6e1ef;
   --input: var(--border);
   --ring: #7c48fd;
-  --sidebar: #f7f7f5;
+  --sidebar: #ffffff;
   --sidebar-foreground: var(--foreground);
   --sidebar-primary: var(--primary);
   --sidebar-primary-foreground: var(--primary-foreground);
-  --sidebar-accent: #f0edf9;
+  --sidebar-accent: #f1edff;
   --sidebar-accent-foreground: var(--accent-foreground);
   --sidebar-border: var(--border);
   --sidebar-ring: var(--ring);
-  --code-block-background: #f6f6f2;
+  --code-block-background: #f8f7fa;
   --code-block-accent: #d8d2ef;
   --machine: #151022;
   --machine-canvas: #2b204a;
@@ -129,7 +129,7 @@
   --ink-rgb: 20 22 26;
   --docs-table-surface: #ffffff;
   --docs-table-head: #f4f1fb;
-  --docs-table-stripe: #fafaf8;
+  --docs-table-stripe: #fbfaff;
   --docs-table-hover: #f5f1ff;
   --docs-table-border-strong: #d9d5e4;
   --docs-diagram-surface: #faf9fc;
@@ -174,7 +174,7 @@
 }
 
 html:root {
-  --doc-sidebar-width: 280px;
+  --doc-sidebar-width: 260px;
 }
 
 html[data-theme='dark'] {
@@ -728,7 +728,8 @@ html[data-theme='dark']
 }
 
 .navbar-sidebar {
-  @apply bg-background text-foreground;
+  background: var(--sidebar);
+  color: var(--foreground);
   border-right: 1px solid var(--sidebar-border);
   box-shadow: none;
 }
@@ -842,7 +843,8 @@ html.docs-doc-page,
 }
 
 .theme-doc-sidebar-container {
-  @apply border-r border-sidebar-border bg-card;
+  border-right: 1px solid var(--sidebar-border);
+  background: var(--sidebar);
 }
 
 .theme-doc-sidebar-container .menu {
@@ -1738,10 +1740,6 @@ html[data-theme='dark'] .theme-admonition-danger {
   }
 }
 
-.docs-sidebar-resizer {
-  display: none;
-}
-
 @media (min-width: 997px) {
   .docs-doc-page main > .container > .row {
     --ifm-spacing-horizontal: 20px;
@@ -1765,7 +1763,7 @@ html[data-theme='dark'] .theme-admonition-danger {
     left: 0;
     width: var(--doc-sidebar-width);
     height: 100vh;
-    background: var(--card);
+    background: var(--sidebar);
   }
 
   .docs-doc-page .navbar {
@@ -1879,69 +1877,6 @@ html[data-theme='dark'] .theme-admonition-danger {
     white-space: nowrap;
   }
 
-  .docs-sidebar-resizer {
-    position: fixed;
-    z-index: calc(var(--ifm-z-index-fixed) - 1);
-    top: var(--ifm-navbar-height);
-    bottom: 0;
-    left: var(--doc-sidebar-width);
-    display: block;
-    width: 9px !important;
-    height: auto !important;
-    transform: translateX(-50%);
-    border: 0;
-    outline: none;
-    background: transparent;
-    cursor: col-resize;
-    touch-action: none;
-  }
-
-  .docs-sidebar-resizer::after {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 4px;
-    width: 1px;
-    background: var(--sidebar-border);
-    content: '';
-    opacity: 0;
-    transition:
-      width var(--ifm-transition-fast),
-      background var(--ifm-transition-fast),
-      opacity 120ms ease;
-    transition-delay: 0ms;
-  }
-
-  .docs-sidebar-resizer:hover::after {
-    width: 2px;
-    background: var(--primary);
-    opacity: 1;
-    transition-delay: 400ms;
-  }
-
-  .docs-sidebar-resizer:focus-visible::after {
-    width: 2px;
-    background: var(--primary);
-    opacity: 1;
-    transition-delay: 0ms;
-  }
-}
-
-.docs-sidebar-is-resizing,
-.docs-sidebar-is-resizing * {
-  cursor: col-resize !important;
-  user-select: none !important;
-}
-
-.docs-sidebar-is-resizing .theme-doc-sidebar-container {
-  transition: none !important;
-}
-
-.docs-sidebar-is-resizing .docs-sidebar-resizer::after {
-  width: 2px;
-  background: var(--primary);
-  opacity: 1;
-  transition-delay: 0ms;
 }
 
 @media (max-width: 996px) {

@@ -2,7 +2,7 @@
 slug: /syntax-highlighting
 ---
 
-# Syntax Highlighting Package
+# Syntax Highlighting
 
 [`@yorun-ai/skel-highlight`](https://www.npmjs.com/package/@yorun-ai/skel-highlight) adds Skel syntax highlighting to documentation sites, code viewers, and browser editors. It provides the canonical Skel TextMate grammar and adapters for popular JavaScript highlighters.
 
