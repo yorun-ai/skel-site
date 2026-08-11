@@ -1347,7 +1347,88 @@ div[class*='codeBlockContainer'] code {
 
 .theme-admonition,
 .alert {
-  @apply rounded-lg border border-border bg-card text-card-foreground shadow-none;
+  border: 1px solid var(--docs-admonition-border, var(--border));
+  border-radius: var(--radius);
+  background-color: var(--docs-admonition-background, var(--card));
+  color: var(--foreground);
+  box-shadow: none;
+}
+
+.theme-admonition-note {
+  --docs-admonition-background: #f6f6f3;
+  --docs-admonition-border: #d7d9de;
+  --docs-admonition-accent: #5f6670;
+}
+
+.theme-admonition-tip {
+  --docs-admonition-background: #f1fbf5;
+  --docs-admonition-border: #b9e2c8;
+  --docs-admonition-accent: #247a48;
+}
+
+.theme-admonition-info {
+  --docs-admonition-background: #f7f4ff;
+  --docs-admonition-border: #ddd3ff;
+  --docs-admonition-accent: #6a3de8;
+}
+
+.theme-admonition-warning {
+  --docs-admonition-background: #fff8e8;
+  --docs-admonition-border: #f2ce7e;
+  --docs-admonition-accent: #8a5a00;
+}
+
+.theme-admonition-caution {
+  --docs-admonition-background: #fff2e8;
+  --docs-admonition-border: #f0a35e;
+  --docs-admonition-accent: #a54400;
+}
+
+.theme-admonition-danger {
+  --docs-admonition-background: #fff0f1;
+  --docs-admonition-border: #f2a1aa;
+  --docs-admonition-accent: #b42335;
+}
+
+.theme-admonition
+  :is([class*='admonitionHeading'], [class*='admonitionIcon']) {
+  color: var(--docs-admonition-accent, currentColor);
+}
+
+html[data-theme='dark'] .theme-admonition-note {
+  --docs-admonition-background: #171a1f;
+  --docs-admonition-border: #353a43;
+  --docs-admonition-accent: #c2c7d0;
+}
+
+html[data-theme='dark'] .theme-admonition-tip {
+  --docs-admonition-background: #102219;
+  --docs-admonition-border: #285c3d;
+  --docs-admonition-accent: #73d49a;
+}
+
+html[data-theme='dark'] .theme-admonition-info {
+  --docs-admonition-background: #1d172e;
+  --docs-admonition-border: #5f4a92;
+  --docs-admonition-accent: #bca7ff;
+}
+
+html[data-theme='dark'] .theme-admonition-warning {
+  --docs-admonition-background: #241c0d;
+  --docs-admonition-border: #6b5221;
+  --docs-admonition-accent: #f0c66d;
+}
+
+html[data-theme='dark'] .theme-admonition-caution {
+  --docs-admonition-background: #29170d;
+  --docs-admonition-border: #80461e;
+  --docs-admonition-accent: #ffad70;
+}
+
+html[data-theme='dark'] .theme-admonition-danger {
+  --docs-admonition-background: #2b1318;
+  --docs-admonition-border: #7c3542;
+  --docs-admonition-accent: #ff9eaa;
 }
 
 .card {
