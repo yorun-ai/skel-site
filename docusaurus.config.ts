@@ -15,6 +15,7 @@ type DocusaurusWebpackConfig = Exclude<
 const config: Config = {
   title: 'Skel',
   tagline: 'A contract language and toolchain for type-safe applications',
+  favicon: 'favicon.ico',
   url: 'https://skel.yorun.ai',
   baseUrl: '/',
   organizationName: 'yorun-ai',
@@ -141,6 +142,12 @@ const config: Config = {
   themeConfig: {
     navbar: {
       title: 'Skeleton DSL',
+      logo: {
+        alt: 'Skel',
+        src: 'brand/skel-navbar.png',
+        width: 28,
+        height: 28,
+      },
       items: [
         {
           type: 'docSidebar',

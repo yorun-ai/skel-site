@@ -19,7 +19,9 @@ export default function NavbarLogo(): ReactNode {
         className={`navbar__brand ${styles.mobileBrand}`}
         onClick={mobileSidebar.toggle}
         type="button">
-        <span aria-hidden="true" className="navbar__logo" />
+        <span aria-hidden="true" className="navbar__logo">
+          <img alt="" src="/brand/skel-navbar.png" />
+        </span>
         <span className={`navbar__title ${styles.mobileTitle}`}>
           Skeleton DSL
         </span>
@@ -28,7 +30,9 @@ export default function NavbarLogo(): ReactNode {
       <Link
         className={`navbar__brand ${styles.desktopBrand}`}
         to="/docs/">
-        <span aria-hidden="true" className="navbar__logo" />
+        <span aria-hidden="true" className="navbar__logo">
+          <img alt="" src="/brand/skel-navbar.png" />
+        </span>
         <span className="navbar__title">Skeleton DSL</span>
       </Link>
 
@@ -49,9 +53,12 @@ export default function NavbarLogo(): ReactNode {
           aria-label="Switch to Vine Framework"
           className={styles.productSwitch}
           href="https://vine.yorun.ai">
-          <span aria-hidden="true" className={styles.productLogo}>
-            V
-          </span>
+          <img
+            alt=""
+            aria-hidden="true"
+            className={styles.productLogo}
+            src="/brand/vine-product.png"
+          />
           <span className={styles.productName}>Vine Framework</span>
         </a>
       </div>
