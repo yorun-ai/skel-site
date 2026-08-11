@@ -53,7 +53,7 @@ const config: Config = {
         baseUrl: '/',
       },
       'zh-CN': {
-        label: '简体中文',
+        label: '中文',
         htmlLang: 'zh-CN',
         baseUrl: '/zh-CN/',
       },
@@ -178,7 +178,7 @@ const config: Config = {
         },
         {
           className: 'navbar-github-link',
-          href: 'https://github.com/yorun-ai/skel-site',
+          href: 'https://github.com/yorun-ai/skelc',
           label: 'GitHub',
           position: 'right',
         },
