@@ -463,10 +463,12 @@ button:not(:disabled),
   box-shadow: 0 1px 2px rgb(var(--ink-rgb) / 4%);
 }
 
-.copy-page-control button {
+.copy-page-control button,
+.copy-page-control a {
   border: 0;
   background: transparent;
   color: var(--muted-foreground);
+  text-decoration: none;
   transition:
     background-color 150ms ease,
     color 150ms ease;
@@ -505,100 +507,18 @@ button:not(:disabled),
 }
 
 .copy-page-control__copy:hover,
-.copy-page-control__toggle:hover,
-.copy-page-control:has(.copy-page-menu)
-  .copy-page-control__toggle {
+.copy-page-control__toggle:hover {
   background: color-mix(in srgb, var(--primary) 7%, transparent);
   color: var(--primary);
-}
-
-.copy-page-control__toggle svg {
-  transition: transform 160ms ease;
-}
-
-.copy-page-control:has(.copy-page-menu)
-  .copy-page-control__toggle
-  svg {
-  transform: rotate(180deg);
+  text-decoration: none;
 }
 
 .copy-page-control button:focus-visible,
-.copy-page-menu__item:focus-visible {
+.copy-page-control a:focus-visible {
   position: relative;
   z-index: 1;
   outline: 2px solid var(--ring);
   outline-offset: 2px;
-}
-
-.copy-page-menu {
-  position: absolute;
-  z-index: var(--ifm-z-index-dropdown);
-  top: calc(100% + 0.55rem);
-  right: 0;
-  display: grid;
-  width: 18rem;
-  gap: 0.2rem;
-  padding: 0.4rem;
-  border: 1px solid var(--border);
-  border-radius: 0.65rem;
-  background: color-mix(in srgb, var(--card) 96%, transparent);
-  box-shadow:
-    0 1px 2px rgb(var(--ink-rgb) / 5%),
-    0 18px 40px -22px rgb(var(--ink-rgb) / 24%);
-  backdrop-filter: blur(14px);
-}
-
-.copy-page-menu::before {
-  position: absolute;
-  right: 0;
-  bottom: 100%;
-  width: 100%;
-  height: 0.65rem;
-  content: '';
-}
-
-.copy-page-menu__item {
-  display: grid;
-  grid-template-columns: 1.2rem 1fr;
-  gap: 0.6rem;
-  align-items: start;
-  width: 100%;
-  padding: 0.55rem 0.6rem;
-  border: 0;
-  border-radius: 0.4rem;
-  background: transparent;
-  color: var(--foreground);
-  text-align: left;
-  text-decoration: none;
-}
-
-.copy-page-menu__item:hover {
-  background: var(--accent);
-  color: var(--accent-foreground);
-  text-decoration: none;
-}
-
-.copy-page-menu__item > svg {
-  margin-top: 0.12rem;
-  color: var(--muted-foreground);
-}
-
-.copy-page-menu__item > span {
-  display: grid;
-  gap: 0.15rem;
-}
-
-.copy-page-menu__item strong {
-  font-size: 0.85rem;
-  font-weight: 600;
-  line-height: 1.25;
-}
-
-.copy-page-menu__item small {
-  color: var(--muted-foreground);
-  font-size: 0.78rem;
-  line-height: 1.35;
-  white-space: nowrap;
 }
 
 .navbar__items--right > .navbar-github-link {
@@ -1455,14 +1375,7 @@ html[data-theme='dark'] .theme-admonition-danger {
 }
 
 .theme-doc-toc-desktop > .copy-page-control {
-  margin: 0 0 1.25rem;
-}
-
-.theme-doc-toc-desktop .copy-page-menu {
-  right: auto;
-  left: 0;
-  width: 16rem;
-  max-width: calc(100vw - 2rem);
+  margin: 0 0 1.5rem;
 }
 
 .table-of-contents {
