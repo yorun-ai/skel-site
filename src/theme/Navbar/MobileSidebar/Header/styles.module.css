@@ -26,9 +26,9 @@
 }
 
 .brand :global(.navbar__logo) {
-  width: 1.75rem !important;
-  height: 1.75rem !important;
-  border-radius: 0.5rem;
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 7px;
   box-shadow: none;
   font-size: 0.875rem;
 }

@@ -52,9 +52,12 @@ export default function NavbarMobileSidebarSecondaryMenu(): ReactNode {
           aria-label="Switch to Vine Framework"
           className={styles.productSwitch}
           href="https://vine.yorun.ai">
-          <span aria-hidden="true" className={styles.productLogo}>
-            V
-          </span>
+          <img
+            alt=""
+            aria-hidden="true"
+            className={styles.productLogo}
+            src="/brand/vine-product.png"
+          />
           <span>Vine Framework</span>
         </a>
       </div>

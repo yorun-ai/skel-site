@@ -288,24 +288,20 @@ button:not(:disabled),
   display: grid;
   flex: 0 0 auto;
   place-items: center;
-  width: 2.25rem;
-  height: 2.25rem;
+  width: 28px;
+  height: 28px;
   margin-right: 0;
-  border-radius: 0.625rem;
-  background: var(--primary);
-  color: var(--primary-foreground);
+  border-radius: 7px;
+  background: transparent;
   box-shadow: 0 4px 14px rgb(var(--ink-rgb) / 5%);
-  font-size: 1.05rem;
-  font-weight: 750;
-  line-height: 1;
-}
-
-.navbar__logo::before {
-  content: 'S';
 }
 
 .navbar__logo img {
-  display: none;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  image-rendering: auto;
 }
 
 .navbar__title {
@@ -1721,9 +1717,9 @@ div[class*='codeBlockContainer'] code {
   }
 
   .docs-doc-page .navbar__logo {
-    width: 1.75rem;
-    height: 1.75rem;
-    border-radius: 0.5rem;
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
     box-shadow: none;
     font-size: 0.875rem;
   }

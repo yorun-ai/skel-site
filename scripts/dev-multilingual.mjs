@@ -26,7 +26,7 @@ const isolatedSiteExclusions = new Set([
 ])
 
 const parseOptions = (args) => {
-  const options = {host: '127.0.0.1', port: 3000}
+  const options = {host: '127.0.0.1', port: 4000}
 
   for (let index = 0; index < args.length; index += 1) {
     const argument = args[index]
