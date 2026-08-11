@@ -352,7 +352,7 @@
     "message": "以 Markdown 格式复制页面"
   },
   "skel.copyPage.viewMarkdown": {
-    "message": "查看 Markdown ↗"
+    "message": "查看 Markdown"
   },
   "skel.copyPage.viewDescription": {
     "message": "以纯文本方式查看本页"

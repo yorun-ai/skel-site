@@ -5,10 +5,9 @@ import React, {
   useState,
 } from 'react'
 import {
-  CaretDown,
+  ArrowUpRight,
   Check,
   Copy,
-  FileMd,
 } from '@phosphor-icons/react'
 import {useDoc} from '@docusaurus/plugin-content-docs/client'
 import {translate} from '@docusaurus/Translate'
@@ -25,11 +24,9 @@ function markdownPath(pathname: string): string {
 
 export default function CopyPageControl(): ReactNode {
   const {metadata} = useDoc()
-  const rootRef = useRef<HTMLDivElement>(null)
   const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
   )
-  const [menuOpen, setMenuOpen] = useState(false)
   const [copyState, setCopyState] = useState<CopyState>('idle')
   const currentMarkdownPath = markdownPath(metadata.permalink)
 
@@ -58,27 +55,10 @@ export default function CopyPageControl(): ReactNode {
   }
 
   useEffect(() => {
-    const closeWhenOutside = (
-      event: MouseEvent | TouchEvent | FocusEvent,
-    ) => {
-      if (
-        rootRef.current?.contains(event.target as Node)
-      ) {
-        return
-      }
-      setMenuOpen(false)
-    }
-
-    document.addEventListener('mousedown', closeWhenOutside)
-    document.addEventListener('touchstart', closeWhenOutside)
-    document.addEventListener('focusin', closeWhenOutside)
     return () => {
       if (resetTimerRef.current) {
         clearTimeout(resetTimerRef.current)
       }
-      document.removeEventListener('mousedown', closeWhenOutside)
-      document.removeEventListener('touchstart', closeWhenOutside)
-      document.removeEventListener('focusin', closeWhenOutside)
     }
   }, [])
 
@@ -98,9 +78,13 @@ export default function CopyPageControl(): ReactNode {
             message: 'Copy page',
           })
   const CopyIcon = copyState === 'copied' ? Check : Copy
+  const viewMarkdownLabel = translate({
+    id: 'skel.copyPage.viewMarkdown',
+    message: 'View as Markdown',
+  })
 
   return (
-    <div className="copy-page-control" ref={rootRef}>
+    <div className="copy-page-control">
       <button
         className="copy-page-control__copy"
         onClick={copyMarkdown}
@@ -108,73 +92,15 @@ export default function CopyPageControl(): ReactNode {
         <CopyIcon aria-hidden="true" size={16} />
         <span>{copyLabel}</span>
       </button>
-      <button
-        aria-expanded={menuOpen}
-        aria-haspopup="menu"
-        aria-label={translate({
-          id: 'skel.copyPage.menuAriaLabel',
-          message: 'Copy page options',
-        })}
+      <a
+        aria-label={viewMarkdownLabel}
         className="copy-page-control__toggle"
-        onClick={() => {
-          setMenuOpen((open) => !open)
-        }}
-        onKeyDown={(event) => {
-          if (event.key === 'Escape') {
-            setMenuOpen(false)
-          }
-        }}
-        type="button">
-        <CaretDown aria-hidden="true" size={12} weight="bold" />
-      </button>
-
-      {menuOpen && (
-        <div className="copy-page-menu" role="menu">
-          <button
-            className="copy-page-menu__item"
-            onClick={copyMarkdown}
-            role="menuitem"
-            type="button">
-            <Copy aria-hidden="true" size={17} />
-            <span>
-              <strong>
-                {translate({
-                  id: 'skel.copyPage.label',
-                  message: 'Copy page',
-                })}
-              </strong>
-              <small>
-                {translate({
-                  id: 'skel.copyPage.copyDescription',
-                  message: 'Copy page as Markdown',
-                })}
-              </small>
-            </span>
-          </button>
-          <a
-            className="copy-page-menu__item"
-            href={currentMarkdownPath}
-            rel="noreferrer"
-            role="menuitem"
-            target="_blank">
-            <FileMd aria-hidden="true" size={17} />
-            <span>
-              <strong>
-                {translate({
-                  id: 'skel.copyPage.viewMarkdown',
-                  message: 'View as Markdown ↗',
-                })}
-              </strong>
-              <small>
-                {translate({
-                  id: 'skel.copyPage.viewDescription',
-                  message: 'View this page as plain text',
-                })}
-              </small>
-            </span>
-          </a>
-        </div>
-      )}
+        href={currentMarkdownPath}
+        rel="noreferrer"
+        target="_blank"
+        title={viewMarkdownLabel}>
+        <ArrowUpRight aria-hidden="true" size={14} />
+      </a>
     </div>
   )
 }
