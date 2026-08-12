@@ -1,4 +1,4 @@
-import React, {type ReactNode, useEffect, useState} from 'react'
+import React, {type ReactNode, useEffect, useRef, useState} from 'react'
 import {useLocation} from '@docusaurus/router'
 
 function scrollToPageTop() {
@@ -22,6 +22,7 @@ function scrollToPageTop() {
 export default function DocBreadcrumbs(): ReactNode {
   const {pathname} = useLocation()
   const isOverviewPage = /\/docs\/?$/.test(pathname)
+  const titleBarRef = useRef<HTMLDivElement>(null)
   const [pageTitle, setPageTitle] = useState('')
   const [titleVisible, setTitleVisible] = useState(false)
 
@@ -38,6 +39,9 @@ export default function DocBreadcrumbs(): ReactNode {
     const mainTitle = document.querySelector<HTMLElement>(
       '.docs-doc-page .theme-doc-markdown h1',
     )
+    const layoutContainer = mainTitle?.closest<HTMLElement>(
+      'main > .container',
+    )
 
     setPageTitle('')
     setTitleVisible(false)
@@ -46,6 +50,20 @@ export default function DocBreadcrumbs(): ReactNode {
     }
 
     setPageTitle(mainTitle.textContent?.trim() ?? '')
+    const updateTitleLayout = () => {
+      const titleBar = titleBarRef.current
+      if (!titleBar) {
+        return
+      }
+      if (window.innerWidth <= 996) {
+        titleBar.style.removeProperty('--docs-article-left')
+        return
+      }
+      titleBar.style.setProperty(
+        '--docs-article-left',
+        `${Math.round(mainTitle.getBoundingClientRect().left * 100) / 100}px`,
+      )
+    }
     const updateTitleVisibility = () => {
       const navbarBottom =
         document
@@ -56,15 +74,23 @@ export default function DocBreadcrumbs(): ReactNode {
       )
     }
 
-    const titleResizeObserver = new ResizeObserver(updateTitleVisibility)
+    const titleResizeObserver = new ResizeObserver(() => {
+      updateTitleLayout()
+      updateTitleVisibility()
+    })
     titleResizeObserver.observe(mainTitle)
+    if (layoutContainer) {
+      titleResizeObserver.observe(layoutContainer)
+    }
     pageScrollContainer?.addEventListener(
       'scroll',
       updateTitleVisibility,
       {passive: true},
     )
     window.addEventListener('scroll', updateTitleVisibility, {passive: true})
+    window.addEventListener('resize', updateTitleLayout)
     window.addEventListener('resize', updateTitleVisibility)
+    updateTitleLayout()
     updateTitleVisibility()
 
     return () => {
@@ -74,6 +100,7 @@ export default function DocBreadcrumbs(): ReactNode {
         updateTitleVisibility,
       )
       window.removeEventListener('scroll', updateTitleVisibility)
+      window.removeEventListener('resize', updateTitleLayout)
       window.removeEventListener('resize', updateTitleVisibility)
     }
   }, [isOverviewPage, pathname])
@@ -81,6 +108,7 @@ export default function DocBreadcrumbs(): ReactNode {
   return (
     <div
       className="doc-breadcrumbs-bar"
+      ref={titleBarRef}
       data-title-visible={titleVisible ? 'true' : 'false'}>
       <button
         aria-hidden={!titleVisible}
