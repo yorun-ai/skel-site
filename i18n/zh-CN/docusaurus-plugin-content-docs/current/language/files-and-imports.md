@@ -49,16 +49,13 @@ data Order {
 
 没有 `as` 的时候，domain 的最后一段就是引用前缀：`identity.user` 用 `user`。当两个 domain 的末段同名，或者某个类型使用很频繁，显式设置别名就行。
 
-`import` 表达的是逻辑依赖，不包含文件系统路径。检查或生成时再提供物理映射：
+`import` 表达的是逻辑依赖，不包含文件系统路径。`skelc check` 和语言服务器只校验当前输入，跨 domain 符号保持未解析，因此检查时只需提供源文件：
 
 ```bash
-skelc check \
-  --skel-in ./order/skel \
-  --skel-import identity.user=./user/pub/skel \
-  --skel-import commerce.catalog=./catalog/pub/skel
+skelc check --skel-in ./order/skel
 ```
 
-每个 `--skel-import` 指向的契约必须声明跟映射键相同的 domain。你需要提供完整的传递依赖图；domain 之间的循环导入会被拒绝。
+生成阶段会校验完整的 import 图。按下面的示例，通过可重复的 `--skel-import` 提供物理路径。每个映射指向的契约必须声明与映射键相同的 domain；你需要提供完整的传递依赖图，domain 之间的循环导入会被拒绝。
 
 ## 分开管理语言包路径
 

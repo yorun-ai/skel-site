@@ -49,16 +49,13 @@ data Order {
 
 Without `as`, the final segment becomes the qualifier: `identity.user` is referenced as `user`. An explicit alias helps when two domains end with the same segment or when a shorter name improves a frequently used type.
 
-An import is a logical dependency. The source file doesn't contain a filesystem path. Supply the path when checking or generating:
+An import is a logical dependency. The source file doesn't contain a filesystem path. `skelc check` and the language server validate the current input while leaving imported symbols unresolved, so checking needs only the source input:
 
 ```bash
-skelc check \
-  --skel-in ./order/skel \
-  --skel-import identity.user=./user/pub/skel \
-  --skel-import commerce.catalog=./catalog/pub/skel
+skelc check --skel-in ./order/skel
 ```
 
-Each `--skel-import` value must identify a contract whose declared domain matches the mapping key. Provide the complete transitive import graph. Cyclic domain imports are rejected.
+Generation validates the complete import graph. Supply physical paths with repeatable `--skel-import` mappings, as shown below. Each mapping must identify a contract whose declared domain matches the key. Provide the complete transitive import graph; cyclic domain imports are rejected.
 
 ## Keep Language Imports Separate
 
