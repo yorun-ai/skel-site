@@ -728,6 +728,12 @@ html.docs-doc-page,
   height: var(--ifm-navbar-height);
   min-height: var(--ifm-navbar-height);
   max-height: var(--ifm-navbar-height);
+  box-shadow: none;
+  transition: box-shadow 150ms ease;
+}
+
+.docs-doc-page .navbar.docs-navbar-has-page-scroll {
+  box-shadow: 0 8px 24px -16px rgb(var(--ink-rgb) / 22%);
 }
 
 .docs-doc-page .navbar__inner {
@@ -1674,6 +1680,19 @@ html[data-theme='dark'] .theme-admonition-danger {
     scroll-padding-bottom: 1rem;
   }
 
+  .docs-doc-page
+    .theme-doc-sidebar-container
+    > div:has(.menu.docs-sidebar-can-scroll-down)::after {
+    position: absolute;
+    right: 1.1rem;
+    bottom: var(--docs-product-links-height);
+    left: 1.1rem;
+    height: 1px;
+    background: rgb(163 163 163 / 16%);
+    content: '';
+    pointer-events: none;
+  }
+
   .docs-doc-page .theme-doc-sidebar-container {
     border-right-color: transparent;
   }
@@ -1692,7 +1711,6 @@ html[data-theme='dark'] .theme-admonition-danger {
   .docs-doc-page .navbar {
     padding-left: 0;
     background: color-mix(in srgb, var(--card) 94%, transparent);
-    box-shadow: none;
   }
 
   .docs-doc-page .navbar__inner {

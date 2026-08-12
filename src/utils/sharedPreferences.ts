@@ -1,5 +1,5 @@
 export type SharedLanguage = 'en' | 'zh-CN'
-export type SharedTheme = 'light' | 'dark' | 'system'
+export type SharedTheme = 'light' | 'dark'
 
 const languageCookie = 'yorun_language'
 const themeCookie = 'yorun_theme'
@@ -52,9 +52,7 @@ export function writeSharedLanguage(language: SharedLanguage): void {
 
 export function readSharedTheme(): SharedTheme | null {
   const value = readCookie(themeCookie)
-  return value === 'light' || value === 'dark' || value === 'system'
-    ? value
-    : null
+  return value === 'light' || value === 'dark' ? value : null
 }
 
 export function writeSharedTheme(theme: SharedTheme): void {

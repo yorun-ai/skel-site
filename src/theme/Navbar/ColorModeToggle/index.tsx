@@ -20,8 +20,10 @@ type PersistlessSetColorMode = (
   options: {persist: false},
 ) => void
 
-function colorModeChoice(theme: SharedTheme): ColorMode | null {
-  return theme === 'system' ? null : theme
+function systemColorMode(): SharedTheme {
+  return window.matchMedia('(prefers-color-scheme: dark)').matches
+    ? 'dark'
+    : 'light'
 }
 
 export default function NavbarColorModeToggle({
@@ -40,14 +42,16 @@ export default function NavbarColorModeToggle({
 
       const preferredTheme = readSharedTheme()
       if (!preferredTheme) {
-        writeSharedTheme(currentChoice ?? 'system')
+        const initialTheme = currentChoice ?? systemColorMode()
+        writeSharedTheme(initialTheme)
+        setWithoutLocalStorage(initialTheme, {persist: false})
         return
       }
 
       const currentAttribute =
         document.documentElement.getAttribute('data-theme-choice')
       if (currentAttribute !== preferredTheme) {
-        setWithoutLocalStorage(colorModeChoice(preferredTheme), {
+        setWithoutLocalStorage(preferredTheme, {
           persist: false,
         })
       }
@@ -86,8 +90,9 @@ export default function NavbarColorModeToggle({
       }
       className={className}
       onChange={(nextChoice) => {
-        writeSharedTheme(nextChoice ?? 'system')
-        setWithoutLocalStorage(nextChoice, {persist: false})
+        const nextTheme = nextChoice ?? systemColorMode()
+        writeSharedTheme(nextTheme)
+        setWithoutLocalStorage(nextTheme, {persist: false})
         removeLegacyThemeStorage()
       }}
       respectPrefersColorScheme={respectPrefersColorScheme}

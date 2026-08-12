@@ -7,6 +7,9 @@
 }
 
 .navigation {
+  --sidebar-scroll-fade-edge: 8px;
+  --sidebar-scroll-fade-size: 56px;
+
   min-height: 0;
   flex: 1 1 auto;
   overflow-x: hidden;
@@ -14,6 +17,28 @@
   overscroll-behavior: contain;
   padding-bottom: 0.75rem;
   scrollbar-width: none;
+}
+
+.navigationCanScrollDown {
+  border-bottom: 1px solid rgb(163 163 163 / 16%) !important;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0,
+    #000 calc(100% - var(--sidebar-scroll-fade-size)),
+    transparent calc(100% - var(--sidebar-scroll-fade-edge)),
+    transparent calc(100% - 1px),
+    #000 calc(100% - 1px),
+    #000 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0,
+    #000 calc(100% - var(--sidebar-scroll-fade-size)),
+    transparent calc(100% - var(--sidebar-scroll-fade-edge)),
+    transparent calc(100% - 1px),
+    #000 calc(100% - 1px),
+    #000 100%
+  );
 }
 
 .navigation::-webkit-scrollbar {
