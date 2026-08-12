@@ -1,4 +1,10 @@
-import React, {type ReactNode} from 'react'
+import React, {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import {useThemeConfig} from '@docusaurus/theme-common'
 import {useNavbarSecondaryMenu} from '@docusaurus/theme-common/internal'
 import NavbarColorModeToggle from '@theme/Navbar/ColorModeToggle'
@@ -22,6 +28,38 @@ function useUtilityItems(): NavbarItemConfig[] {
 export default function NavbarMobileSidebarSecondaryMenu(): ReactNode {
   const secondaryMenu = useNavbarSecondaryMenu()
   const utilityItems = useUtilityItems()
+  const navigationRef = useRef<HTMLDivElement>(null)
+  const [canScrollDown, setCanScrollDown] = useState(false)
+  const updateScrollHint = useCallback(() => {
+    const navigation = navigationRef.current
+    if (!navigation) {
+      return
+    }
+
+    const maxScrollTop = Math.max(
+      0,
+      navigation.scrollHeight - navigation.clientHeight,
+    )
+    setCanScrollDown(navigation.scrollTop < maxScrollTop - 1)
+  }, [])
+
+  useEffect(() => {
+    const navigation = navigationRef.current
+    if (!navigation) {
+      return undefined
+    }
+
+    const resizeObserver = new ResizeObserver(updateScrollHint)
+    const contentObserver = new MutationObserver(updateScrollHint)
+    resizeObserver.observe(navigation)
+    contentObserver.observe(navigation, {childList: true, subtree: true})
+    updateScrollHint()
+
+    return () => {
+      resizeObserver.disconnect()
+      contentObserver.disconnect()
+    }
+  }, [updateScrollHint])
 
   return (
     <div className={styles.layout}>
@@ -34,7 +72,12 @@ export default function NavbarMobileSidebarSecondaryMenu(): ReactNode {
           <NavbarColorModeToggle />
         </div>
       </div>
-      <div className={styles.navigation}>{secondaryMenu.content}</div>
+      <div
+        className={`${styles.navigation} ${canScrollDown ? styles.navigationCanScrollDown : ''}`}
+        onScroll={updateScrollHint}
+        ref={navigationRef}>
+        {secondaryMenu.content}
+      </div>
       <div className={styles.productLinks}>
         <a
           aria-label="Open Yorun Platform"

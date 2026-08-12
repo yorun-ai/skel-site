@@ -87,6 +87,10 @@
 }
 
 @media (max-width: 996px) {
+  :global(.docs-doc-page .navbar__items--right > .navbar-search-control) {
+    position: static !important;
+  }
+
   .dialog {
     top: 4.75rem;
     width: calc(100vw - 1.5rem);

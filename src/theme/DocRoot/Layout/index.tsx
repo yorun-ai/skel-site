@@ -17,12 +17,22 @@ export default function DocRootLayoutWrapper(props: Props): ReactNode {
     const pageScrollContainer = document.querySelector<HTMLElement>(
       '.docs-doc-page .main-wrapper',
     )
+    const navbar = document.querySelector<HTMLElement>(
+      '.docs-doc-page .navbar',
+    )
+    const updateNavbarScrollHint = () => {
+      navbar?.classList.toggle(
+        'docs-navbar-has-page-scroll',
+        (pageScrollContainer?.scrollTop ?? 0) > 1,
+      )
+    }
     let hidePageScrollbarTimer: number | undefined
     const showPageScrollbarWhileScrolling = () => {
       if (!pageScrollContainer) {
         return
       }
 
+      updateNavbarScrollHint()
       pageScrollContainer.classList.add('docs-page-is-scrolling')
       if (hidePageScrollbarTimer !== undefined) {
         window.clearTimeout(hidePageScrollbarTimer)
@@ -37,6 +47,7 @@ export default function DocRootLayoutWrapper(props: Props): ReactNode {
       showPageScrollbarWhileScrolling,
       {passive: true},
     )
+    updateNavbarScrollHint()
 
     const keepViewportPinned = () => {
       if (window.scrollX !== 0 || window.scrollY !== 0) {
@@ -126,6 +137,7 @@ export default function DocRootLayoutWrapper(props: Props): ReactNode {
         'scroll',
         showPageScrollbarWhileScrolling,
       )
+      navbar?.classList.remove('docs-navbar-has-page-scroll')
       window.removeEventListener('scroll', keepViewportPinned)
       if (hideScrollbarTimer !== undefined) {
         window.clearTimeout(hideScrollbarTimer)

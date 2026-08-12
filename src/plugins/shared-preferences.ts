@@ -28,17 +28,13 @@ const bootstrapScript = String.raw`
   } catch (_) {}
 
   var theme = readCookie('yorun_theme')
-  if (theme !== 'light' && theme !== 'dark' && theme !== 'system') {
-    theme = 'light'
+  if (theme !== 'light' && theme !== 'dark') {
+    theme = matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light'
     writeCookie('yorun_theme', theme)
   }
-  var effectiveTheme =
-    theme === 'system'
-      ? matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light'
-      : theme
-  document.documentElement.setAttribute('data-theme', effectiveTheme)
+  document.documentElement.setAttribute('data-theme', theme)
   document.documentElement.setAttribute('data-theme-choice', theme)
 
   var pathIsChinese = /^\/zh-CN(?:\/|$)/.test(location.pathname)
