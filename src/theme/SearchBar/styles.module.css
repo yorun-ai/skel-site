@@ -20,6 +20,7 @@
 .dialog :global(.navbar__search) {
   width: 100%;
   height: 100%;
+  margin: 0;
   border: 1px solid color-mix(in srgb, var(--border) 72%, var(--foreground));
   border-radius: 0.875rem;
   background: color-mix(in srgb, var(--card) 96%, transparent);
