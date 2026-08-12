@@ -178,9 +178,9 @@ html:root {
 }
 
 html[data-theme='dark'] {
-  --background: #0e1013;
+  --background: #12151a;
   --foreground: oklch(0.97 0.005 270);
-  --card: #14181d;
+  --card: #181d23;
   --card-foreground: var(--foreground);
   --popover: var(--card);
   --popover-foreground: var(--foreground);
@@ -196,7 +196,7 @@ html[data-theme='dark'] {
   --border: oklch(1 0 0 / 12%);
   --input: oklch(1 0 0 / 16%);
   --ring: #8e66ff;
-  --sidebar: #12151a;
+  --sidebar: var(--card);
   --sidebar-foreground: var(--foreground);
   --sidebar-primary: var(--primary);
   --sidebar-primary-foreground: var(--primary-foreground);
@@ -206,7 +206,7 @@ html[data-theme='dark'] {
   --sidebar-ring: var(--ring);
   --code-block-background: #151022;
   --code-block-accent: #6d50a3;
-  --docs-table-surface: #14181d;
+  --docs-table-surface: #181d23;
   --docs-table-head: #292238;
   --docs-table-stripe: #191e25;
   --docs-table-hover: #272235;
@@ -343,7 +343,7 @@ button:not(:disabled),
 .navbar__items--right {
   --navbar-control-size: 2rem;
 
-  gap: 0.5rem;
+  gap: 0.625rem;
 }
 
 .navbar__items--right > .navbar__item {
@@ -734,6 +734,13 @@ html.docs-doc-page,
 
 .docs-doc-page .navbar.docs-navbar-has-page-scroll {
   box-shadow: 0 8px 24px -16px rgb(var(--ink-rgb) / 22%);
+}
+
+html[data-theme='dark'].docs-doc-page
+  .navbar.docs-navbar-has-page-scroll {
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 7%),
+    0 10px 28px -16px rgb(0 0 0 / 60%);
 }
 
 .docs-doc-page .navbar__inner {
