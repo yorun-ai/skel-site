@@ -1768,11 +1768,21 @@ html[data-theme='dark'] .theme-admonition-danger {
     position: fixed;
     z-index: calc(var(--ifm-z-index-fixed) + 1);
     top: 0;
-    left: calc(var(--doc-sidebar-width) + 2.5rem);
+    left: var(
+      --docs-article-left,
+      calc(var(--doc-sidebar-width) + 40px)
+    );
     display: flex;
     align-items: center;
     overflow: hidden;
-    width: calc(100vw - var(--doc-sidebar-width) - 30rem);
+    width: calc(
+      100vw -
+        var(
+          --docs-article-left,
+          calc(var(--doc-sidebar-width) + 40px)
+        ) -
+        30rem
+    );
     height: var(--ifm-navbar-height);
     margin: 0;
     padding: 0;
