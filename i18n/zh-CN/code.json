@@ -414,20 +414,44 @@
   "homepage.visual.ariaLabel": {
     "message": "一份 Skel 源契约经过一次校验，再被编译成类型化的 Go、TypeScript 与运行时产物。"
   },
+  "homepage.visual.title": {
+    "message": "契约编译器"
+  },
+  "homepage.visual.detail": {
+    "message": "同一份源模型"
+  },
   "homepage.visual.validated": {
     "message": "已校验"
   },
   "homepage.visual.model": {
     "message": "已解析模型"
   },
+  "homepage.visual.model.detail": {
+    "message": "AST 与诊断"
+  },
   "homepage.visual.outputs.go": {
     "message": "Go 契约"
+  },
+  "homepage.visual.outputs.go.detail": {
+    "message": "类型与接口"
   },
   "homepage.visual.outputs.typescript": {
     "message": "TypeScript 客户端"
   },
+  "homepage.visual.outputs.typescript.detail": {
+    "message": "类型化消费方"
+  },
   "homepage.visual.outputs.schema": {
     "message": "Domain Schema"
+  },
+  "homepage.visual.outputs.schema.detail": {
+    "message": "运行时元数据"
+  },
+  "homepage.visual.pipeline": {
+    "message": "编译流程"
+  },
+  "homepage.visual.note": {
+    "message": "一次校验后的模型，为所有消费方生成一致的类型化边界。"
   },
   "homepage.loop.declare.title": {
     "message": "声明"
