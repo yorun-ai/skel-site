@@ -16,7 +16,6 @@ import {
   ShieldCheck,
   Sparkles,
   SquareTerminal,
-  Workflow,
   type LucideIcon,
 } from 'lucide-react'
 import {
@@ -46,7 +45,6 @@ const mechanismIcons: LucideIcon[] = [
   Code2,
 ]
 
-const stageIcons: LucideIcon[] = [FileCode2, ShieldCheck, Braces, Workflow]
 const guideIcons: LucideIcon[] = [Sparkles, Route, SquareTerminal]
 
 function InlineDocLink({
@@ -191,8 +189,6 @@ export default function DeveloperLanding(): React.JSX.Element {
   const firstContractPath = useBaseUrl(docsPath('/getting-started'))
   const languagePath = useBaseUrl(docsPath('/language'))
   const workflowPath = useBaseUrl(docsPath('/workflow'))
-  const installationPath = useBaseUrl(docsPath('/installation'))
-  const compatibilityPath = useBaseUrl(docsPath('/compatibility'))
   const shortcutsLabel = translate({
     id: 'homepage.a11y.shortcuts',
     message: 'Overview shortcuts',
@@ -210,16 +206,6 @@ export default function DeveloperLanding(): React.JSX.Element {
     <div className={`developer-landing ${styles.landing}`}>
       <header className={styles.hero}>
         <div className={styles.heroCopy}>
-          <div className={styles.kicker}>
-            <span aria-hidden="true" className={styles.kickerMark}>
-              <FileCode2 size={14} strokeWidth={2} />
-            </span>
-            <span>
-              <Translate id="homepage.kicker">
-                Contract DSL and compiler
-              </Translate>
-            </span>
-          </div>
           <h1>
             {heroTitleBreak >= 0 ? (
               <>
@@ -236,15 +222,6 @@ export default function DeveloperLanding(): React.JSX.Element {
               tasks in Skel. skelc validates the contract once, then generates
               the typed boundaries each consumer needs.
             </Translate>
-          </p>
-          <p className={styles.aiPromise}>
-            <CheckCircle2 aria-hidden="true" size={17} strokeWidth={2} />
-            <span>
-              <Translate id="homepage.description.ai">
-                AI-generated changes meet a machine-checkable boundary before
-                they enter application code.
-              </Translate>
-            </span>
           </p>
           <nav aria-label={shortcutsLabel} className={styles.heroActions}>
             <Link className={styles.primaryAction} to={firstContractPath}>
@@ -308,6 +285,11 @@ export default function DeveloperLanding(): React.JSX.Element {
                     </Translate>
                   </span>
                 </div>
+                <div className={styles.markers} aria-hidden="true">
+                  {mechanism.markers.map((marker) => (
+                    <code key={marker}>{marker}</code>
+                  ))}
+                </div>
                 <h3>
                   <Translate id={mechanism.title.id}>
                     {mechanism.title.text}
@@ -318,11 +300,6 @@ export default function DeveloperLanding(): React.JSX.Element {
                     {mechanism.description.text}
                   </Translate>
                 </p>
-                <div className={styles.markers} aria-hidden="true">
-                  {mechanism.markers.map((marker) => (
-                    <code key={marker}>{marker}</code>
-                  ))}
-                </div>
                 <div className={styles.cardLinks}>
                   {mechanism.links.map((link) => (
                     <InlineDocLink
@@ -368,23 +345,17 @@ export default function DeveloperLanding(): React.JSX.Element {
         </div>
 
         <ol className={styles.workflowGrid}>
-          {contractStages.map((stage, index) => {
-            const StageIcon = stageIcons[index]
-
-            return (
+          {contractStages.map((stage, index) => (
               <li key={stage.title.id}>
-                <div className={styles.stageTopline}>
-                  <span className={styles.stageIcon}>
-                    <StageIcon aria-hidden="true" size={18} strokeWidth={1.8} />
-                  </span>
+                <div className={styles.stageMeta}>
+                  <code>{stage.artifact}</code>
+                </div>
+                <h3>
                   <span className={styles.stageNumber}>
                     {String(index + 1).padStart(2, '0')}
                   </span>
-                </div>
-                <strong>
                   <Translate id={stage.title.id}>{stage.title.text}</Translate>
-                </strong>
-                <code>{stage.artifact}</code>
+                </h3>
                 <p>
                   <Translate id={stage.description.id}>
                     {stage.description.text}
@@ -399,8 +370,7 @@ export default function DeveloperLanding(): React.JSX.Element {
                   />
                 ) : null}
               </li>
-            )
-          })}
+            ))}
         </ol>
       </section>
 
@@ -431,20 +401,18 @@ export default function DeveloperLanding(): React.JSX.Element {
             return (
               <section className={styles.guideGroup} key={group.title.id}>
                 <div className={styles.guideGroupHeading}>
-                  <span>
+                  <span className={styles.guideGroupIcon}>
                     <GuideIcon aria-hidden="true" size={19} strokeWidth={1.8} />
                   </span>
-                  <div>
-                    <h3>
-                      <Translate id={group.title.id}>{group.title.text}</Translate>
-                    </h3>
-                    <p>
-                      <Translate id={group.description.id}>
-                        {group.description.text}
-                      </Translate>
-                    </p>
-                  </div>
+                  <h3>
+                    <Translate id={group.title.id}>{group.title.text}</Translate>
+                  </h3>
                 </div>
+                <p>
+                  <Translate id={group.description.id}>
+                    {group.description.text}
+                  </Translate>
+                </p>
                 <div className={styles.guideLinks}>
                   {group.links.map((link) => (
                     <GuideLink
@@ -460,30 +428,6 @@ export default function DeveloperLanding(): React.JSX.Element {
         </div>
       </section>
 
-      <aside className={styles.statusNote}>
-        <span className={styles.statusIcon} aria-hidden="true">
-          <ShieldCheck size={20} strokeWidth={1.8} />
-        </span>
-        <div>
-          <strong>
-            <Translate id="homepage.status.label">Before 1.0</Translate>
-          </strong>
-          <p>
-            <Translate id="homepage.status.description">
-              Pin skelc in development and CI, then review generated diffs when
-              the compiler or a public contract changes.
-            </Translate>
-          </p>
-        </div>
-        <div className={styles.statusLinks}>
-          <Link to={installationPath}>
-            <Translate id="homepage.status.installation">Install skelc</Translate>
-          </Link>
-          <Link to={compatibilityPath}>
-            <Translate id="homepage.status.compatibility">Compatibility</Translate>
-          </Link>
-        </div>
-      </aside>
     </div>
   )
 }

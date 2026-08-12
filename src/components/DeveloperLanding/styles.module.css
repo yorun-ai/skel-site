@@ -1,10 +1,10 @@
 .landing {
   width: 100%;
-  padding: 0.4rem 0 5rem;
+  padding: 0.4rem 0 4.75rem;
   font-family: var(--ifm-font-family-base);
   --landing-border: color-mix(in srgb, var(--border) 88%, transparent);
   --landing-muted: color-mix(in srgb, var(--muted) 78%, var(--card));
-  --landing-accent: color-mix(in srgb, var(--primary) 8%, var(--card));
+  --landing-accent: color-mix(in srgb, var(--accent) 62%, var(--card));
   --landing-accent-strong: color-mix(
     in srgb,
     var(--primary) 15%,
@@ -56,74 +56,32 @@
 .hero {
   position: relative;
   display: grid;
-  overflow: hidden;
-  grid-template-columns: minmax(0, 1.04fr) minmax(22rem, 0.96fr);
-  gap: clamp(2.5rem, 6vw, 5rem);
+  overflow: visible;
+  grid-template-columns: minmax(0, 1.08fr) minmax(23.5rem, 0.92fr);
+  gap: clamp(2.5rem, 5vw, 4rem);
   align-items: center;
-  padding: clamp(2.25rem, 5.5vw, 4.6rem);
-  border: 1px solid var(--landing-border);
-  border-radius: 1rem;
-  background:
-    radial-gradient(
-      circle at 88% 14%,
-      color-mix(in srgb, var(--primary) 15%, transparent),
-      transparent 34%
-    ),
-    linear-gradient(
-      135deg,
-      color-mix(in srgb, var(--card) 95%, var(--primary)) 0%,
-      var(--card) 55%,
-      color-mix(in srgb, var(--muted) 78%, var(--card)) 100%
-    );
-  box-shadow:
-    0 1px 2px rgb(var(--ink-rgb) / 4%),
-    0 18px 50px rgb(var(--ink-rgb) / 5%);
-}
-
-.hero::before {
-  position: absolute;
-  width: 18rem;
-  height: 18rem;
-  border: 1px solid color-mix(in srgb, var(--primary) 14%, transparent);
-  border-radius: 50%;
-  content: '';
-  inset: auto -8rem -10rem auto;
+  padding-block: 4rem;
+  isolation: isolate;
 }
 
 .heroCopy {
   position: relative;
   z-index: 1;
+  display: flex;
+  min-width: 0;
+  min-height: 25.8rem;
+  flex-direction: column;
 }
 
-.kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  margin-bottom: 1.15rem;
-  color: var(--ifm-color-primary);
-  font-size: 0.72rem;
-  font-weight: 650;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.kickerMark {
-  display: grid;
-  width: 1.75rem;
-  height: 1.75rem;
-  place-items: center;
-  border-radius: 0.45rem;
-  background: var(--landing-accent-strong);
-}
-
-.hero h1 {
-  max-width: 38rem;
+.landing .hero h1 {
+  max-width: 39rem;
   margin: 0;
   font-family: var(--ifm-heading-font-family);
-  font-size: clamp(2.3rem, 3.6vw, 2.55rem);
-  font-weight: 650;
-  letter-spacing: -0.06em;
-  line-height: 0.98;
+  color: var(--foreground);
+  font-size: 36px !important;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.16;
   text-wrap: balance;
 }
 
@@ -133,49 +91,31 @@
 }
 
 .lede {
-  max-width: 38rem;
-  margin: 1.45rem 0 0;
-  color: var(--ifm-color-emphasis-700);
-  font-size: clamp(1rem, 1.6vw, 1.13rem);
-  line-height: 1.68;
-}
-
-.aiPromise {
-  display: flex;
-  max-width: 36rem;
-  align-items: flex-start;
-  gap: 0.55rem;
-  margin: 1.15rem 0 0;
-  color: var(--ifm-color-emphasis-800);
-  font-size: 0.82rem;
-  font-weight: 520;
-  line-height: 1.55;
-}
-
-.aiPromise svg {
-  flex: 0 0 auto;
-  margin-top: 0.08rem;
-  color: var(--ifm-color-primary);
+  max-width: 39rem;
+  margin: 1rem 0 0;
+  color: var(--muted-foreground);
+  font-size: 1rem;
+  line-height: 1.72;
 }
 
 .heroActions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.7rem;
-  margin-top: 1.7rem;
+  margin-top: 0.9rem;
 }
 
 .primaryAction,
 .secondaryAction {
   display: inline-flex;
-  min-height: 2.65rem;
+  min-height: 2.7rem;
   align-items: center;
   justify-content: center;
   gap: 0.48rem;
-  padding: 0.68rem 1rem;
-  border-radius: 0.5rem;
-  font-size: 0.83rem;
-  font-weight: 620;
+  padding: 0.7rem 1rem;
+  border-radius: 0.55rem;
+  font-size: 0.86rem;
+  font-weight: 500;
   line-height: 1;
   text-decoration: none;
   transition:
@@ -424,63 +364,83 @@
 }
 
 .section {
+  position: relative;
   padding-top: clamp(4.5rem, 8vw, 6.5rem);
 }
 
+.hero + .section::before {
+  position: absolute;
+  top: clamp(2.25rem, 4vw, 3.25rem);
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: color-mix(in srgb, var(--border) 72%, transparent);
+  content: '';
+}
+
 .sectionHeader {
-  max-width: 44rem;
+  max-width: 62rem;
+  margin-bottom: 2rem;
 }
 
 .eyebrow {
-  margin: 0 0 0.7rem;
-  color: var(--ifm-color-primary);
-  font-size: 0.7rem;
-  font-weight: 650;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
+  display: inline-flex;
+  min-height: 2.35rem;
+  align-items: center;
+  margin: 0 0 1rem;
+  border: 1px solid color-mix(in srgb, var(--primary) 30%, var(--border));
+  border-radius: 999px;
+  padding: 0.4rem 1rem;
+  background: color-mix(in srgb, var(--primary) 4%, transparent);
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 680;
+  letter-spacing: 0.01em;
+  text-transform: none;
 }
 
 .landing .sectionHeader h2 {
   margin: 0;
   font-family: var(--ifm-heading-font-family);
-  font-size: clamp(1.8rem, 3.4vw, 2.45rem);
-  font-weight: 640;
-  letter-spacing: -0.04em;
-  line-height: 1.08;
-  text-wrap: balance;
+  color: var(--foreground);
+  font-size: 26px !important;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.06;
+  text-wrap: pretty;
 }
 
 .sectionHeader > p:last-child {
-  max-width: 42rem;
-  margin: 0.85rem 0 0;
-  color: var(--ifm-color-emphasis-700);
-  font-size: 0.96rem;
+  max-width: 52rem;
+  margin: 0.95rem 0 0;
+  color: var(--muted-foreground);
+  font-size: 15px;
   line-height: 1.68;
 }
 
 .capabilityGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
-  margin-top: 2rem;
+  gap: 0.85rem;
+  margin-top: 0;
 }
 
 .capabilityCard {
   position: relative;
   display: flex;
   min-width: 0;
-  min-height: 20rem;
+  min-height: 18.5rem;
   flex-direction: column;
-  padding: clamp(1.35rem, 3vw, 1.75rem);
+  padding: 1.4rem;
   border: 1px solid var(--landing-border);
-  border-radius: 0.85rem;
+  border-radius: 0.82rem;
   background:
     linear-gradient(
       145deg,
-      color-mix(in srgb, var(--card) 96%, var(--primary)),
-      var(--card) 58%
+      color-mix(in srgb, var(--card) 94%, var(--accent)),
+      var(--card)
     );
-  box-shadow: 0 1px 2px rgb(var(--ink-rgb) / 3%);
+  box-shadow: 0 14px 36px -34px rgb(var(--ink-rgb) / 44%);
   transition:
     border-color 160ms ease,
     box-shadow 160ms ease,
@@ -489,9 +449,7 @@
 
 .capabilityCard:hover {
   border-color: color-mix(in srgb, var(--primary) 30%, var(--border));
-  box-shadow:
-    0 2px 4px rgb(var(--ink-rgb) / 4%),
-    0 14px 34px rgb(var(--ink-rgb) / 5%);
+  box-shadow: 0 22px 46px -38px rgb(var(--brand-rgb) / 48%);
   transform: translateY(-2px);
 }
 
@@ -499,6 +457,7 @@
   display: flex;
   align-items: center;
   gap: 0.65rem;
+  color: var(--primary);
 }
 
 .cardIcon,
@@ -512,58 +471,68 @@
 }
 
 .cardIcon {
-  width: 2.35rem;
-  height: 2.35rem;
-  border-radius: 0.6rem;
-  background: var(--landing-accent);
+  width: 2.15rem;
+  height: 2.15rem;
+  border-radius: 0.52rem;
+  background: var(--accent);
 }
 
 .cardLabel {
-  color: var(--ifm-color-emphasis-600);
-  font-size: 0.68rem;
+  color: var(--primary);
+  font-size: 0.82rem;
   font-weight: 650;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.075em;
   text-transform: uppercase;
 }
 
 .capabilityCard h3 {
   max-width: 27rem;
-  margin: 1.25rem 0 0;
+  margin: 1rem 0 0;
   font-family: var(--ifm-heading-font-family);
-  font-size: 1.15rem;
-  font-weight: 630;
-  letter-spacing: -0.02em;
-  line-height: 1.3;
+  color: var(--foreground);
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.4;
 }
 
 .capabilityCard > p {
   max-width: 28rem;
-  margin: 0.65rem 0 0;
-  color: var(--ifm-color-emphasis-700);
-  font-size: 0.82rem;
-  line-height: 1.65;
+  margin: 0.18rem 0 0;
+  color: var(--muted-foreground);
+  font-size: 1rem;
+  line-height: 1.72;
 }
 
 .markers {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-top: 1.05rem;
+  gap: 0.25rem 0.4rem;
+  margin-top: 1rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 75%, transparent);
+  padding-bottom: 1.5rem;
+  opacity: 0.72;
 }
 
-.markers code {
-  padding: 0.22rem 0.42rem;
+.landing .markers code {
+  padding: 0;
   border: 0;
-  border-radius: 0.32rem;
-  background: var(--landing-muted);
-  color: var(--ifm-color-emphasis-700);
-  font-size: 0.62rem;
+  border-radius: 0;
+  background: transparent;
+  color: var(--muted-foreground);
+  font-size: 12px !important;
+}
+
+.markers code + code::before {
+  margin-right: 0.4rem;
+  color: color-mix(in srgb, var(--muted-foreground) 55%, transparent);
+  content: '·';
 }
 
 .cardLinks {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.5rem 1rem;
   margin-top: auto;
   padding-top: 1.3rem;
 }
@@ -572,11 +541,11 @@
   display: inline-flex;
   align-items: center;
   gap: 0.32rem;
-  padding: 0.48rem 0.62rem;
-  border-radius: 0.4rem;
-  background: var(--landing-accent);
-  color: var(--ifm-font-color-base) !important;
-  font-size: 0.69rem;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--primary) !important;
+  font-size: 0.72rem;
   font-weight: 620;
   text-decoration: none !important;
   transition:
@@ -585,28 +554,18 @@
 }
 
 .cardLinks a:hover {
-  background: var(--landing-accent-strong);
-  color: var(--ifm-color-primary) !important;
+  background: transparent;
+  color: var(--primary) !important;
   text-decoration: none !important;
 }
 
 .workflowSection {
-  margin-top: clamp(4.5rem, 8vw, 6.5rem);
-  padding: clamp(1.5rem, 4vw, 2.4rem);
-  border: 1px solid var(--landing-border);
-  border-radius: 1rem;
-  background:
-    radial-gradient(
-      circle at 8% 0%,
-      color-mix(in srgb, var(--primary) 11%, transparent),
-      transparent 30%
-    ),
-    var(--landing-muted);
+  margin-top: 0;
 }
 
 .workflowHeading {
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 2rem;
 }
@@ -617,6 +576,7 @@
   align-items: center;
   gap: 0.4rem;
   padding-bottom: 0.18rem;
+  margin-top: 0.75rem;
   color: var(--ifm-font-color-base) !important;
   font-size: 0.75rem;
   font-weight: 620;
@@ -632,8 +592,17 @@
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0.75rem;
-  margin: 2rem 0 0;
-  padding: 0;
+  margin: 0;
+  padding: 0.8rem;
+  border: 1px solid var(--landing-border);
+  border-radius: 0.9rem;
+  background:
+    radial-gradient(
+      circle at 8% 0%,
+      color-mix(in srgb, var(--primary) 11%, transparent),
+      transparent 30%
+    ),
+    var(--landing-muted);
   list-style: none;
 }
 
@@ -641,140 +610,159 @@
   position: relative;
   display: flex;
   min-width: 0;
-  min-height: 13rem;
-  flex-direction: column;
-  padding: 1.1rem;
+  min-height: 7.6rem;
+  padding: 0.95rem;
   border: 1px solid var(--landing-border);
   border-radius: 0.7rem;
   background: var(--card);
   box-shadow: 0 1px 2px rgb(var(--ink-rgb) / 3%);
 }
 
-.stageTopline {
+.stageMeta {
+  position: absolute;
+  top: 0.95rem;
+  right: 1.9rem;
   display: flex;
+  height: 1.9rem;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+  justify-content: flex-end;
 }
 
-.stageIcon {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 0.48rem;
-  background: var(--landing-accent);
-}
-
-.stageNumber {
-  color: var(--ifm-color-emphasis-400);
-  font-family: var(--ifm-font-family-monospace);
-  font-size: 0.62rem;
-}
-
-.workflowGrid strong {
-  margin-top: 1rem;
-  font-size: 0.88rem;
-  font-weight: 640;
-}
-
-.workflowGrid li > code {
-  align-self: flex-start;
-  margin-top: 0.35rem;
+.landing .stageMeta code {
+  overflow: hidden;
   padding: 0;
   border: 0;
   background: transparent;
-  color: var(--ifm-color-primary);
-  font-size: 0.63rem;
+  color: var(--muted-foreground);
+  font-size: 12px !important;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stageNumber {
+  flex: 0 0 auto;
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: -0.08em;
+  line-height: 0.9;
+  font-variant-numeric: tabular-nums;
+}
+
+.landing .workflowGrid h3 {
+  position: absolute;
+  top: 0.95rem;
+  left: 0.95rem;
+  display: flex;
+  height: 1.9rem;
+  align-items: center;
+  gap: 0.48rem;
+  margin: 0 !important;
+  color: var(--foreground);
+  font-size: 18px;
+  font-weight: 620;
+  letter-spacing: -0.015em;
 }
 
 .workflowGrid li > p {
-  margin: auto 0 0;
-  padding-top: 1rem;
-  color: var(--ifm-color-emphasis-600);
-  font-size: 0.7rem;
-  line-height: 1.5;
+  position: absolute;
+  top: 3.25rem;
+  right: 0.95rem;
+  left: 0.95rem;
+  margin: 0;
+  color: var(--muted-foreground);
+  font-size: 15px;
+  line-height: 1.48;
 }
 
 .stageArrow {
   position: absolute;
   z-index: 1;
   top: 50%;
-  right: -1.25rem;
-  width: 1.75rem;
-  height: 1.75rem;
-  padding: 0.35rem;
+  right: -0.85rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  padding: 0.2rem;
   border: 1px solid var(--landing-border);
   border-radius: 50%;
-  background: var(--landing-muted);
-  color: var(--ifm-color-emphasis-500);
+  background: var(--card);
+  color: var(--primary);
   transform: translateY(-50%);
 }
 
 .guideGroups {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
-  margin-top: 2rem;
+  align-items: stretch;
+  gap: 0.85rem;
+  margin-top: 0;
 }
 
 .guideGroup {
+  display: flex;
   min-width: 0;
-  padding: 1.2rem;
+  flex-direction: column;
+  padding: 0.65rem 1.25rem 1.25rem;
   border: 1px solid var(--landing-border);
-  border-radius: 0.8rem;
+  border-radius: 0.82rem;
   background: var(--card);
-  box-shadow: 0 1px 2px rgb(var(--ink-rgb) / 3%);
+  box-shadow: 0 12px 32px -32px rgb(var(--ink-rgb) / 40%);
 }
 
 .guideGroupHeading {
   display: flex;
-  align-items: flex-start;
-  gap: 0.8rem;
+  height: 2.35rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.7rem;
 }
 
-.guideGroupHeading > span {
+.guideGroupIcon {
   display: grid;
   flex: 0 0 auto;
-  width: 2.2rem;
-  height: 2.2rem;
+  order: 2;
+  width: 2.35rem;
+  height: 2.35rem;
   place-items: center;
-  border-radius: 0.55rem;
-  background: var(--landing-accent);
-}
-
-.guideGroupHeading > div {
-  min-width: 0;
+  border-radius: 0.58rem;
+  background: var(--accent);
 }
 
 .guideGroup h3 {
+  display: flex;
+  min-height: 2.35rem;
+  align-items: center;
   margin: 0 !important;
-  font-size: 0.93rem;
-  font-weight: 640;
-  letter-spacing: -0.015em;
-  line-height: 1.25;
+  color: var(--foreground);
+  font-size: 18px;
+  font-weight: 630;
+  letter-spacing: -0.02em;
+  line-height: 1;
 }
 
-.guideGroupHeading p {
-  margin: 0.3rem 0 0 !important;
-  color: var(--ifm-color-emphasis-600);
-  font-size: 0.7rem;
-  line-height: 1.45;
+.guideGroup > p {
+  min-height: 3.6rem;
+  margin: 0.4rem 0 0 !important;
+  color: var(--muted-foreground);
+  font-size: 15px;
+  line-height: 1.55;
 }
 
 .guideLinks {
   display: grid;
   gap: 0.48rem;
-  margin-top: 1.2rem;
+  margin-top: 1rem;
 }
 
 .guideLink {
   display: flex;
   min-width: 0;
-  min-height: 4.75rem;
+  min-height: 0;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 0.65rem;
-  padding: 0.72rem;
-  border-radius: 0.5rem;
+  gap: 0.7rem;
+  padding: 0.78rem;
+  border-radius: 0.55rem;
   background: var(--landing-muted);
   color: inherit !important;
   text-decoration: none !important;
@@ -784,10 +772,10 @@
 }
 
 .guideLink:hover {
-  background: var(--landing-accent);
+  background: var(--accent);
   color: inherit !important;
   text-decoration: none !important;
-  transform: translateX(2px);
+  transform: translateY(-1px);
 }
 
 .guideLink > span {
@@ -796,7 +784,8 @@
 
 .guideLink strong {
   display: block;
-  font-size: 0.8rem;
+  color: var(--foreground);
+  font-size: 0.78rem;
   font-weight: 620;
   line-height: 1.3;
   transition: color 140ms ease;
@@ -805,15 +794,22 @@
 .guideLink small {
   display: block;
   margin-top: 0.22rem;
-  color: var(--ifm-color-emphasis-600);
-  font-size: 0.7rem;
-  line-height: 1.45;
+  color: var(--muted-foreground);
+  font-size: 0.66rem;
+  line-height: 1.4;
 }
 
 .guideLink svg {
+  display: grid;
   flex: 0 0 auto;
-  margin-top: 0.02rem;
-  color: var(--ifm-color-emphasis-400);
+  width: 1.65rem;
+  height: 1.65rem;
+  place-items: center;
+  margin-top: 0;
+  border-radius: 999px;
+  padding: 0.25rem;
+  background: var(--card);
+  color: var(--muted-foreground);
   transition:
     color 140ms ease,
     transform 140ms ease;
@@ -828,69 +824,11 @@
   transform: translate(1px, -1px);
 }
 
-.statusNote {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: 0.9rem;
-  align-items: center;
-  margin-top: clamp(4rem, 7vw, 5.5rem);
-  padding: 1.15rem 1.25rem;
-  border: 1px solid color-mix(in srgb, var(--primary) 22%, var(--border));
-  border-radius: 0.75rem;
-  background: var(--landing-accent);
-}
-
-.statusIcon {
-  width: 2.35rem;
-  height: 2.35rem;
-  border-radius: 0.55rem;
-  background: color-mix(in srgb, var(--primary) 13%, var(--card));
-}
-
-.statusNote > div {
-  min-width: 0;
-}
-
-.statusNote strong {
-  display: block;
-  font-size: 0.78rem;
-  font-weight: 650;
-}
-
-.statusNote p {
-  margin: 0.18rem 0 0;
-  color: var(--ifm-color-emphasis-700);
-  font-size: 0.72rem;
-  line-height: 1.5;
-}
-
-.statusLinks {
-  display: flex;
-  flex: 0 0 auto;
-  gap: 0.45rem;
-}
-
-.statusLinks a {
-  padding: 0.48rem 0.62rem;
-  border-radius: 0.4rem;
-  background: color-mix(in srgb, var(--card) 78%, transparent);
-  color: var(--ifm-font-color-base) !important;
-  font-size: 0.72rem;
-  font-weight: 620;
-  text-decoration: none !important;
-}
-
-.statusLinks a:hover {
-  color: var(--ifm-color-primary) !important;
-  text-decoration: none !important;
-}
-
 .primaryAction:focus-visible,
 .secondaryAction:focus-visible,
 .cardLinks a:focus-visible,
 .textAction:focus-visible,
-.guideLink:focus-visible,
-.statusLinks a:focus-visible {
+.guideLink:focus-visible {
   outline: 2px solid var(--ring);
   outline-offset: 3px;
 }
@@ -898,10 +836,12 @@
 @media (max-width: 1000px) {
   .hero {
     grid-template-columns: 1fr;
+    padding-block: 3.5rem;
   }
 
   .heroCopy {
     max-width: 44rem;
+    min-height: 0;
   }
 
   .compilerVisual {
@@ -913,7 +853,7 @@
   }
 
   .workflowGrid li {
-    min-height: 11.5rem;
+    min-height: 7.6rem;
   }
 
   .stageArrow {
@@ -921,8 +861,17 @@
   }
 
   .guideGroups {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .guideGroup:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .guideGroup > p {
+    min-height: 0;
+  }
+
 }
 
 @media (max-width: 700px) {
@@ -932,12 +881,11 @@
 
   .hero {
     gap: 2.25rem;
-    padding: 1.4rem;
-    border-radius: 0.8rem;
+    padding: 2.5rem 0 3.5rem;
   }
 
-  .hero h1 {
-    font-size: clamp(2rem, 8.5vw, 2.3rem);
+  .landing .hero h1 {
+    font-size: clamp(2.35rem, 10vw, 3rem) !important;
   }
 
   .capabilityGrid,
@@ -956,28 +904,22 @@
   }
 
   .workflowGrid li {
-    min-height: 0;
+    min-height: 7.6rem;
   }
 
-  .workflowGrid li > p {
-    margin-top: 1rem;
+  .guideGroups {
+    grid-template-columns: 1fr;
   }
 
-  .statusNote {
-    grid-template-columns: auto minmax(0, 1fr);
+  .guideGroup:last-child {
+    grid-column: auto;
   }
 
-  .statusLinks {
-    grid-column: 1 / -1;
-    padding-left: 3.25rem;
-  }
 }
 
 @media (max-width: 480px) {
   .hero {
-    margin-right: -0.2rem;
-    margin-left: -0.2rem;
-    padding: 1.2rem;
+    padding: 2rem 0 3rem;
   }
 
   .heroActions {
@@ -1011,10 +953,10 @@
     justify-content: flex-start;
   }
 
-  .statusLinks {
-    flex-direction: column;
-    padding-left: 0;
+  .compilerCommand {
+    flex-wrap: wrap;
   }
+
 }
 
 @media (prefers-reduced-motion: reduce) {
