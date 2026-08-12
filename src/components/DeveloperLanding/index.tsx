@@ -11,7 +11,6 @@ import {
   CheckCircle2,
   Code2,
   FileCode2,
-  GitBranch,
   Layers3,
   Route,
   ShieldCheck,
@@ -190,8 +189,6 @@ export default function DeveloperLanding(): React.JSX.Element {
   const firstContractPath = useBaseUrl(docsPath('/getting-started'))
   const languagePath = useBaseUrl(docsPath('/language'))
   const workflowPath = useBaseUrl(docsPath('/workflow'))
-  const installationPath = useBaseUrl(docsPath('/installation'))
-  const compatibilityPath = useBaseUrl(docsPath('/compatibility'))
   const shortcutsLabel = translate({
     id: 'homepage.a11y.shortcuts',
     message: 'Overview shortcuts',
@@ -209,13 +206,6 @@ export default function DeveloperLanding(): React.JSX.Element {
     <div className={`developer-landing ${styles.landing}`}>
       <header className={styles.hero}>
         <div className={styles.heroCopy}>
-          <div className={styles.kicker}>
-            <span>
-              <Translate id="homepage.kicker">
-                Contract DSL and compiler
-              </Translate>
-            </span>
-          </div>
           <h1>
             {heroTitleBreak >= 0 ? (
               <>
@@ -232,15 +222,6 @@ export default function DeveloperLanding(): React.JSX.Element {
               tasks in Skel. skelc validates the contract once, then generates
               the typed boundaries each consumer needs.
             </Translate>
-          </p>
-          <p className={styles.aiPromise}>
-            <CheckCircle2 aria-hidden="true" size={17} strokeWidth={2} />
-            <span>
-              <Translate id="homepage.description.ai">
-                AI-generated changes meet a machine-checkable boundary before
-                they enter application code.
-              </Translate>
-            </span>
           </p>
           <nav aria-label={shortcutsLabel} className={styles.heroActions}>
             <Link className={styles.primaryAction} to={firstContractPath}>
@@ -447,32 +428,6 @@ export default function DeveloperLanding(): React.JSX.Element {
         </div>
       </section>
 
-      <aside className={styles.statusNote}>
-        <div className={styles.statusLabel}>
-          <GitBranch aria-hidden="true" size={16} strokeWidth={1.8} />
-          <span>
-            <Translate id="homepage.status.label">Before 1.0</Translate>
-          </span>
-        </div>
-        <div>
-          <p>
-            <Translate id="homepage.status.description">
-              Pin skelc in development and CI, then review generated diffs when
-              the compiler or a public contract changes.
-            </Translate>
-          </p>
-        </div>
-        <div className={styles.statusLinks}>
-          <Link to={installationPath}>
-            <Translate id="homepage.status.installation">Install skelc</Translate>
-            <ArrowRight aria-hidden="true" size={14} strokeWidth={1.8} />
-          </Link>
-          <Link to={compatibilityPath}>
-            <Translate id="homepage.status.compatibility">Compatibility</Translate>
-            <ArrowRight aria-hidden="true" size={14} strokeWidth={1.8} />
-          </Link>
-        </div>
-      </aside>
     </div>
   )
 }
