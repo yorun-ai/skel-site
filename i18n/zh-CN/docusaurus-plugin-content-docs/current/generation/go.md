@@ -29,7 +29,9 @@ skelc gen go-module \
 
 生成的非泛型 data 类型会提供 `Clone()`，泛型 data 类型则提供 `CloneBy(...)`，并为每个类型参数接收一个类型安全的 clone callback。生成的 Rpc method spec 会组合这些方法，形成类型安全的请求和结果 clone hook。Vine 使用这些 hook 防止可变参数和结果越过进程内 caller/handler 边界。
 
-这项契约只保证值隔离。JSON 或 CBOR 编解码、传输规范化、自定义 marshal/unmarshal 方法和 codec 错误不属于进程内契约，可能因生成 spec 而不同。引用导入 domain 数据或使用递归 data 的请求或结果类型仍使用 Vine 基于序列化的兼容 fallback；该 fallback 的 codec 往返只是实现细节，不会增强进程内调用的契约。
+这项契约只保证值隔离。JSON 或 CBOR 编解码、传输规范化、自定义 marshal/unmarshal 方法和 codec 错误不属于进程内契约，可能因生成 spec 而不同。软递归 data 同样使用生成的 clone 方法。
+
+skelc v0.12 支持滚动升级期间引用 v0.12 之前生成的 Go package。消费方会优先使用外部类型已有的 `Clone()` 或 `CloneBy(...)`；如果方法不存在，非泛型外部 data 使用序列化兼容路径，泛型外部 data 则使用类型安全的结构化 clone，确保类型参数 callback 继续控制值隔离。这里检测的是能力，不会判断生成器版本。重新生成被导入的 package 后即可进入直接 clone 路径。
 
 ## 生成包所有权
 
