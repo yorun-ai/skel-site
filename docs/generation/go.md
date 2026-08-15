@@ -25,6 +25,30 @@ skelc gen go-module \
 
 Add `--go-pub-out` and `--go-pub-module` to produce a public module alongside the regular one. The regular module carries the full contract and server capabilities; the public module exposes public clients, listeners, and the types they depend on.
 
+## In-Process Rpc Value Isolation
+
+Generated non-generic data types expose `Clone()`. Generic data types expose
+`CloneBy(...)`, accepting one typed clone callback for each type parameter.
+Generated Rpc method specs compose these methods into type-safe request and
+result clone hooks. Vine uses these hooks to prevent mutable arguments and
+results from leaking across the in-process caller/handler boundary.
+
+This contract guarantees value isolation only. JSON or CBOR encoding, transport
+normalization, custom marshal/unmarshal methods, and codec failures are not part
+of the in-process contract and may differ by generated spec. Request or result
+types that reference data from an imported domain or use recursive data retain
+Vine's serialization-based compatibility fallback; the fallback's codec round
+trip is an implementation detail and does not strengthen the in-process
+contract.
+
+## Generated Package Ownership
+
+Generated Go packages are fully managed by skelc. Do not edit generated files
+or add handwritten `.go` files to the same package. skelc and Vine compatibility
+covers only generated declarations; compilation and runtime behavior are not
+guaranteed when unmanaged files add declarations, methods, or custom codec
+behavior. Keep business implementations and adapters in separate packages.
+
 ## Deprecation Output
 
 `@deprecated` becomes a standard `Deprecated:` paragraph on generated Go declarations, methods, constants, and fields, so Go-aware editors can present the symbol as obsolete. The generated domain schema also carries `Deprecated` and `DeprecatedReason` for Vine tooling. Multiline explanations remain valid Go documentation.
