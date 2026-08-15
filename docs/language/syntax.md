@@ -113,7 +113,10 @@ Imported resources use a qualifier, such as `account.User:read`. Check arguments
 | Field, method, via, action, check, trigger | `lowerCamelCase` |
 | Enum item | `SCREAMING_SNAKE_CASE` |
 
-Identifiers can't begin with `_`. `UNSPECIFIED` is reserved for enum output, and `skelSensitive` is reserved in generated sensitive structures.
+Identifiers can't begin with `_`. `UNSPECIFIED` is reserved for enum output,
+and `skelSensitive` is reserved in generated sensitive structures. Data and
+actor authentication fields can't be named `clone` or `cloneBy`; those names
+are reserved for generated Go value-isolation methods.
 
 Validate the current input after every contract change:
 
