@@ -26,7 +26,7 @@ Once connected, the extension provides:
 - Skel syntax highlighting and the optional Skel Dark theme
 - Recoverable syntax and source-directory-scoped semantic diagnostics
 - Live schema compatibility diagnostics against Git `HEAD` or an explicit baseline
-- A CodeLens and command that open the complete JSON compatibility report
+- A CodeLens and a command to open the complete JSON compatibility report
 - Related diagnostic locations and quick fixes
 - Formatting, hover details, and decorator completion filtered for the element being decorated
 - Deprecated declarations and elements in completion, hover, and symbol views

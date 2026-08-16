@@ -55,7 +55,7 @@ data Order {
 skelc check --skel-in ./order/skel
 ```
 
-生成阶段会校验完整的 import 图。按下面的示例，通过可重复的 `--skel-import` 提供物理路径。每个映射指向的契约必须声明与映射键相同的 domain；你需要提供完整的传递依赖图，domain 之间的循环导入会被拒绝。
+生成阶段会校验完整的 import 图。按下面的示例，通过可重复的 `--skel-import` 提供物理路径。每个映射指向的契约，其声明的 domain 必须与映射键一致；你需要提供完整的传递依赖图，domain 之间的循环导入会被拒绝。
 
 ## 分开管理语言包路径
 

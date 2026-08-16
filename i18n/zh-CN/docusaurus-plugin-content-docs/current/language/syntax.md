@@ -113,7 +113,7 @@ any(item, item)
 | 字段、method、via、action、check、trigger | `lowerCamelCase` |
 | Enum item | `SCREAMING_SNAKE_CASE` |
 
-标识符不能以 `_` 开头。`UNSPECIFIED` 为 enum 输出保留，`skelSensitive` 为生成的敏感结构保留。data 和 actor 认证字段不能命名为 `clone` 或 `cloneBy`；这些名称为生成的 Go 值隔离方法保留。
+标识符不能以 `_` 开头。`UNSPECIFIED` 预留给 enum 输出，`skelSensitive` 预留给生成的敏感结构。data 和 actor 认证字段不能命名为 `clone` 或 `cloneBy`；这些名称预留给生成的 Go 值隔离方法。
 
 每次修改契约后都运行一下：
 

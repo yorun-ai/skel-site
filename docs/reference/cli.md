@@ -47,7 +47,9 @@ Generation resolves imported domains with repeatable mappings:
 --skel-import demo.user=./domain/user/pub/skel
 ```
 
-The mapping key is the full domain name declared by `import`; the value points to that domain's public Skel input.
+The mapping key is the full domain name declared by `import`; the value points
+to that domain's public Skel input.
+
 Schema commands do not accept these mappings. Schema snapshots and source-based
 diffs preserve imported symbols as opaque, fully qualified references.
 
@@ -122,8 +124,8 @@ skelc schema get data demo.user.User --skel-in ./domain/user/skel
 skelc schema get resource demo.user.User --skel-in ./domain/user/skel
 ```
 
-Some declaration kinds have independent namespaces, so a data and resource can
-share one fully qualified Skel name. `TYPE` is therefore required and is part of
+Some declaration kinds have independent namespaces, so `data` and `resource`
+can share one fully qualified Skel name. `TYPE` is therefore required and is part of
 the declaration identity. `get` returns one complete normalized JSON declaration
 including its type-specific data, enum, resource, service, or other body:
 
@@ -172,7 +174,7 @@ artifact.
 Imported domains are intentionally not embedded in this artifact. Their symbols
 are recorded as opaque, fully qualified references. `schema snapshot` does not
 accept `--skel-import`. Snapshot and diff each imported domain separately to
-check compatibility of that dependency itself.
+check that dependency's own compatibility.
 
 Imported member, argument, and result types use the explicit
 `"kind": "importedReference"` representation:
