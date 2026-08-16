@@ -210,6 +210,9 @@ skelc schema snapshot \
 
 ```bash
 skelc schema diff \
+  --skel-in ./domain/user/skel
+
+skelc schema diff \
   --baseline-skel-in ./previous/user/skel \
   --skel-in ./domain/user/skel
 ```
@@ -218,11 +221,26 @@ skelc schema diff \
 不接受 import 映射。diff 始终覆盖完整 domain，包括公开和私有声明。它只接受
 原始 Skel 源码，不读取 schema 快照文件。
 
-每项变化都有稳定 code，并归入三个影响等级：
+`--baseline-skel-in` 是可选参数。省略时，skelc 会查找 `--skel-in` 所在的 Git
+仓库，并从 `HEAD` 中提取同一个文件或目录，用最近一次已提交源码和当前工作区
+进行 diff。baseline 源码位置使用稳定的 `HEAD:<repo-relative-path>` 形式。如果
+找不到 Git 仓库、提交历史或 `HEAD` 中的对应路径，命令会报错并提示显式传入
+`--baseline-skel-in`。
 
-- `breaking`：删除或改变已有契约、增加必填字段或参数、收紧认证要求等会破坏已有使用方的变化。
-- `dangerous`：不一定直接造成源码不兼容，但可能改变行为的变化，例如增加 enum item 或放宽授权边界。
-- `compatible`：增加可独立调用的声明或 method，以及修改文档和废弃元数据。
+每项变化都有稳定 code，`impact` 使用三个 SCREAMING_CASE 枚举值：
+
+- `BREAKING`：删除或从结构上改变已有契约、增加必填字段或参数，以及其他要求已有使用方修改代码或数据的变化。
+- `DANGEROUS`：保持结构兼容但可能改变运行时、安全或解释语义的变化，例如改变认证或权限要求，以及增加 enum item。
+- `COMPATIBLE`：增加可独立调用的声明或 method，以及修改文档和废弃元数据。
+
+每项结果还带有独立的 SCREAMING_CASE `change` 维度：
+
+- `ADDED`：新增声明、member、item、method 或 capability。
+- `REMOVED`：删除已有元素。
+- `MODIFIED`：已有元素的类型、顺序、可见性、元数据、认证、授权、敏感性或其他属性发生变化。
+
+例如，新增 enum item 的结果为 `change: "ADDED"`、`impact: "DANGEROUS"`；
+新增必填 data member 同样是 `change: "ADDED"`，但 `impact: "BREAKING"`。
 
 命令始终在结构化 JSON 报告中返回全部变化，包括兼容性结论、分类计数、稳定
 变化 code、symbol，以及可用的 baseline/candidate 源码位置。无论兼容性结论

@@ -30,3 +30,9 @@ CI 和开发环境要用同一个 skelc 版本。输入、import 映射和输出
 不接受 import 路径映射。
 diff 直接读取 baseline 和 candidate 的 Skel 源文件或目录，不接受 schema 快照
 JSON 作为 diff 输入。
+未显式指定 baseline 时，diff 会从 Git `HEAD` 读取 candidate 的同一路径；没有
+可用历史的仓库必须传入 `--baseline-skel-in`。
+
+Go 集成可以通过根 facade `go.yorun.ai/skelc` 解析这些命令输出。各 schema
+子命令对应使用 `SchemaEntry`、`SchemaDeclaration`、`SchemaSnapshot` 或
+`SchemaDiffReport`；嵌套 schema 类型和分类常量也由同一个 package 导出。

@@ -32,3 +32,11 @@ owns each declaration and makes import paths unnecessary for schema checks.
 Schema commands do not accept import-path mappings.
 Diff reads the baseline and candidate Skel source files or directories directly;
 schema snapshot JSON is not accepted as diff input.
+When no explicit baseline is supplied, diff reads the candidate path from Git
+`HEAD`. Repositories without usable history must pass `--baseline-skel-in`.
+
+Go integrations can decode these command outputs through the root
+`go.yorun.ai/skelc` facade. Use `SchemaEntry`, `SchemaDeclaration`,
+`SchemaSnapshot`, or `SchemaDiffReport` for the corresponding schema
+subcommand; nested schema types and classification constants are exported from
+the same package.

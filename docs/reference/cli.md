@@ -184,6 +184,9 @@ List every schema change between baseline and candidate Skel source files or dir
 
 ```bash
 skelc schema diff \
+  --skel-in ./domain/user/skel
+
+skelc schema diff \
   --baseline-skel-in ./previous/user/skel \
   --skel-in ./domain/user/skel
 ```
@@ -193,14 +196,35 @@ diff command does not accept import mappings. Diff always covers the complete
 domain, including both public and private declarations. It accepts only original
 Skel source and does not read schema snapshot files.
 
-Changes are assigned stable codes and one of three impact levels:
+`--baseline-skel-in` is optional. When it is omitted, skelc discovers the Git
+repository containing `--skel-in` and extracts the same file or directory from
+`HEAD`. This compares the latest committed source with the current working tree.
+Baseline source positions use the stable `HEAD:<repo-relative-path>` form. If no
+Git repository, commit history, or matching path at `HEAD` exists, the command
+fails and asks for an explicit `--baseline-skel-in`.
 
-- `breaking`: removes or changes an existing contract, adds a required member
-  or argument, tightens authentication, or otherwise breaks existing users.
-- `dangerous`: can change behavior without being an unconditional source break,
-  such as adding an enum item or relaxing an authorization boundary.
-- `compatible`: adds an independently callable declaration or method, or changes
+Changes are assigned stable codes and one of three SCREAMING_CASE `impact`
+values:
+
+- `BREAKING`: removes or structurally changes an existing contract, adds a
+  required member or argument, or otherwise requires an existing user to
+  change its code or data.
+- `DANGEROUS`: preserves structural compatibility but can change runtime,
+  security, or interpretation semantics, such as changing authentication or
+  permission requirements or adding an enum item.
+- `COMPATIBLE`: adds an independently callable declaration or method, or changes
   documentation and deprecation metadata.
+
+Each item also has an independent SCREAMING_CASE `change` value:
+
+- `ADDED`: a declaration, member, item, method, or capability was added.
+- `REMOVED`: an existing element was removed.
+- `MODIFIED`: an existing element changed type, order, visibility, metadata,
+  authentication, authorization, sensitivity, or another property.
+
+For example, adding an enum item produces `change: "ADDED"` with
+`impact: "DANGEROUS"`, while adding a required data member produces the same
+`change` with `impact: "BREAKING"`.
 
 The command always emits every detected change in a structured JSON report,
 including the compatibility result, summary counts, stable change codes,
