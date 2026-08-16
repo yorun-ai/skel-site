@@ -230,8 +230,12 @@ skelc schema diff \
 每项变化都有稳定 code，`impact` 使用三个 SCREAMING_CASE 枚举值：
 
 - `BREAKING`：删除或从结构上改变已有契约、增加必填字段或参数，以及其他要求已有使用方修改代码或数据的变化。
-- `DANGEROUS`：保持结构兼容但可能改变运行时、安全或解释语义的变化，例如改变认证或权限要求，以及增加 enum item。
+- `DANGEROUS`：保持结构兼容但可能改变运行时、安全或解释语义的变化，例如改变认证或权限要求、改变 config lifecycle，以及增加 enum item。
 - `COMPATIBLE`：增加可独立调用的声明或 method，以及修改文档和废弃元数据。
+
+domain 名称变化表示整个 schema 身份被替换，而不是某个嵌套符号改名。diff 只输出
+一项 `domain.name.changed`，其中 `change: "MODIFIED"`、`impact: "BREAKING"`，
+随后停止，不再展开被替换 domain 下的声明、成员或元数据变化。
 
 每项结果还带有独立的 SCREAMING_CASE `change` 维度：
 

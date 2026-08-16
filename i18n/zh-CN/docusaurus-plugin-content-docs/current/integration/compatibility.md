@@ -33,6 +33,8 @@ JSON 作为 diff 输入。
 未显式指定 baseline 时，diff 会从 Git `HEAD` 读取 candidate 的同一路径；没有
 可用历史的仓库必须传入 `--baseline-skel-in`。
 
-Go 集成可以通过根 facade `go.yorun.ai/skelc` 解析这些命令输出。各 schema
-子命令对应使用 `SchemaEntry`、`SchemaDeclaration`、`SchemaSnapshot` 或
-`SchemaDiffReport`；嵌套 schema 类型和分类常量也由同一个 package 导出。
+Go 集成通过公开 facade `go.yorun.ai/skelc/schema` 解析这些命令输出。该 package
+在实现保持 internal 的同时，统一提供响应类型、嵌套 wire 类型、带类型的常量，
+以及严格的 `schema.Decode`、`schema.Validate`、`schema.Encode` 函数。严格解码
+会拒绝未知字段、尾随 JSON 值、不支持的格式版本、未知 wire 枚举值和不完整的
+规范化结构。根 package `go.yorun.ai/skelc` 继续只负责解析和生成 API。

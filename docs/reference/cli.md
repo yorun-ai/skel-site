@@ -211,9 +211,14 @@ values:
   change its code or data.
 - `DANGEROUS`: preserves structural compatibility but can change runtime,
   security, or interpretation semantics, such as changing authentication or
-  permission requirements or adding an enum item.
+  permission requirements, changing config lifecycle, or adding an enum item.
 - `COMPATIBLE`: adds an independently callable declaration or method, or changes
   documentation and deprecation metadata.
+
+A domain-name change replaces the schema identity rather than renaming one
+nested symbol. Diff emits a single `domain.name.changed` item with
+`change: "MODIFIED"` and `impact: "BREAKING"`, then stops without expanding
+declaration, member, or metadata changes beneath the replaced domain.
 
 Each item also has an independent SCREAMING_CASE `change` value:
 
