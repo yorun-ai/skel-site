@@ -6,7 +6,7 @@ slug: /cli
 
 本文档以当前 module 中的 `cli` 实现为准。
 
-`skelc` 读取 `.skel` 定义、进行校验，或生成 Go / Go module / TypeScript / pub skel 代码。
+`skelc` 读取 `.skel` 定义，进行校验、格式化、查询、导出和兼容性比较，或生成 Go / Go module / TypeScript / pub skel 代码。
 
 本文档只说明 CLI 操作、输入输出路径、参数和生成行为。`.skel` 文件本身的语法见 [Skel 语法参考](/docs/syntax)。
 
@@ -19,6 +19,11 @@ skelc gen go --help
 skelc gen go-module --help
 skelc gen ts --help
 skelc gen skel --help
+skelc schema --help
+skelc schema list --help
+skelc schema get --help
+skelc schema export --help
+skelc schema compare --help
 skelc symbol list --help
 skelc symbol get --help
 skelc check --help
@@ -72,7 +77,7 @@ skelc check --skel-in ./domain/user/skel
 - 普通 `.skel` 文件不允许在 domain 上使用 `@desc`
 - `domain.skel` 只能包含 `domain ...` 以及可选的 `@desc`，不能包含其它顶层条目
 
-跨 domain 定义在生成阶段通过 `--skel-import domain=PATH` 映射，具体用法见后面的各生成命令。
+生成、schema 导出以及基于源码的 schema 比较通过 `--skel-import domain=PATH` 映射跨 domain 定义，具体用法见后面的对应命令。
 
 ## 2. 校验 skel
 
@@ -122,51 +127,117 @@ skelc lsp
 
 LSP 通信独占标准输入和标准输出，集成方不能向服务器的 stdout 写入日志。
 
-## 5. 查看 symbol
+## 5. 查询、导出和比较 schema
 
-输出当前 skel 中所有顶层 symbol，每行格式为 `pub标记 类型 skelName`：
+输出当前 Skel 中的全部顶层声明，每行格式为 `pub标记 类型 skelName`：
 
 ```bash
-skelc symbol list --skel-in ./domain/user/skel
+skelc schema list --skel-in ./domain/user/skel
+skelc schema list data --skel-in ./domain/user/skel
 ```
+
+可选的位置参数 `TYPE` 用于过滤列表。支持的类型为 `actor`、`config`、
+`data`、`enum`、`event`、`resource`、`service`、`task` 和 `web`。
 
 示例输出：
 
 ```text
-pub  actor    demo.user.ClientActor
-pub  data     demo.user.User
----  enum     demo.user.UserStatus
-pub  resource demo.user.User
-pub  service  demo.user.UserService
----  web      demo.user.UserPortalWeb
+pub  actor     demo.user.ClientActor
+pub  data      demo.user.User
+---  enum      demo.user.UserStatus
+pub  resource  demo.user.User
+pub  service   demo.user.UserService
+---  web       demo.user.UserPortalWeb
 ```
 
-`symbol list` 只列当前 skel 中声明的顶层 symbol，不解析跨 domain 引用，因此无需传 `--skel-import`。
+`schema list` 只列当前 Skel 中声明的顶层条目，不解析跨 domain 定义，因此无需传 `--skel-import`。
 需要机器读取时加上 `--output-format json`：
 
 ```bash
-skelc symbol list --output-format json --skel-in ./domain/user/skel
+skelc schema list --output-format json --skel-in ./domain/user/skel
 ```
 
-查询单个 symbol：
+按类型和完整 Skel 名称读取一个完整声明：
 
 ```bash
-skelc symbol get demo.user.User --skel-in ./domain/user/skel
+skelc schema get data demo.user.User --skel-in ./domain/user/skel
+skelc schema get resource demo.user.User --skel-in ./domain/user/skel
+skelc schema get data demo.user.User --output-format json --skel-in ./domain/user/skel
 ```
 
-找到时输出：
+不同声明类型拥有独立命名空间，因此 data 和 resource 可能使用相同的完整
+Skel 名称。因此 `TYPE` 是必填参数，也是声明身份的一部分。`get` 返回单个完整
+的规范化声明，包括对应的 data、enum、resource、service 或其他类型主体。
+默认文本输出为确定的、便于阅读的详情树：
 
 ```text
-pub  data  demo.user.User
+pub data demo.user.User
+  name: User
+  members:
+    - id: uuid
+    - displayName: string?
 ```
 
-找不到时退出码为 `1`，输出：
+工具需要无损结构时使用 `--output-format json` 获取完整声明对象。
+
+找不到声明时退出码为 `1`。`schema list/get` 默认使用
+`--scope all`；使用 `--scope public` 可以只查询公开契约。现有的
+`symbol list/get` 仍然可用，但已经是保留原有摘要输出的废弃兼容入口。
+
+导出按确定顺序排列、带格式版本的 JSON schema：
+
+```bash
+skelc schema export \
+  --skel-in ./domain/user/skel \
+  --schema-out ./dist/user.schema.json
+```
+
+`schema export` 默认使用 `--scope public`；需要完整 domain 时传
+`--scope all`。省略 `--schema-out` 时，JSON 会写到标准输出。制品包含
+`format`、`formatVersion`、domain、scope、文档信息和规范化声明；源码位置
+不会写入制品，因此移动源码目录不会改变导出结果。
+
+比较已发布 schema 和当前源码：
+
+```bash
+skelc schema compare \
+  --against ./released/user.schema.json \
+  --skel-in ./domain/user/skel
+```
+
+也可以比较两份源码或两份 schema 制品：
+
+```bash
+skelc schema compare \
+  --against-skel-in ./previous/user/skel \
+  --skel-in ./domain/user/skel
+
+skelc schema compare \
+  --against ./previous.schema.json \
+  --schema-in ./current.schema.json
+```
+
+baseline 源码的依赖使用 `--against-skel-import domain=PATH`，candidate
+源码的依赖使用 `--skel-import domain=PATH`。两侧必须采用相同 scope；默认
+比较 `public`。
+
+每项变化都有稳定 code，并归入三个影响等级：
+
+- `breaking`：删除或改变已有契约、增加必填字段或参数、收紧认证要求等会破坏已有使用方的变化。
+- `dangerous`：不一定直接造成源码不兼容，但可能改变行为的变化，例如增加 enum item 或放宽授权边界。
+- `compatible`：增加可独立调用的声明或 method，以及修改文档和废弃元数据。
+
+默认的 `--fail-on breaking` 在发现 breaking 变化时返回退出码 `2`；退出码
+`1` 保留给命令参数、输入、编译和 schema 格式错误。CI 还可以选择
+`--fail-on dangerous`、`--fail-on any-change` 或 `--fail-on none`。
+`--output-format json` 会返回包含兼容性结论、分类计数、稳定变化 code、
+symbol，以及可用 baseline/candidate 源码位置的结构化报告。
+
+旧 `symbol get` 找不到时的兼容输出仍为：
 
 ```text
 symbol not found: demo.user.Missing
 ```
-
-`get` 同样支持 `--output-format json`。
 
 ## 6. 生成 Go 代码
 
