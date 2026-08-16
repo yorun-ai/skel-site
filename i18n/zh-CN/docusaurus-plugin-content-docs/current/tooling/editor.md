@@ -10,7 +10,7 @@ slug: /editor
 
 ## 快速配置
 
-1. 安装 skelc v0.10.3 或更高版本，并确认 VS Code 所在环境能找到它：
+1. 安装 skelc v0.13.0 或更高版本，并确认 VS Code 所在环境能找到它：
 
    ```bash
    go install go.yorun.ai/skelc/cmd/skelc@latest
@@ -25,6 +25,8 @@ slug: /editor
 
 - Skel 语法高亮和可选的 Skel Dark 主题
 - 可恢复的语法诊断，以及按源目录隔离的语义诊断
+- 基于 Git `HEAD` 或显式 baseline 的实时 schema 兼容性诊断
+- 用于打开完整 JSON 兼容性报告的 CodeLens 和命令
 - 诊断关联位置与快速修复
 - 格式化、悬停信息，以及按被修饰对象过滤并去重的 decorator 补全
 - 在补全、悬停和符号视图中展示弃用声明与元素
@@ -41,11 +43,16 @@ slug: /editor
 | --- | --- | --- |
 | `skelc.path` | `skelc` | 指定 skelc 可执行文件；修改后会重启语言服务器。 |
 | `skelc.trace.server` | `off` | 使用 `off`、`messages` 或 `verbose` 记录 LSP 通信。 |
+| `skelc.schemaCompatibility.diagnostics` | `true` | 编辑时报告 `BREAKING` 和 `DANGEROUS` 变化。 |
+| `skelc.schemaCompatibility.includeCompatible` | `false` | 同时把 `COMPATIBLE` 变化报告为 hint。 |
+| `skelc.schemaCompatibility.codeLens` | `true` | 在 domain 声明上方显示兼容性 CodeLens。 |
+| `skelc.schemaCompatibility.baseline` | 空 | 相对于 domain 源目录的显式 baseline；留空时使用 Git `HEAD`。 |
 
 命令面板中提供：
 
 - `Skel: Restart Language Server`
 - `Skel: Show Language Server Output`
+- `Skel: Check Schema Compatibility`
 
 遇到启动问题时，先在扩展宿主环境中运行 `skelc version --output-format json`。然后检查语言服务器输出；需要查看协议细节时，再启用 `skelc.trace.server`。
 

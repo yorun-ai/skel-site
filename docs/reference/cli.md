@@ -93,7 +93,11 @@ Editors and other development tools can start the Skel language server over stan
 skelc lsp
 ```
 
-The language server reports multiple syntax and semantic issues as you edit. It also provides quick fixes, related diagnostic locations, document symbols, cross-file Go to Definition, and Find All References.
+The language server reports multiple syntax and semantic issues as you edit. It also provides quick fixes, related diagnostic locations, document symbols, cross-file Go to Definition, Find All References, and schema compatibility CodeLens actions. Clients can enable live compatibility diagnostics and call the `skel.schema.diff` execute command to retrieve the complete structured report for the current in-memory domain.
+
+Compatibility analysis uses the same normalized projection and impact rules as `skelc schema diff`. By default it compares the domain's source directory with Git `HEAD`; clients may provide an explicit baseline source path. `BREAKING`, `DANGEROUS`, and optionally `COMPATIBLE` changes are reported as warning, information, and hint diagnostics.
+
+Clients configure the feature through `initializationOptions.schemaCompatibility` or `workspace/didChangeConfiguration`: `diagnostics` and `codeLens` enable the corresponding live features, `includeCompatible` includes hint diagnostics, and `baseline` selects a source file or directory relative to the domain source directory. An empty baseline uses Git `HEAD`. The server advertises `skel.schema.diff` through `executeCommandProvider`; invoke it with one document URI argument to receive the same complete report shape returned by the CLI. If Git history is unavailable, continuous compatibility diagnostics stay silent and an explicit command returns an actionable error.
 
 Analysis includes unsaved changes but treats each source directory as an independent input. Files that declare the same domain are merged only when they are in the same directory, so the same domain name can appear in separate directories without conflict. This matches `check`: imports remain unresolved during validation, while generation commands validate the complete import graph from explicit `--skel-import` mappings.
 
