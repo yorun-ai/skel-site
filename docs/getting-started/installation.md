@@ -38,7 +38,7 @@ JSON output works well in build scripts. `--go-vine-version` can raise the targe
 
 ## Add Editor Support
 
-For authoring `.skel` files in VS Code, install [Skeleton DSL Support](https://marketplace.visualstudio.com/items?itemName=yorun.skeleton). The extension starts `skelc lsp` with the skelc executable on your `PATH` and requires skelc v0.10.3 or newer.
+For authoring `.skel` files in VS Code, install [Skeleton DSL Support](https://marketplace.visualstudio.com/items?itemName=yorun.skeleton). The extension starts `skelc lsp` with the skelc executable on your `PATH` and requires skelc v0.13.0 or newer.
 
 For documentation sites, code viewers, and browser editors, install [`@yorun-ai/skel-highlight`](https://www.npmjs.com/package/@yorun-ai/skel-highlight) together with the highlighter used by your application.
 

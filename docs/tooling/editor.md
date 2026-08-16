@@ -10,7 +10,7 @@ The extension does not bundle the compiler. It starts `skelc lsp`, so install sk
 
 ## Quick Setup
 
-1. Install skelc v0.10.3 or newer and confirm that VS Code can find it:
+1. Install skelc v0.13.0 or newer and confirm that VS Code can find it:
 
    ```bash
    go install go.yorun.ai/skelc/cmd/skelc@latest
@@ -25,6 +25,8 @@ Once connected, the extension provides:
 
 - Skel syntax highlighting and the optional Skel Dark theme
 - Recoverable syntax and source-directory-scoped semantic diagnostics
+- Live schema compatibility diagnostics against Git `HEAD` or an explicit baseline
+- A CodeLens and command that open the complete JSON compatibility report
 - Related diagnostic locations and quick fixes
 - Formatting, hover details, and decorator completion filtered for the element being decorated
 - Deprecated declarations and elements in completion, hover, and symbol views
@@ -41,11 +43,16 @@ The extension is a thin client: parsing, formatting, diagnostics, completion, na
 | --- | --- | --- |
 | `skelc.path` | `skelc` | Select the skelc executable. Changing it restarts the language server. |
 | `skelc.trace.server` | `off` | Trace LSP traffic with `off`, `messages`, or `verbose`. |
+| `skelc.schemaCompatibility.diagnostics` | `true` | Report `BREAKING` and `DANGEROUS` changes while editing. |
+| `skelc.schemaCompatibility.includeCompatible` | `false` | Also report `COMPATIBLE` changes as hints. |
+| `skelc.schemaCompatibility.codeLens` | `true` | Show the compatibility CodeLens above domain declarations. |
+| `skelc.schemaCompatibility.baseline` | empty | Explicit baseline relative to the domain source directory; empty uses Git `HEAD`. |
 
 The Command Palette provides:
 
 - `Skel: Restart Language Server`
 - `Skel: Show Language Server Output`
+- `Skel: Check Schema Compatibility`
 
 For startup problems, run `skelc version --output-format json` in the extension host environment first. Then inspect the language-server output and enable `skelc.trace.server` when protocol details are needed.
 

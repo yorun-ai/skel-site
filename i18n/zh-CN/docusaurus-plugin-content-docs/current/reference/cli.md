@@ -124,7 +124,11 @@ skelc format --check --output-format json --skel-in ./domain/user/skel
 skelc lsp
 ```
 
-语言服务器会在编辑过程中报告多条语法和语义问题，同时提供快速修复、诊断关联位置、文档符号、跨文件定义跳转和引用查找。
+语言服务器会在编辑过程中报告多条语法和语义问题，同时提供快速修复、诊断关联位置、文档符号、跨文件定义跳转、引用查找和 schema 兼容性 CodeLens。客户端可以启用实时兼容性诊断，并通过 `skel.schema.diff` 执行命令获取当前内存 domain 的完整结构化报告。
+
+兼容性分析复用 `skelc schema diff` 的规范化投影和影响分级规则。默认会把 domain 的源目录与 Git `HEAD` 比较，客户端也可以提供显式 baseline 源码路径。`BREAKING`、`DANGEROUS` 和可选的 `COMPATIBLE` 变化分别以 warning、information 和 hint 诊断展示。
+
+客户端通过 `initializationOptions.schemaCompatibility` 或 `workspace/didChangeConfiguration` 配置这个功能：`diagnostics` 和 `codeLens` 分别启用实时诊断与 CodeLens，`includeCompatible` 包含 hint 诊断，`baseline` 指定相对于 domain 源目录的源码文件或目录；留空时使用 Git `HEAD`。服务器通过 `executeCommandProvider` 声明 `skel.schema.diff`，调用时传入一个文档 URI 参数，即可获得与 CLI 相同结构的完整报告。找不到 Git 历史时，持续兼容性诊断会保持安静，显式命令则返回可操作的错误信息。
 
 分析会包含尚未保存的修改，但每个源目录都是一份独立输入。只有位于同一目录且声明同一 domain 的文件才会合并，因此不同目录中的同名 domain 互不冲突。这与 `check` 的行为一致：校验时不解析 import；生成命令则根据显式的 `--skel-import` 映射校验完整的 import 图。
 
