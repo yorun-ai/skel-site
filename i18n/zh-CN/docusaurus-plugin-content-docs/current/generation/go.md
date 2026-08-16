@@ -31,7 +31,7 @@ skelc gen go-module \
 
 这项契约只保证值隔离。JSON 或 CBOR 编解码、传输规范化、自定义 marshal/unmarshal 方法和 codec 错误不属于进程内契约，可能因生成 spec 而不同。软递归 data 同样使用生成的 clone 方法。
 
-skelc v0.12 支持滚动升级期间引用 v0.12 之前生成的 Go package。消费方会优先使用外部类型已有的 `Clone()` 或 `CloneBy(...)`；如果方法不存在，非泛型外部 data 使用序列化兼容路径，泛型外部 data 则使用类型安全的结构化 clone，确保类型参数 callback 继续控制值隔离。这里检测的是能力，不会判断生成器版本。重新生成被导入的 package 后即可进入直接 clone 路径。
+skelc v0.12.0 支持与 v0.11.x 生成的 Go package 滚动升级。建议逐步重新生成所有依赖 package，并在升级到后续 minor 版本前完成迁移。
 
 ## 生成包所有权
 
