@@ -6,7 +6,7 @@ slug: /cli
 
 本文档以当前 module 中的 `cli` 实现为准。
 
-`skelc` 读取 `.skel` 定义、进行校验，或生成 Go / Go module / TypeScript / pub skel 代码。
+`skelc` 读取 `.skel` 定义，进行校验、格式化、查询、生成快照和兼容性差异分析，或生成 Go / Go module / TypeScript / pub skel 代码。
 
 本文档只说明 CLI 操作、输入输出路径、参数和生成行为。`.skel` 文件本身的语法见 [Skel 语法参考](/docs/syntax)。
 
@@ -19,6 +19,11 @@ skelc gen go --help
 skelc gen go-module --help
 skelc gen ts --help
 skelc gen skel --help
+skelc schema --help
+skelc schema list --help
+skelc schema get --help
+skelc schema snapshot --help
+skelc schema diff --help
 skelc symbol list --help
 skelc symbol get --help
 skelc check --help
@@ -46,6 +51,9 @@ skelc --log-format jsonl gen go-module --skel-in ./domain/user/skel --go-out ./d
 {"level":"warn","code":"loader.ignored-hidden-file","severity":"warning","range":{"start":{"file":"/path/.hidden.skel","line":1,"column":1},"end":{"file":"/path/.hidden.skel","line":1,"column":1}},"message":"/path/.hidden.skel ignored (HIDDEN_FILE)"}
 ```
 
+schema 命令始终输出格式化 JSON。其他支持多种结果格式的命令可使用
+`--output-format json` 获取结构化输出。
+
 ## 1. 输入与依赖
 
 `--skel-in` 接受一个 `.skel` 文件或目录。
@@ -72,7 +80,7 @@ skelc check --skel-in ./domain/user/skel
 - 普通 `.skel` 文件不允许在 domain 上使用 `@desc`
 - `domain.skel` 只能包含 `domain ...` 以及可选的 `@desc`，不能包含其它顶层条目
 
-跨 domain 定义在生成阶段通过 `--skel-import domain=PATH` 映射，具体用法见后面的各生成命令。
+生成命令通过 `--skel-import domain=PATH` 映射跨 domain 定义。schema 命令不接受依赖映射；schema 快照和基于源码的 diff 把外部符号保留为不透明的完整名称。
 
 ## 2. 校验 skel
 
@@ -122,51 +130,132 @@ skelc lsp
 
 LSP 通信独占标准输入和标准输出，集成方不能向服务器的 stdout 写入日志。
 
-## 5. 查看 symbol
+## 5. 查询、生成快照和查看 schema 差异
 
-输出当前 skel 中所有顶层 symbol，每行格式为 `pub标记 类型 skelName`：
-
-```bash
-skelc symbol list --skel-in ./domain/user/skel
-```
-
-示例输出：
-
-```text
-pub  actor    demo.user.ClientActor
-pub  data     demo.user.User
----  enum     demo.user.UserStatus
-pub  resource demo.user.User
-pub  service  demo.user.UserService
----  web      demo.user.UserPortalWeb
-```
-
-`symbol list` 只列当前 skel 中声明的顶层 symbol，不解析跨 domain 引用，因此无需传 `--skel-import`。
-需要机器读取时加上 `--output-format json`：
+以 JSON 数组输出当前 Skel 中的全部顶层声明摘要：
 
 ```bash
-skelc symbol list --output-format json --skel-in ./domain/user/skel
+skelc schema list --skel-in ./domain/user/skel
+skelc schema list data --skel-in ./domain/user/skel
 ```
 
-查询单个 symbol：
+可选的位置参数 `TYPE` 用于过滤列表。支持的类型为 `actor`、`config`、
+`data`、`enum`、`event`、`resource`、`service`、`task` 和 `web`。
+
+`schema list` 只列当前 Skel 中声明的顶层条目，不解析跨 domain 定义，因此无需传 `--skel-import`。外部引用统一使用完整名称，不受当前文件所用 import alias 的影响。
+
+按类型和完整 Skel 名称读取一个完整声明：
 
 ```bash
-skelc symbol get demo.user.User --skel-in ./domain/user/skel
+skelc schema get data demo.user.User --skel-in ./domain/user/skel
+skelc schema get resource demo.user.User --skel-in ./domain/user/skel
 ```
 
-找到时输出：
+不同声明类型拥有独立命名空间，因此 data 和 resource 可能使用相同的完整
+Skel 名称。因此 `TYPE` 是必填参数，也是声明身份的一部分。`get` 返回单个完整
+的规范化 JSON 声明，包括对应的 data、enum、resource、service 或其他类型主体：
 
-```text
-pub  data  demo.user.User
+```json
+{
+  "pub": true,
+  "name": "User",
+  "type": "data",
+  "skelName": "demo.user.User",
+  "data": {
+    "members": [
+      {
+        "name": "id",
+        "type": {
+          "kind": "scalar",
+          "name": "uuid"
+        }
+      }
+    ]
+  }
+}
 ```
 
-找不到时退出码为 `1`，输出：
+找不到声明时退出码为 `1`。`schema list/get` 始终查询完整 domain，每个声明
+保留自己的 `pub` 标记。现有的 `symbol list/get` 仍然可用，但已经是保留原有
+摘要输出的废弃兼容入口。
+
+生成按确定顺序排列、带格式版本的 JSON schema 快照：
+
+```bash
+skelc schema snapshot \
+  --skel-in ./domain/user/skel \
+  > ./dist/user.schema.json
+```
+
+`schema snapshot` 始终捕获完整 domain，每个声明保留自己的 `pub` 标记。JSON
+写到标准输出，需要保存快照时使用 shell 重定向。制品包含 `format`、
+`formatVersion`、domain、文档信息和规范化声明；源码位置不会写入制品，
+因此移动源码目录不会改变导出结果。
+
+快照制品不会嵌入 import domain 的定义，只会把外部符号记录为不透明的完整
+名称。`schema snapshot` 不接受 `--skel-import`。依赖 domain 自身的兼容性，
+应当在该 domain 上单独生成快照和执行 diff。
+
+成员、参数和返回值中的 import 类型使用明确的
+`"kind": "importedReference"` 表示：
+
+```json
+{
+  "kind": "importedReference",
+  "name": "identity.user.UserSummary"
+}
+```
+
+列出 baseline 和 candidate Skel 源文件或目录之间的全部 schema 变化：
+
+```bash
+skelc schema diff \
+  --skel-in ./domain/user/skel
+
+skelc schema diff \
+  --baseline-skel-in ./previous/user/skel \
+  --skel-in ./domain/user/skel
+```
+
+基于源码执行 diff 时，import 保持不透明，不使用文件系统映射。`schema diff`
+不接受 import 映射。diff 始终覆盖完整 domain，包括公开和私有声明。它只接受
+原始 Skel 源码，不读取 schema 快照文件。
+
+`--baseline-skel-in` 是可选参数。省略时，skelc 会查找 `--skel-in` 所在的 Git
+仓库，并从 `HEAD` 中提取同一个文件或目录，用最近一次已提交源码和当前工作区
+进行 diff。baseline 源码位置使用稳定的 `HEAD:<repo-relative-path>` 形式。如果
+找不到 Git 仓库、提交历史或 `HEAD` 中的对应路径，命令会报错并提示显式传入
+`--baseline-skel-in`。
+
+每项变化都有稳定 code，`impact` 使用三个 SCREAMING_CASE 枚举值：
+
+- `BREAKING`：删除或从结构上改变已有契约、增加必填字段或参数，以及其他要求已有使用方修改代码或数据的变化。
+- `DANGEROUS`：保持结构兼容但可能改变运行时、安全或解释语义的变化，例如改变认证或权限要求、改变 config lifecycle，以及增加 enum item。
+- `COMPATIBLE`：增加可独立调用的声明或 method，以及修改文档和废弃元数据。
+
+domain 名称变化表示整个 schema 身份被替换，而不是某个嵌套符号改名。diff 只输出
+一项 `domain.name.changed`，其中 `change: "MODIFIED"`、`impact: "BREAKING"`，
+随后停止，不再展开被替换 domain 下的声明、成员或元数据变化。
+
+每项结果还带有独立的 SCREAMING_CASE `change` 维度：
+
+- `ADDED`：新增声明、member、item、method 或 capability。
+- `REMOVED`：删除已有元素。
+- `MODIFIED`：已有元素的类型、顺序、可见性、元数据、认证、授权、敏感性或其他属性发生变化。
+
+例如，新增 enum item 的结果为 `change: "ADDED"`、`impact: "DANGEROUS"`；
+新增必填 data member 同样是 `change: "ADDED"`，但 `impact: "BREAKING"`。
+
+命令始终在结构化 JSON 报告中返回全部变化，包括兼容性结论、分类计数、稳定
+变化 code、symbol，以及可用的 baseline/candidate 源码位置。无论兼容性结论
+如何，diff 完成后都返回退出码 `0`；命令参数、输入、编译和 schema 格式错误
+返回 `1`。CI 可以读取报告并自行应用失败策略，无需配置 diff 命令。
+
+旧 `symbol get` 找不到时的兼容输出仍为：
 
 ```text
 symbol not found: demo.user.Missing
 ```
-
-`get` 同样支持 `--output-format json`。
 
 ## 6. 生成 Go 代码
 

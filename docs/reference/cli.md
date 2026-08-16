@@ -4,7 +4,7 @@ slug: /cli
 
 # CLI Reference
 
-skelc validates, formats, and inspects `.skel` definitions and generates Go, TypeScript, and public Skel contracts.
+skelc validates, formats, inspects, snapshots, and diffs `.skel` definitions and generates Go, TypeScript, and public Skel contracts.
 
 The built-in help shows the flags your installed version supports:
 
@@ -13,6 +13,7 @@ skelc --help
 skelc check --help
 skelc format --help
 skelc lsp --help
+skelc schema --help
 skelc symbol --help
 skelc gen --help
 ```
@@ -31,7 +32,8 @@ Ordinary logs carry `level` and `message`; structured diagnostics also include `
 {"level":"warn","code":"loader.ignored-hidden-file","severity":"warning","range":{"start":{"file":"/path/.hidden.skel","line":1,"column":1},"end":{"file":"/path/.hidden.skel","line":1,"column":1}},"message":"/path/.hidden.skel ignored (HIDDEN_FILE)"}
 ```
 
-Commands that expose structured result data use `--output-format json`.
+Schema commands always emit pretty-printed JSON. Other commands that support
+multiple result formats use `--output-format json` for structured output.
 
 ## Input modes
 
@@ -39,13 +41,15 @@ Commands that expose structured result data use `--output-format json`.
 
 All accepted files must declare the same domain. `domain.skel` may contain only the domain declaration and its optional `@desc`; other files carry the domain declarations and contracts.
 
-Generation commands resolve imported domains with repeatable mappings:
+Generation resolves imported domains with repeatable mappings:
 
 ```bash
 --skel-import demo.user=./domain/user/pub/skel
 ```
 
 The mapping key is the full domain name declared by `import`; the value points to that domain's public Skel input.
+Schema commands do not accept these mappings. Schema snapshots and source-based
+diffs preserve imported symbols as opaque, fully qualified references.
 
 ## Validate and transform
 
@@ -95,23 +99,144 @@ Analysis includes unsaved changes but treats each source directory as an indepen
 
 LSP traffic has exclusive use of standard input and output. Integrations must not write logs to the server's stdout.
 
-## Inspect symbols
+## Inspect, snapshot, and diff schemas
 
-List top-level symbols:
-
-```bash
-skelc symbol list --skel-in ./domain/user/skel
-skelc symbol list --output-format json --skel-in ./domain/user/skel
-```
-
-Inspect a single fully qualified Skel name:
+List top-level declarations in the normalized semantic schema:
 
 ```bash
-skelc symbol get demo.user.User --skel-in ./domain/user/skel
-skelc symbol get demo.user.User --output-format json --skel-in ./domain/user/skel
+skelc schema list --skel-in ./domain/user/skel
+skelc schema list data --skel-in ./domain/user/skel
 ```
 
-Symbol inspection covers declarations in the current input and does not resolve external domain definitions.
+The optional positional `TYPE` filters the list. Supported types are `actor`,
+`config`, `data`, `enum`, `event`, `resource`, `service`, `task`, and `web`.
+
+Get one complete declaration by type and fully qualified Skel name:
+
+```bash
+skelc schema get data demo.user.User --skel-in ./domain/user/skel
+skelc schema get resource demo.user.User --skel-in ./domain/user/skel
+```
+
+Some declaration kinds have independent namespaces, so a data and resource can
+share one fully qualified Skel name. `TYPE` is therefore required and is part of
+the declaration identity. `get` returns one complete normalized JSON declaration
+including its type-specific data, enum, resource, service, or other body:
+
+```json
+{
+  "pub": true,
+  "name": "User",
+  "type": "data",
+  "skelName": "demo.user.User",
+  "data": {
+    "members": [
+      {
+        "name": "id",
+        "type": {
+          "kind": "scalar",
+          "name": "uuid"
+        }
+      }
+    ]
+  }
+}
+```
+
+Schema inspection covers declarations in the current input and does not resolve
+external domain definitions. External references use their canonical fully
+qualified names, independent of the local import alias. Inspection always covers
+the complete domain, and each declaration retains its `pub` marker. The older
+`symbol list` and `symbol get` commands remain available as deprecated
+compatibility entry points that preserve their historical summary output.
+
+Create a deterministic, versioned JSON schema snapshot:
+
+```bash
+skelc schema snapshot \
+  --skel-in ./domain/user/skel \
+  > ./dist/user.schema.json
+```
+
+`schema snapshot` always captures the complete domain and preserves each
+declaration's `pub` marker. It writes the JSON document to stdout; use shell
+redirection to persist a snapshot. The artifact records `format`,
+`formatVersion`, domain, documentation, and normalized declarations. Source
+positions are intentionally omitted so moving a source tree does not change the
+artifact.
+
+Imported domains are intentionally not embedded in this artifact. Their symbols
+are recorded as opaque, fully qualified references. `schema snapshot` does not
+accept `--skel-import`. Snapshot and diff each imported domain separately to
+check compatibility of that dependency itself.
+
+Imported member, argument, and result types use the explicit
+`"kind": "importedReference"` representation:
+
+```json
+{
+  "kind": "importedReference",
+  "name": "identity.user.UserSummary"
+}
+```
+
+List every schema change between baseline and candidate Skel source files or directories:
+
+```bash
+skelc schema diff \
+  --skel-in ./domain/user/skel
+
+skelc schema diff \
+  --baseline-skel-in ./previous/user/skel \
+  --skel-in ./domain/user/skel
+```
+
+Source imports remain opaque and do not use filesystem mappings. The schema
+diff command does not accept import mappings. Diff always covers the complete
+domain, including both public and private declarations. It accepts only original
+Skel source and does not read schema snapshot files.
+
+`--baseline-skel-in` is optional. When it is omitted, skelc discovers the Git
+repository containing `--skel-in` and extracts the same file or directory from
+`HEAD`. This compares the latest committed source with the current working tree.
+Baseline source positions use the stable `HEAD:<repo-relative-path>` form. If no
+Git repository, commit history, or matching path at `HEAD` exists, the command
+fails and asks for an explicit `--baseline-skel-in`.
+
+Changes are assigned stable codes and one of three SCREAMING_CASE `impact`
+values:
+
+- `BREAKING`: removes or structurally changes an existing contract, adds a
+  required member or argument, or otherwise requires an existing user to
+  change its code or data.
+- `DANGEROUS`: preserves structural compatibility but can change runtime,
+  security, or interpretation semantics, such as changing authentication or
+  permission requirements, changing config lifecycle, or adding an enum item.
+- `COMPATIBLE`: adds an independently callable declaration or method, or changes
+  documentation and deprecation metadata.
+
+A domain-name change replaces the schema identity rather than renaming one
+nested symbol. Diff emits a single `domain.name.changed` item with
+`change: "MODIFIED"` and `impact: "BREAKING"`, then stops without expanding
+declaration, member, or metadata changes beneath the replaced domain.
+
+Each item also has an independent SCREAMING_CASE `change` value:
+
+- `ADDED`: a declaration, member, item, method, or capability was added.
+- `REMOVED`: an existing element was removed.
+- `MODIFIED`: an existing element changed type, order, visibility, metadata,
+  authentication, authorization, sensitivity, or another property.
+
+For example, adding an enum item produces `change: "ADDED"` with
+`impact: "DANGEROUS"`, while adding a required data member produces the same
+`change` with `impact: "BREAKING"`.
+
+The command always emits every detected change in a structured JSON report,
+including the compatibility result, summary counts, stable change codes,
+symbols, and available baseline or candidate source positions. A completed
+diff returns exit code `0` regardless of its compatibility result;
+command, input, compilation, and schema format errors return `1`. CI policy can
+be applied by reading the report instead of configuring the diff command.
 
 ## Generate Go source
 
