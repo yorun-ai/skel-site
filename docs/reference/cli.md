@@ -180,6 +180,10 @@ Imported member, argument, and result types use the explicit
 }
 ```
 
+Resolved references owned by the current domain retain their declaration kind:
+`enum`, `data`, `config`, or `event`. This distinction is part of the normalized
+schema and is shared with generated Vine runtime schema metadata.
+
 List every schema change between baseline and candidate Skel source files or directories:
 
 ```bash
