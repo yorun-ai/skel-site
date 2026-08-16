@@ -4,7 +4,7 @@ slug: /cli
 
 # CLI Reference
 
-skelc validates, formats, inspects, exports, and compares `.skel` definitions and generates Go, TypeScript, and public Skel contracts.
+skelc validates, formats, inspects, snapshots, and diffs `.skel` definitions and generates Go, TypeScript, and public Skel contracts.
 
 The built-in help shows the flags your installed version supports:
 
@@ -32,7 +32,8 @@ Ordinary logs carry `level` and `message`; structured diagnostics also include `
 {"level":"warn","code":"loader.ignored-hidden-file","severity":"warning","range":{"start":{"file":"/path/.hidden.skel","line":1,"column":1},"end":{"file":"/path/.hidden.skel","line":1,"column":1}},"message":"/path/.hidden.skel ignored (HIDDEN_FILE)"}
 ```
 
-Commands that expose structured result data use `--output-format json`.
+Schema commands always emit pretty-printed JSON. Other commands that support
+multiple result formats use `--output-format json` for structured output.
 
 ## Input modes
 
@@ -40,13 +41,15 @@ Commands that expose structured result data use `--output-format json`.
 
 All accepted files must declare the same domain. `domain.skel` may contain only the domain declaration and its optional `@desc`; other files carry the domain declarations and contracts.
 
-Generation, schema export, and source-based schema comparison resolve imported domains with repeatable mappings:
+Generation resolves imported domains with repeatable mappings:
 
 ```bash
 --skel-import demo.user=./domain/user/pub/skel
 ```
 
 The mapping key is the full domain name declared by `import`; the value points to that domain's public Skel input.
+Schema commands do not accept these mappings. Schema snapshots and source-based
+diffs preserve imported symbols as opaque, fully qualified references.
 
 ## Validate and transform
 
@@ -96,14 +99,13 @@ Analysis includes unsaved changes but treats each source directory as an indepen
 
 LSP traffic has exclusive use of standard input and output. Integrations must not write logs to the server's stdout.
 
-## Inspect, export, and compare schemas
+## Inspect, snapshot, and diff schemas
 
 List top-level declarations in the normalized semantic schema:
 
 ```bash
 skelc schema list --skel-in ./domain/user/skel
 skelc schema list data --skel-in ./domain/user/skel
-skelc schema list --output-format json --skel-in ./domain/user/skel
 ```
 
 The optional positional `TYPE` filters the list. Supported types are `actor`,
@@ -114,68 +116,82 @@ Get one complete declaration by type and fully qualified Skel name:
 ```bash
 skelc schema get data demo.user.User --skel-in ./domain/user/skel
 skelc schema get resource demo.user.User --skel-in ./domain/user/skel
-skelc schema get data demo.user.User --output-format json --skel-in ./domain/user/skel
 ```
 
 Some declaration kinds have independent namespaces, so a data and resource can
 share one fully qualified Skel name. `TYPE` is therefore required and is part of
-the declaration identity. `get` returns one complete normalized declaration
-including its type-specific data, enum, resource, service, or other body. Text
-output is a deterministic human-readable detail tree:
+the declaration identity. `get` returns one complete normalized JSON declaration
+including its type-specific data, enum, resource, service, or other body:
 
-```text
-pub data demo.user.User
-  name: User
-  members:
-    - id: uuid
-    - displayName: string?
+```json
+{
+  "pub": true,
+  "name": "User",
+  "type": "data",
+  "skelName": "demo.user.User",
+  "data": {
+    "members": [
+      {
+        "name": "id",
+        "type": {
+          "kind": "scalar",
+          "name": "uuid"
+        }
+      }
+    ]
+  }
+}
 ```
-
-Use `--output-format json` for the lossless declaration object consumed by tools.
 
 Schema inspection covers declarations in the current input and does not resolve
-external domain definitions. It defaults to `--scope all`; use `--scope public`
-to inspect only declarations in the public contract. The older `symbol list`
-and `symbol get` commands remain available as deprecated compatibility entry
-points that preserve their historical summary output.
+external domain definitions. External references use their canonical fully
+qualified names, independent of the local import alias. Inspection always covers
+the complete domain, and each declaration retains its `pub` marker. The older
+`symbol list` and `symbol get` commands remain available as deprecated
+compatibility entry points that preserve their historical summary output.
 
-Export a deterministic, versioned JSON schema document:
+Create a deterministic, versioned JSON schema snapshot:
 
 ```bash
-skelc schema export \
+skelc schema snapshot \
   --skel-in ./domain/user/skel \
-  --schema-out ./dist/user.schema.json
+  > ./dist/user.schema.json
 ```
 
-`schema export` defaults to `--scope public`; pass `--scope all` for the complete
-domain. When `--schema-out` is omitted, the JSON document is written to stdout.
-The artifact records `format`, `formatVersion`, domain, scope, documentation,
-and normalized declarations. Source positions are intentionally omitted so
-moving a source tree does not change the artifact.
+`schema snapshot` always captures the complete domain and preserves each
+declaration's `pub` marker. It writes the JSON document to stdout; use shell
+redirection to persist a snapshot. The artifact records `format`,
+`formatVersion`, domain, documentation, and normalized declarations. Source
+positions are intentionally omitted so moving a source tree does not change the
+artifact.
 
-Compare a released schema with current source:
+Imported domains are intentionally not embedded in this artifact. Their symbols
+are recorded as opaque, fully qualified references. `schema snapshot` does not
+accept `--skel-import`. Snapshot and diff each imported domain separately to
+check compatibility of that dependency itself.
+
+Imported member, argument, and result types use the explicit
+`"kind": "importedReference"` representation:
+
+```json
+{
+  "kind": "importedReference",
+  "name": "identity.user.UserSummary"
+}
+```
+
+List every schema change between baseline and candidate Skel source files or directories:
 
 ```bash
-skelc schema compare \
-  --against ./released/user.schema.json \
+skelc schema diff \
+  --baseline-skel-in ./previous/user/skel \
   --skel-in ./domain/user/skel
 ```
 
-Source-to-source and artifact-to-artifact comparison are also supported:
-
-```bash
-skelc schema compare \
-  --against-skel-in ./previous/user/skel \
-  --skel-in ./domain/user/skel
-
-skelc schema compare \
-  --against ./previous.schema.json \
-  --schema-in ./current.schema.json
-```
-
-Use `--against-skel-import domain=PATH` for baseline source imports and
-`--skel-import domain=PATH` for candidate source imports. Both inputs must use
-the same scope; comparison defaults to `public`.
+Source imports remain opaque and do not use filesystem mappings. The schema
+diff command does not accept import mappings. Diff always covers the complete
+domain, including both public and private declarations. It accepts only original
+Skel source and does not read schema snapshot files.
 
 Changes are assigned stable codes and one of three impact levels:
 
@@ -186,12 +202,12 @@ Changes are assigned stable codes and one of three impact levels:
 - `compatible`: adds an independently callable declaration or method, or changes
   documentation and deprecation metadata.
 
-The default `--fail-on breaking` returns exit code `2` when breaking changes are
-found. Exit code `1` is reserved for command, input, compilation, or schema
-format errors. CI can select `--fail-on dangerous`, `--fail-on any-change`, or
-`--fail-on none`. Add `--output-format json` for a structured report containing
-the compatibility result, summary counts, stable change codes, symbols, and
-available baseline or candidate source positions.
+The command always emits every detected change in a structured JSON report,
+including the compatibility result, summary counts, stable change codes,
+symbols, and available baseline or candidate source positions. A completed
+diff returns exit code `0` regardless of its compatibility result;
+command, input, compilation, and schema format errors return `1`. CI policy can
+be applied by reading the report instead of configuring the diff command.
 
 ## Generate Go source
 

@@ -20,3 +20,13 @@ slug: /compatibility
 CI 和开发环境要用同一个 skelc 版本。输入、import 映射和输出目录配置都纳入版本管理，这样每次生成结果才一致。记得把本地 `replace`、相邻仓库依赖、全局环境这些隐性因素排除掉——它们会让可重复性打折扣。
 
 历史文档版本用于了解旧行为，但修复当前契约时，以当前文档和对应的 release note 为准。
+
+## 按 domain 检查 schema
+
+每个 domain 独立生成快照和执行 diff。当前 domain 的 schema 只把 import domain 中的符号
+保存为不透明的完整名称，不会复制外部声明。schema 快照覆盖完整 domain，包括
+公开和私有声明，同时保留每个声明的 `pub` 标记。这样每项声明的兼容性仍由拥有
+它的 domain 负责，schema 检查也不依赖 import 的文件系统路径。schema 命令
+不接受 import 路径映射。
+diff 直接读取 baseline 和 candidate 的 Skel 源文件或目录，不接受 schema 快照
+JSON 作为 diff 输入。
