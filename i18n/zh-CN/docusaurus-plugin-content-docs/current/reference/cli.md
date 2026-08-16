@@ -206,6 +206,10 @@ skelc schema snapshot \
 }
 ```
 
+当前 domain 自身拥有的已解析引用会保留其声明种类：`enum`、`data`、
+`config` 或 `event`。这一区分属于规范化 schema，并与生成的 Vine 运行时
+schema 元数据保持一致。
+
 列出 baseline 和 candidate Skel 源文件或目录之间的全部 schema 变化：
 
 ```bash
