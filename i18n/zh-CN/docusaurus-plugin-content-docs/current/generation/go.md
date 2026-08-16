@@ -27,15 +27,15 @@ skelc gen go-module \
 
 ## 进程内 Rpc 值隔离
 
-生成的非泛型 data 类型会提供 `Clone()`，泛型 data 类型则提供 `CloneBy(...)`，并为每个类型参数接收一个类型安全的 clone callback。生成的 Rpc method spec 会组合这些方法，形成类型安全的请求和结果 clone hook。Vine 使用这些 hook 防止可变参数和结果越过进程内 caller/handler 边界。
+生成的非泛型 data 类型会提供 `Clone()`，泛型 data 类型则提供 `CloneBy(...)`，每个类型参数对应一个类型安全的 clone callback。生成的 Rpc method spec 会组合这些方法，形成类型安全的请求和结果 clone hook。Vine 用这些 hook 防止可变参数和结果泄漏到进程内 caller/handler 边界之外。
 
-这项契约只保证值隔离。JSON 或 CBOR 编解码、传输规范化、自定义 marshal/unmarshal 方法和 codec 错误不属于进程内契约，可能因生成 spec 而不同。软递归 data 同样使用生成的 clone 方法。
+这项契约只保证值隔离。JSON 或 CBOR 编解码、传输规范化、自定义 marshal/unmarshal 方法和 codec 错误都不在进程内契约范围内，行为可能随生成的 spec 而异。软递归 data 也使用生成的 clone 方法。
 
-skelc v0.12.x 和 v0.13.x 支持与 v0.11.x 生成的 Go package 滚动升级。建议逐步重新生成所有依赖 package，并在升级到 v0.14.0 前完成迁移；从 v0.14.0 开始，导入的生成 data 必须提供 `Clone()` 或 `CloneBy(...)`。
+skelc v0.12.x 和 v0.13.x 支持与 v0.11.x 生成的 Go package 进行滚动升级。建议逐步重新生成所有导入的 package，并在升级到 v0.14.0 前完成迁移；从 v0.14.0 开始，导入的生成 data 必须提供 `Clone()` 或 `CloneBy(...)`。
 
 ## 生成包所有权
 
-生成的 Go package 完全由 skelc 管理。不要直接修改生成文件，也不要在同一个 package 中加入手写 `.go` 文件。skelc 和 Vine 的兼容保证只覆盖生成声明；如果非托管文件添加了声明、方法或自定义 codec 行为，不保证生成包能够正常编译或运行。业务实现和 adapter 应放在独立 package 中。
+生成的 Go package 完全由 skelc 管理。不要直接修改生成文件，也不要在同一个 package 中加入手写 `.go` 文件。skelc 和 Vine 的兼容保证只覆盖生成声明；一旦非托管文件添加了声明、方法或自定义 codec 行为，生成包的编译和运行都不再有保证。业务实现和 adapter 应放在独立 package 中。
 
 ## 弃用输出
 

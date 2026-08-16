@@ -197,8 +197,8 @@ skelc schema snapshot \
 因此移动源码目录不会改变导出结果。
 
 快照制品不会嵌入 import domain 的定义，只会把外部符号记录为不透明的完整
-名称。`schema snapshot` 不接受 `--skel-import`。依赖 domain 自身的兼容性，
-应当在该 domain 上单独生成快照和执行 diff。
+名称。`schema snapshot` 不接受 `--skel-import`。要检查某个依赖 domain 自身的
+兼容性，应在该 domain 上单独执行 snapshot 和 diff。
 
 成员、参数和返回值中的 import 类型使用明确的
 `"kind": "importedReference"` 表示：

@@ -19,6 +19,6 @@ Generated Go code uses Vine public packages as its runtime contract. Output incl
 5. Run Vine application tests.
 
 Generated files are derived artifacts -- don't patch them directly or add
-unmanaged Go files to their packages. skelc and Vine only support the generated
-package as a generator-owned unit. See the [Vine documentation](https://vine.yorun.ai/docs/)
+unmanaged Go files to their packages. skelc and Vine treat the generated package
+as a generator-owned unit. See the [Vine documentation](https://vine.yorun.ai/docs/)
 for application lifecycle and Rpc/Web/Event/Task implementation.

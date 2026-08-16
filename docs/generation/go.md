@@ -34,14 +34,14 @@ result clone hooks. Vine uses these hooks to prevent mutable arguments and
 results from leaking across the in-process caller/handler boundary.
 
 This contract guarantees value isolation only. JSON or CBOR encoding, transport
-normalization, custom marshal/unmarshal methods, and codec failures are not part
-of the in-process contract and may differ by generated spec. Soft-recursive data
-uses the same generated clone methods.
+normalization, custom marshal/unmarshal methods, and codec failures are outside
+the in-process contract and may vary with the generated spec. Soft-recursive
+data uses the same generated clone methods.
 
 skelc v0.12.x and v0.13.x support rolling upgrades with Go packages generated
-by v0.11.x. Regenerate imported packages incrementally, and complete the
-migration before upgrading to v0.14.0, when imported generated data must provide
-`Clone()` or `CloneBy(...)`.
+by v0.11.x. Regenerate imported packages incrementally, and finish the
+migration before upgrading to v0.14.0, at which point imported generated data
+must provide `Clone()` or `CloneBy(...)`.
 
 ## Generated Package Ownership
 

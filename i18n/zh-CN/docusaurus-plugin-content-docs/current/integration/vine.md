@@ -18,4 +18,4 @@ skelc 生成的 Go 代码以 Vine 的公开包作为运行时契约。生成内�
 4. 检查生成 API、module 依赖和 schema diff。
 5. 运行 Vine 应用测试。
 
-生成文件是派生产物，不要直接修改，也不要在生成 package 中加入非托管 Go 文件。skelc 和 Vine 只支持把生成 package 作为完全由生成器管理的整体使用。Vine 的应用生命周期、RPC、Web、Event 与 Task 的实现方式见 [Vine 文档](https://vine.yorun.ai/docs/)。
+生成文件是派生产物，不要直接修改，也不要在生成 package 中加入非托管 Go 文件。skelc 和 Vine 把生成 package 视为由生成器独占管理的单元。Vine 的应用生命周期、RPC、Web、Event 与 Task 的实现方式见 [Vine 文档](https://vine.yorun.ai/docs/)。
