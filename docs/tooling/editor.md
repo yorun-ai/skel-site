@@ -10,11 +10,11 @@ The extension does not bundle the compiler. It starts `skelc lsp`, so install sk
 
 ## Quick Setup
 
-1. Install skelc v0.13.0 or newer and confirm that VS Code can find it:
+1. Install skelc v0.14.0 or newer and confirm that VS Code can find it:
 
    ```bash
    go install go.yorun.ai/skelc/cmd/skelc@latest
-   skelc version --output-format json
+   skelc version
    ```
 
 2. Install [Skeleton DSL Support](https://marketplace.visualstudio.com/items?itemName=yorun.skeleton) from the VS Code Marketplace.
@@ -54,7 +54,7 @@ The Command Palette provides:
 - `Skel: Show Language Server Output`
 - `Skel: Check Schema Compatibility`
 
-For startup problems, run `skelc version --output-format json` in the extension host environment first. Then inspect the language-server output and enable `skelc.trace.server` when protocol details are needed.
+For startup problems, run `skelc version` in the extension host environment first. Then inspect the language-server output and enable `skelc.trace.server` when protocol details are needed.
 
 ## Remote Workspaces
 

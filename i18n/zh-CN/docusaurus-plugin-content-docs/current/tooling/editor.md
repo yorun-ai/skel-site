@@ -10,11 +10,11 @@ slug: /editor
 
 ## 快速配置
 
-1. 安装 skelc v0.13.0 或更高版本，并确认 VS Code 所在环境能找到它：
+1. 安装 skelc v0.14.0 或更高版本，并确认 VS Code 所在环境能找到它：
 
    ```bash
    go install go.yorun.ai/skelc/cmd/skelc@latest
-   skelc version --output-format json
+   skelc version
    ```
 
 2. 从 VS Code Marketplace 安装 [Skeleton DSL Support](https://marketplace.visualstudio.com/items?itemName=yorun.skeleton)。
@@ -54,7 +54,7 @@ slug: /editor
 - `Skel: Show Language Server Output`
 - `Skel: Check Schema Compatibility`
 
-遇到启动问题时，先在扩展宿主环境中运行 `skelc version --output-format json`。然后检查语言服务器输出；需要查看协议细节时，再启用 `skelc.trace.server`。
+遇到启动问题时，先在扩展宿主环境中运行 `skelc version`。然后检查语言服务器输出；需要查看协议细节时，再启用 `skelc.trace.server`。
 
 ## 远程工作区
 

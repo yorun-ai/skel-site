@@ -31,14 +31,13 @@ go install go.yorun.ai/skelc/cmd/skelc@v0.10.3
 
 ```bash
 skelc version
-skelc version --output-format json
 ```
 
 JSON 输出适合给构建脚本读。生成 Go 代码时用 `--go-vine-version` 拉高目标 Vine 版本，但不能低于 skelc 内置的默认版本。
 
 ## 添加编辑器支持
 
-使用 VS Code 编写 `.skel` 文件时，安装 [Skeleton DSL Support](https://marketplace.visualstudio.com/items?itemName=yorun.skeleton)。扩展会使用 `PATH` 中的 skelc 可执行文件启动 `skelc lsp`，要求 skelc v0.13.0 或更高版本。
+使用 VS Code 编写 `.skel` 文件时，安装 [Skeleton DSL Support](https://marketplace.visualstudio.com/items?itemName=yorun.skeleton)。扩展会使用 `PATH` 中的 skelc 可执行文件启动 `skelc lsp`，要求 skelc v0.14.0 或更高版本。
 
 如果要在文档站、代码查看器或浏览器编辑器中展示 Skel，安装 [`@yorun-ai/skel-highlight`](https://www.npmjs.com/package/@yorun-ai/skel-highlight)，并按需搭配项目正在使用的高亮器。
 

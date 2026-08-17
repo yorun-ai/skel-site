@@ -4,26 +4,32 @@ slug: /diagnostics
 
 # Diagnostics & CI
 
-## Log Formats
+## Result and Log Formats
 
-Text output is for terminals; integrations should use JSONL:
+Command results are always pretty-printed JSON on stdout. `check` returns every
+diagnostic in one `{valid,diagnostics}` result. stderr is reserved for logs;
+integrations can request JSONL log formatting with:
 
 ```bash
-skelc --log-format jsonl check --skel-in ./skel
+skelc --log-format jsonl gen go --skel-in ./skel --go-out ./generated/domain
 ```
 
-Each line independently carries `level`, `severity`, a stable `code`, an exact `range`, and `message`. Diagnostics also include `related` or `suggestion` when a related declaration or automatic fix is available. Failed commands return a non-zero exit code -- automation shouldn't infer success from text output alone.
+Each diagnostic carries a stable `code`, `severity`, exact `range`, and
+`message`, with optional `related` or `suggestion`. Exit codes are `0` for a
+satisfied result, `1` for a completed unsatisfied check, and `2` for a command
+failure.
 
 `check` recovers syntax analysis at top-level declarations, block members, closing braces, and decorator boundaries, then collects up to 50 independent syntax and semantic diagnostics per domain in one run. Invalid declarations are isolated so dependent errors don't cascade. Warnings use the same structured model without causing a non-zero exit code.
 
-## Inspect Symbols
+## Inspect Schemas
 
 ```bash
-skelc symbol list --skel-in ./skel
-skelc symbol get demo.user.User --skel-in ./skel
+skelc schema list --skel-in ./skel
+skelc schema get data demo.user.User --skel-in ./skel
 ```
 
-Add `--output-format json` for structured results. Symbol commands inspect top-level declarations in the current input and do not resolve external domain definitions.
+Schema commands inspect top-level declarations in the current input and do not
+resolve external domain definitions.
 
 ## Integration Rules
 

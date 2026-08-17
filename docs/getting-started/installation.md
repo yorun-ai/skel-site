@@ -31,14 +31,13 @@ After upgrading skelc, regenerate contracts and review the diff. Don't let devel
 
 ```bash
 skelc version
-skelc version --output-format json
 ```
 
 JSON output works well in build scripts. `--go-vine-version` can raise the target Vine version during Go generation, but it won't go below skelc's built-in default.
 
 ## Add Editor Support
 
-For authoring `.skel` files in VS Code, install [Skeleton DSL Support](https://marketplace.visualstudio.com/items?itemName=yorun.skeleton). The extension starts `skelc lsp` with the skelc executable on your `PATH` and requires skelc v0.13.0 or newer.
+For authoring `.skel` files in VS Code, install [Skeleton DSL Support](https://marketplace.visualstudio.com/items?itemName=yorun.skeleton). The extension starts `skelc lsp` with the skelc executable on your `PATH` and requires skelc v0.14.0 or newer.
 
 For documentation sites, code viewers, and browser editors, install [`@yorun-ai/skel-highlight`](https://www.npmjs.com/package/@yorun-ai/skel-highlight) together with the highlighter used by your application.
 
