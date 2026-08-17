@@ -25,8 +25,8 @@ CI 和开发环境要用同一个 skelc 版本。输入、import 映射和输出
 
 每个 domain 独立生成快照和执行 diff。当前 domain 的 schema 只把 import domain 中的符号
 保存为不透明的完整名称，不会复制外部声明。schema 快照覆盖完整 domain，包括
-公开和私有声明，同时保留每个声明的 `pub` 标记。这样每项声明的兼容性仍由拥有
-它的 domain 负责，schema 检查也不依赖 import 的文件系统路径。
+公开和私有声明，同时保留每个声明的 `pub` 标记。这样，每项声明的兼容性都由
+所属的 domain 负责，schema 检查不再依赖 import 的文件系统路径。
 
 schema 命令不接受 import 路径映射。
 
@@ -40,4 +40,4 @@ Go 集成通过公开 facade `go.yorun.ai/skelc/schema` 解析这些命令输出
 保持实现 internal，同时对外提供响应类型、嵌套 wire 类型、带类型的常量，
 以及严格的 `schema.Decode`、`schema.Validate`、`schema.Encode` 函数。严格解码
 会拒绝未知字段、尾随 JSON 值、不支持的格式版本、未知 wire 枚举值和格式错误的
-规范化结构。根 package `go.yorun.ai/skelc` 继续只负责解析和生成 API。
+规范化结构。根 package `go.yorun.ai/skelc` 仍专注于解析和生成。

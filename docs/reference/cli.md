@@ -14,16 +14,18 @@ skelc check --help
 skelc format --help
 skelc lsp --help
 skelc schema --help
-skelc symbol --help
 skelc gen --help
 ```
 
 ## Global output
 
-Diagnostics default to text. Tooling can request one JSON object per line with JSONL:
+Every non-LSP command writes exactly one pretty-printed JSON result to stdout.
+Help remains text and LSP uses JSON-RPC. stderr is reserved for logs and
+diagnostics, using JSONL by default. Select human-readable logs explicitly
+with:
 
 ```bash
-skelc --log-format jsonl check --skel-in ./domain/user/skel
+skelc --log-format text gen go-module --skel-in ./domain/user/skel --go-out ./domain/user/skeled/golang --go-module go.yorun.ai/app/demo/user
 ```
 
 Ordinary logs carry `level` and `message`; structured diagnostics also include `code`, `severity`, and `range`, with optional `related` and `suggestion` fields:
@@ -32,8 +34,10 @@ Ordinary logs carry `level` and `message`; structured diagnostics also include `
 {"level":"warn","code":"loader.ignored-hidden-file","severity":"warning","range":{"start":{"file":"/path/.hidden.skel","line":1,"column":1},"end":{"file":"/path/.hidden.skel","line":1,"column":1}},"message":"/path/.hidden.skel ignored (HIDDEN_FILE)"}
 ```
 
-Schema commands always emit pretty-printed JSON. Other commands that support
-multiple result formats use `--output-format json` for structured output.
+Exit code `0` means the result was satisfied, `1` means `check` or
+`format --check` completed with an unsatisfied result, and `2` means the command
+failed. A failed command writes `{code,message}` to stdout. Public Go consumers
+can use the result and error types in `go.yorun.ai/skelc/command`.
 
 ## Input modes
 
@@ -61,7 +65,10 @@ Validate a single file or directory:
 skelc check --skel-in ./domain/user/skel
 ```
 
-`check` recovers at declaration, block-member, closing-brace, and decorator boundaries and reports up to 50 independent syntax and semantic diagnostics per domain in one run. With `--log-format jsonl`, each diagnostic is emitted separately with its code, severity, range, related locations, and optional suggestion.
+`check` returns `{valid,diagnostics}`. It recovers at declaration, block-member,
+closing-brace, and decorator boundaries and reports up to 50 independent syntax
+and semantic diagnostics per domain in one run. An invalid input completes the
+command with exit code `1`, not a command failure.
 
 Format accepted files in place:
 
@@ -73,10 +80,10 @@ Check formatting in CI without modifying files:
 
 ```bash
 skelc format --check --skel-in ./domain/user/skel
-skelc format --check --output-format json --skel-in ./domain/user/skel
 ```
 
-`--check` exits nonzero and lists absolute paths when any accepted file requires formatting. JSON output has a stable `changed` boolean and ordered `files` array:
+`--check` exits with code `1` when any accepted file requires formatting. The
+result always has a stable `changed` boolean and ordered `files` array:
 
 ```json
 {
@@ -95,11 +102,11 @@ Editors and other development tools can start the Skel language server over stan
 skelc lsp
 ```
 
-The language server reports multiple syntax and semantic issues as you edit. It also provides quick fixes, related diagnostic locations, document symbols, cross-file Go to Definition, Find All References, and schema compatibility CodeLens actions. Clients can enable live compatibility diagnostics and call the `skel.schema.diff` execute command to retrieve the complete structured report for the current in-memory domain.
+The language server reports multiple syntax and semantic issues as you edit. It also provides quick fixes, related diagnostic locations, document symbols, cross-file Go to Definition, Find All References, and schema compatibility CodeLens actions. Clients can enable live compatibility diagnostics and invoke the `skel.schema.diff` execute command to retrieve the complete structured report for the current in-memory domain.
 
 Compatibility analysis uses the same normalized projection and impact rules as `skelc schema diff`. By default it compares the domain's source directory with Git `HEAD`; clients may provide an explicit baseline source path. `BREAKING`, `DANGEROUS`, and optionally `COMPATIBLE` changes are reported as warning, information, and hint diagnostics.
 
-Clients configure the feature through `initializationOptions.schemaCompatibility` or `workspace/didChangeConfiguration`: `diagnostics` and `codeLens` enable the corresponding live features, `includeCompatible` includes hint diagnostics, and `baseline` selects a source file or directory relative to the domain source directory. An empty baseline uses Git `HEAD`. The server advertises `skel.schema.diff` through `executeCommandProvider`; invoke it with one document URI argument to receive the same complete report shape returned by the CLI. If Git history is unavailable, continuous compatibility diagnostics stay silent and an explicit command returns an actionable error.
+Clients configure the feature through `initializationOptions.schemaCompatibility` or `workspace/didChangeConfiguration`: `diagnostics` and `codeLens` enable the corresponding live features, `includeCompatible` reports `COMPATIBLE` changes as hints, and `baseline` selects a source file or directory relative to the domain source directory. An empty baseline uses Git `HEAD`. The server advertises `skel.schema.diff` through `executeCommandProvider`; invoke it with one document URI argument to receive the same complete report shape returned by the CLI. If Git history is unavailable, live compatibility diagnostics stay silent and an explicit command returns an actionable error.
 
 Analysis includes unsaved changes but treats each source directory as an independent input. Files that declare the same domain are merged only when they are in the same directory, so the same domain name can appear in separate directories without conflict. This matches `check`: imports remain unresolved during validation, while generation commands validate the complete import graph from explicit `--skel-import` mappings.
 
@@ -149,12 +156,34 @@ including its type-specific data, enum, resource, service, or other body:
 }
 ```
 
+If the requested declaration does not exist, `get` returns JSON `null` with
+exit code `0`. Absence is a normal query result rather than a command failure.
+
 Schema inspection covers declarations in the current input and does not resolve
 external domain definitions. External references use their canonical fully
 qualified names, independent of the local import alias. Inspection always covers
-the complete domain, and each declaration retains its `pub` marker. The older
-`symbol list` and `symbol get` commands remain available as deprecated
-compatibility entry points that preserve their historical summary output.
+the complete domain, and each declaration retains its `pub` marker.
+
+Every successfully completed schema command writes exactly one JSON result to
+stdout and exits with code `0`. Any failure of the command, input, compilation,
+Git history, or schema exits nonzero and writes one JSON error object to stdout:
+
+```json
+{
+  "code": "COMPILATION_FAILED",
+  "message": "failed to compile schema source"
+}
+```
+
+Programs must branch on `code`, not parse `message`. Current stable codes are
+
+- `INVALID_ARGUMENT`: command arguments or flag combinations are invalid.
+- `COMPILATION_FAILED`: Skel source loading, parsing, or semantic analysis failed.
+- `GIT_HISTORY_NOT_FOUND`: an implicit Git baseline could not be found.
+- `COMMAND_FAILED`: output, projection, encoding, or another command operation failed.
+
+stderr is reserved for zero or more JSONL logs and diagnostics and is never
+part of the command result. `--log-format text` selects human-readable stderr.
 
 Create a deterministic, versioned JSON schema snapshot:
 
@@ -174,7 +203,7 @@ artifact.
 Imported domains are intentionally not embedded in this artifact. Their symbols
 are recorded as opaque, fully qualified references. `schema snapshot` does not
 accept `--skel-import`. Snapshot and diff each imported domain separately to
-check that dependency's own compatibility.
+verify its own compatibility.
 
 Imported member, argument, and result types use the explicit
 `"kind": "importedReference"` representation:
@@ -211,14 +240,14 @@ repository containing `--skel-in` and extracts the same file or directory from
 `HEAD`. This compares the latest committed source with the current working tree.
 Baseline source positions use the stable `HEAD:<repo-relative-path>` form. If no
 Git repository, commit history, or matching path at `HEAD` exists, the command
-fails and asks for an explicit `--baseline-skel-in`.
+fails and prompts you to pass `--baseline-skel-in` explicitly.
 
 Changes are assigned stable codes and one of three SCREAMING_CASE `impact`
 values:
 
 - `BREAKING`: removes or structurally changes an existing contract, adds a
-  required member or argument, or otherwise requires an existing user to
-  change its code or data.
+  required member or argument, or otherwise forces existing users to change
+  their code or data.
 - `DANGEROUS`: preserves structural compatibility but can change runtime,
   security, or interpretation semantics, such as changing authentication or
   permission requirements, changing config lifecycle, or adding an enum item.
@@ -245,8 +274,9 @@ The command always emits every detected change in a structured JSON report,
 including the compatibility result, summary counts, stable change codes,
 symbols, and available baseline or candidate source positions. A completed
 diff returns exit code `0` regardless of its compatibility result;
-command, input, compilation, and schema format errors return `1`. CI policy can
-be applied by reading the report instead of configuring the diff command.
+command, input, compilation, and schema format errors return `2`. CI can read
+the report and apply its own failure policy instead of configuring the diff
+command.
 
 ## Generate Go source
 
@@ -265,6 +295,10 @@ Generation marks ownership near the top of every output with
 marked files are removed, and files at paths generated by the current run are
 overwritten. The first generation after upgrading from v0.9.3 through v0.11.0
 migrates and removes the old `.skelc-manifest.json` sidecar.
+
+Every generation command returns `{generated}` after committing its outputs.
+Non-fatal compiler diagnostics are written as JSONL logs to stderr by default;
+use `--log-format text` for human-readable log entries.
 
 ## Generate Go modules
 
@@ -334,7 +368,6 @@ Display compiler, platform, Go, and default Vine version information:
 
 ```bash
 skelc version
-skelc version --output-format json
 ```
 
 For language rules referenced by these commands, see the [Skel syntax reference](/docs/syntax).

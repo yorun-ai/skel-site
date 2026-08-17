@@ -24,8 +24,6 @@ skelc schema list --help
 skelc schema get --help
 skelc schema snapshot --help
 skelc schema diff --help
-skelc symbol list --help
-skelc symbol get --help
 skelc check --help
 skelc format --help
 skelc lsp --help
@@ -35,14 +33,14 @@ skelc lsp --help
 
 ```bash
 skelc version
-skelc version --output-format json
 ```
 
-`skelc` 的诊断日志默认使用文本格式。如果上层工具需要读取，加上全局参数 `--log-format jsonl` 就行：
+除 LSP 外，每个命令都在 stdout 输出恰好一个格式化 JSON 结果。help 保持文本，
+LSP 使用 JSON-RPC。stderr 只保留日志和诊断，默认使用 JSONL；需要人类可读日志时
+显式使用：
 
 ```bash
-skelc --log-format jsonl check --skel-in ./domain/user/skel
-skelc --log-format jsonl gen go-module --skel-in ./domain/user/skel --go-out ./domain/user/skeled/golang --go-module go.yorun.ai/app/demo/user
+skelc --log-format text gen go-module --skel-in ./domain/user/skel --go-out ./domain/user/skeled/golang --go-module go.yorun.ai/app/demo/user
 ```
 
 普通日志只包含 `level` 和 `message`；结构化诊断还会带上 `code`、`severity`、`range`，有时还有 `related` 和 `suggestion`：
@@ -51,8 +49,9 @@ skelc --log-format jsonl gen go-module --skel-in ./domain/user/skel --go-out ./d
 {"level":"warn","code":"loader.ignored-hidden-file","severity":"warning","range":{"start":{"file":"/path/.hidden.skel","line":1,"column":1},"end":{"file":"/path/.hidden.skel","line":1,"column":1}},"message":"/path/.hidden.skel ignored (HIDDEN_FILE)"}
 ```
 
-schema 命令始终输出格式化 JSON。其他支持多种结果格式的命令可使用
-`--output-format json` 获取结构化输出。
+退出码 `0` 表示结果满足预期，`1` 表示 `check` 或 `format --check` 完成但检查未通过，
+`2` 表示命令失败。失败的命令会向 stdout 写入 `{code,message}`。Go 程序可使用
+`go.yorun.ai/skelc/command` 中的公开结果和错误类型。
 
 ## 1. 输入与依赖
 
@@ -88,7 +87,10 @@ skelc check --skel-in ./domain/user/skel
 skelc check --skel-in ./domain/user/skel
 ```
 
-`check` 检查当前输入中的语法、命名、类型和引用规则；这个命令只接受 `--skel-in`。语法分析会在声明、block 成员、右花括号和 decorator 边界处恢复，单次运行可为每个 domain 报告最多 50 条相互独立的语法与语义诊断。使用 `--log-format jsonl` 时，每条诊断独占一行，包含 code、severity、range、related location，以及可选的 suggestion。
+`check` 返回 `{valid,diagnostics}`，检查当前输入中的语法、命名、类型和引用规则；
+这个命令只接受 `--skel-in`。语法分析会在声明、block 成员、右花括号和 decorator
+边界处恢复，单次运行可为每个 domain 报告最多 50 条相互独立的语法与语义诊断。
+输入无效时检查仍会正常完成，退出码为 `1`，不是命令失败。
 
 ## 3. 格式化 skel
 
@@ -102,10 +104,10 @@ skelc format --skel-in ./domain/user/skel
 
 ```bash
 skelc format --check --skel-in ./domain/user/skel
-skelc format --check --output-format json --skel-in ./domain/user/skel
 ```
 
-如果存在需要格式化的文件，`--check` 会按顺序输出其绝对路径并以非零状态退出。JSON 输出包含稳定的 `changed` 布尔值和有序 `files` 数组：
+如果存在需要格式化的文件，`--check` 返回退出码 `1`。结果始终包含稳定的
+`changed` 布尔值和有序 `files` 数组：
 
 ```json
 {
@@ -124,11 +126,11 @@ skelc format --check --output-format json --skel-in ./domain/user/skel
 skelc lsp
 ```
 
-语言服务器会在编辑过程中报告多条语法和语义问题，同时提供快速修复、诊断关联位置、文档符号、跨文件定义跳转、引用查找和 schema 兼容性 CodeLens。客户端可以启用实时兼容性诊断，并通过 `skel.schema.diff` 执行命令获取当前内存 domain 的完整结构化报告。
+语言服务器会在编辑过程中报告多条语法和语义问题，同时提供快速修复、诊断关联位置、文档符号、跨文件定义跳转、引用查找和 schema 兼容性 CodeLens。客户端可以启用实时兼容性诊断，并调用 `skel.schema.diff` 执行命令来获取当前内存 domain 的完整结构化报告。
 
 兼容性分析复用 `skelc schema diff` 的规范化投影和影响分级规则。默认会把 domain 的源目录与 Git `HEAD` 比较，客户端也可以提供显式 baseline 源码路径。`BREAKING`、`DANGEROUS` 和可选的 `COMPATIBLE` 变化分别以 warning、information 和 hint 诊断展示。
 
-客户端通过 `initializationOptions.schemaCompatibility` 或 `workspace/didChangeConfiguration` 配置这个功能：`diagnostics` 和 `codeLens` 分别启用实时诊断与 CodeLens，`includeCompatible` 包含 hint 诊断，`baseline` 指定相对于 domain 源目录的源码文件或目录；留空时使用 Git `HEAD`。服务器通过 `executeCommandProvider` 声明 `skel.schema.diff`，调用时传入一个文档 URI 参数，即可获得与 CLI 相同结构的完整报告。找不到 Git 历史时，持续兼容性诊断会保持安静，显式命令则返回可操作的错误信息。
+客户端通过 `initializationOptions.schemaCompatibility` 或 `workspace/didChangeConfiguration` 配置这个功能：`diagnostics` 和 `codeLens` 分别启用实时诊断与 CodeLens，`includeCompatible` 把 `COMPATIBLE` 变化也报告为 hint 诊断，`baseline` 指定相对于 domain 源目录的源码文件或目录；留空时使用 Git `HEAD`。服务器通过 `executeCommandProvider` 声明 `skel.schema.diff`，调用时传入一个文档 URI 参数，即可获得与 CLI 相同结构的完整报告。找不到 Git 历史时，实时兼容性诊断保持安静；显式调用命令时，则返回可操作的错误信息。
 
 分析会包含尚未保存的修改，但每个源目录都是一份独立输入。只有位于同一目录且声明同一 domain 的文件才会合并，因此不同目录中的同名 domain 互不冲突。这与 `check` 的行为一致：校验时不解析 import；生成命令则根据显式的 `--skel-import` 映射校验完整的 import 图。
 
@@ -179,9 +181,30 @@ Skel 名称。因此 `TYPE` 是必填参数，也是声明身份的一部分。`
 }
 ```
 
-找不到声明时退出码为 `1`。`schema list/get` 始终查询完整 domain，每个声明
-保留自己的 `pub` 标记。现有的 `symbol list/get` 仍然可用，但已经是保留原有
-摘要输出的废弃兼容入口。
+请求的声明不存在时，`get` 会返回 JSON `null` 和退出码 `0`。不存在是正常查询结果，
+不是命令失败。`schema list/get` 始终查询完整 domain，每个声明
+保留自己的 `pub` 标记。
+
+每个正常完成的 schema 命令都会向 stdout 写入恰好一个 JSON 结果，并以退出码 `0`
+结束。命令、输入、编译、Git 历史或 schema 的任何失败都会以非零退出码结束，
+并向 stdout 写入一个 JSON 错误对象：
+
+```json
+{
+  "code": "COMPILATION_FAILED",
+  "message": "failed to compile schema source"
+}
+```
+
+程序必须根据 `code` 分支，不得解析 `message`。当前稳定 code 为：
+
+- `INVALID_ARGUMENT`：命令参数或 flag 组合无效。
+- `COMPILATION_FAILED`：Skel 源码加载、解析或语义分析失败。
+- `GIT_HISTORY_NOT_FOUND`：无法找到隐式 Git baseline。
+- `COMMAND_FAILED`：输出、投影、编码或其他命令执行失败。
+
+stderr 只保留零到多条 JSONL 日志和诊断，永远不属于命令结果；使用
+`--log-format text` 可以切换成人类可读格式。
 
 生成按确定顺序排列、带格式版本的 JSON schema 快照：
 
@@ -237,7 +260,7 @@ skelc schema diff \
 
 每项变化都有稳定 code，`impact` 使用三个 SCREAMING_CASE 枚举值：
 
-- `BREAKING`：删除或从结构上改变已有契约、增加必填字段或参数，以及其他要求已有使用方修改代码或数据的变化。
+- `BREAKING`：删除或结构性改变已有契约，增加必填字段或参数，或迫使现有使用者修改其代码或数据。
 - `DANGEROUS`：保持结构兼容但可能改变运行时、安全或解释语义的变化，例如改变认证或权限要求、改变 config lifecycle，以及增加 enum item。
 - `COMPATIBLE`：增加可独立调用的声明或 method，以及修改文档和废弃元数据。
 
@@ -254,16 +277,10 @@ domain 名称变化表示整个 schema 身份被替换，而不是某个嵌套�
 例如，新增 enum item 的结果为 `change: "ADDED"`、`impact: "DANGEROUS"`；
 新增必填 data member 同样是 `change: "ADDED"`，但 `impact: "BREAKING"`。
 
-命令始终在结构化 JSON 报告中返回全部变化，包括兼容性结论、分类计数、稳定
+命令会把检测到的全部变化写入结构化 JSON 报告，包括兼容性结论、分类计数、稳定
 变化 code、symbol，以及可用的 baseline/candidate 源码位置。无论兼容性结论
 如何，diff 完成后都返回退出码 `0`；命令参数、输入、编译和 schema 格式错误
-返回 `1`。CI 可以读取报告并自行应用失败策略，无需配置 diff 命令。
-
-旧 `symbol get` 找不到时的兼容输出仍为：
-
-```text
-symbol not found: demo.user.Missing
-```
+返回 `2`。CI 可以读取报告并自行应用失败策略，无需配置 diff 命令。
 
 ## 6. 生成 Go 代码
 
@@ -360,6 +377,9 @@ skelc gen go-module \
 - `web` 默认实现只提供空壳，具体路由仍然由 Go 代码实现 `Routes(*web.Router)`
 - `--go-module-prefix` 可用于推导外部 domain 的 pub import path；pub Go 包按 `<prefix>/<domain parts except last>/<last-domain>pub` 拼接，例如 `example.com/demo/skeled/userpub`
 - `--go-module-prefix`、`--go-module`、`--go-pub-module` 不能以 `/` 结尾；需要在参数传入时修正
+
+每个生成命令在提交输出后返回 `{generated}`。非致命编译诊断默认作为 JSONL 日志
+写入 stderr；需要人类可读日志时使用 `--log-format text`。
 
 ## 7. 生成 TypeScript 代码
 
