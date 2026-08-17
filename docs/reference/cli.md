@@ -149,12 +149,33 @@ including its type-specific data, enum, resource, service, or other body:
 }
 ```
 
+If the requested declaration does not exist, `get` returns JSON `null` with
+exit code `0`. Absence is a normal query result rather than a command failure.
+
 Schema inspection covers declarations in the current input and does not resolve
 external domain definitions. External references use their canonical fully
 qualified names, independent of the local import alias. Inspection always covers
 the complete domain, and each declaration retains its `pub` marker. The older
 `symbol list` and `symbol get` commands remain available as deprecated
 compatibility entry points that preserve their historical summary output.
+
+Every successfully completed schema command writes exactly one JSON result to
+stdout and exits with code `0`. A genuine command, input, compilation, Git
+history, or schema failure exits nonzero and writes one JSON error object to
+stdout:
+
+```json
+{
+  "code": "SCHEMA_COMPILATION_FAILED",
+  "message": "failed to compile schema source"
+}
+```
+
+Programs must branch on `code`, not parse `message`. Current stable codes are
+`INVALID_ARGUMENT`, `SCHEMA_COMPILATION_FAILED`,
+`SCHEMA_GIT_HISTORY_NOT_FOUND`, and `SCHEMA_COMMAND_FAILED`. stderr is reserved
+for zero or more human-readable or JSONL logs and diagnostics and is never part
+of the command result.
 
 Create a deterministic, versioned JSON schema snapshot:
 

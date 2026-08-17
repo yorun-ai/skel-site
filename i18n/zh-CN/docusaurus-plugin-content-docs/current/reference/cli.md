@@ -179,9 +179,26 @@ Skel 名称。因此 `TYPE` 是必填参数，也是声明身份的一部分。`
 }
 ```
 
-找不到声明时退出码为 `1`。`schema list/get` 始终查询完整 domain，每个声明
+请求的声明不存在时，`get` 会返回 JSON `null` 和退出码 `0`。不存在是正常查询结果，
+不是命令失败。`schema list/get` 始终查询完整 domain，每个声明
 保留自己的 `pub` 标记。现有的 `symbol list/get` 仍然可用，但已经是保留原有
 摘要输出的废弃兼容入口。
+
+每个正常完成的 schema 命令都会向 stdout 写入恰好一个 JSON 结果，并以退出码 `0`
+结束。真正的命令、输入、编译、Git 历史或 schema 失败会以非零退出码结束，
+并向 stdout 写入一个 JSON 错误对象：
+
+```json
+{
+  "code": "SCHEMA_COMPILATION_FAILED",
+  "message": "failed to compile schema source"
+}
+```
+
+程序必须根据 `code` 分支，不得解析 `message`。当前稳定 code 为
+`INVALID_ARGUMENT`、`SCHEMA_COMPILATION_FAILED`、
+`SCHEMA_GIT_HISTORY_NOT_FOUND` 和 `SCHEMA_COMMAND_FAILED`。stderr 只保留零到多条
+供人阅读或 JSONL 日志和诊断，永远不属于命令结果。
 
 生成按确定顺序排列、带格式版本的 JSON schema 快照：
 
