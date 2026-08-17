@@ -40,8 +40,8 @@ data uses the same generated clone methods.
 
 skelc v0.12.x and v0.13.x support rolling upgrades with Go packages generated
 by v0.11.x. Regenerate imported packages incrementally, and finish the
-migration before upgrading to v0.14.0, at which point imported generated data
-must provide `Clone()` or `CloneBy(...)`.
+migration before upgrading to v0.14.0, when imported generated data must
+provide `Clone()` or `CloneBy(...)`.
 
 ## Generated Package Ownership
 

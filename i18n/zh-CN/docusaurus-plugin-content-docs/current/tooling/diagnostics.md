@@ -8,7 +8,7 @@ slug: /diagnostics
 
 命令结果始终在 stdout 输出格式化 JSON；`check` 在一个
 `{valid,diagnostics}` 结果中返回全部诊断。stderr 只保留日志并默认使用 JSONL；
-面向人类的调用可以显式切换为文本：
+需要人类可读输出时，选择文本格式：
 
 ```bash
 skelc --log-format text gen go --skel-in ./skel --go-out ./generated/domain

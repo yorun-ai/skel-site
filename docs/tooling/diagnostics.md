@@ -8,7 +8,7 @@ slug: /diagnostics
 
 Command results are always pretty-printed JSON on stdout. `check` returns every
 diagnostic in one `{valid,diagnostics}` result. stderr is reserved for logs and
-uses JSONL by default. Human-facing invocations can select text formatting with:
+uses JSONL by default. For human-readable output, select text formatting with:
 
 ```bash
 skelc --log-format text gen go --skel-in ./skel --go-out ./generated/domain
@@ -16,8 +16,8 @@ skelc --log-format text gen go --skel-in ./skel --go-out ./generated/domain
 
 Each diagnostic carries a stable `code`, `severity`, exact `range`, and
 `message`, with optional `related` or `suggestion`. Exit codes are `0` for a
-satisfied result, `1` for a completed unsatisfied check, and `2` for a command
-failure.
+satisfied result, `1` for a check that completed unsatisfied, and `2` for a
+command failure.
 
 `check` recovers syntax analysis at top-level declarations, block members, closing braces, and decorator boundaries, then collects up to 50 independent syntax and semantic diagnostics per domain in one run. Invalid declarations are isolated so dependent errors don't cascade. Warnings use the same structured model without causing a non-zero exit code.
 
