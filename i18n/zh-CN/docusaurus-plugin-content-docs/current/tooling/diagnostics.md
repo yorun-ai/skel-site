@@ -7,11 +7,11 @@ slug: /diagnostics
 ## 结果和日志格式
 
 命令结果始终在 stdout 输出格式化 JSON；`check` 在一个
-`{valid,diagnostics}` 结果中返回全部诊断。stderr 只保留日志；工具集成可通过
-以下参数要求 JSONL 日志：
+`{valid,diagnostics}` 结果中返回全部诊断。stderr 只保留日志并默认使用 JSONL；
+面向人类的调用可以显式切换为文本：
 
 ```bash
-skelc --log-format jsonl gen go --skel-in ./skel --go-out ./generated/domain
+skelc --log-format text gen go --skel-in ./skel --go-out ./generated/domain
 ```
 
 每条诊断包含稳定的 `code`、`severity`、精确的 `range` 和 `message`，还可带有

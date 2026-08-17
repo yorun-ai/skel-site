@@ -36,11 +36,11 @@ skelc version
 ```
 
 除 LSP 外，每个命令都在 stdout 输出恰好一个格式化 JSON 结果。help 保持文本，
-LSP 使用 JSON-RPC。stderr 只保留日志和诊断；上层工具可通过全局参数
-`--log-format jsonl` 读取 JSONL 日志：
+LSP 使用 JSON-RPC。stderr 只保留日志和诊断，默认使用 JSONL；需要人类可读日志时
+显式使用：
 
 ```bash
-skelc --log-format jsonl gen go-module --skel-in ./domain/user/skel --go-out ./domain/user/skeled/golang --go-module go.yorun.ai/app/demo/user
+skelc --log-format text gen go-module --skel-in ./domain/user/skel --go-out ./domain/user/skeled/golang --go-module go.yorun.ai/app/demo/user
 ```
 
 普通日志只包含 `level` 和 `message`；结构化诊断还会带上 `code`、`severity`、`range`，有时还有 `related` 和 `suggestion`：
@@ -203,7 +203,8 @@ Skel 名称。因此 `TYPE` 是必填参数，也是声明身份的一部分。`
 - `GIT_HISTORY_NOT_FOUND`：无法找到隐式 Git baseline。
 - `COMMAND_FAILED`：输出、投影、编码或其他命令执行失败。
 
-stderr 只保留零到多条供人阅读或 JSONL 日志和诊断，永远不属于命令结果。
+stderr 只保留零到多条 JSONL 日志和诊断，永远不属于命令结果；使用
+`--log-format text` 可以切换成人类可读格式。
 
 生成按确定顺序排列、带格式版本的 JSON schema 快照：
 
@@ -377,8 +378,8 @@ skelc gen go-module \
 - `--go-module-prefix` 可用于推导外部 domain 的 pub import path；pub Go 包按 `<prefix>/<domain parts except last>/<last-domain>pub` 拼接，例如 `example.com/demo/skeled/userpub`
 - `--go-module-prefix`、`--go-module`、`--go-pub-module` 不能以 `/` 结尾；需要在参数传入时修正
 
-每个生成命令在提交输出后返回 `{generated}`。非致命编译诊断作为日志写入 stderr；
-工具需要结构化日志时使用 `--log-format jsonl`。
+每个生成命令在提交输出后返回 `{generated}`。非致命编译诊断默认作为 JSONL 日志
+写入 stderr；需要人类可读日志时使用 `--log-format text`。
 
 ## 7. 生成 TypeScript 代码
 

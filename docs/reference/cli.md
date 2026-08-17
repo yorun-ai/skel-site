@@ -21,10 +21,11 @@ skelc gen --help
 
 Every non-LSP command writes exactly one pretty-printed JSON result to stdout.
 Help remains text and LSP uses JSON-RPC. stderr is reserved for logs and
-diagnostics; tooling can request JSONL logs with:
+diagnostics and uses JSONL by default. Select human-readable logs explicitly
+with:
 
 ```bash
-skelc --log-format jsonl gen go-module --skel-in ./domain/user/skel --go-out ./domain/user/skeled/golang --go-module go.yorun.ai/app/demo/user
+skelc --log-format text gen go-module --skel-in ./domain/user/skel --go-out ./domain/user/skeled/golang --go-module go.yorun.ai/app/demo/user
 ```
 
 Ordinary logs carry `level` and `message`; structured diagnostics also include `code`, `severity`, and `range`, with optional `related` and `suggestion` fields:
@@ -182,8 +183,8 @@ Programs must branch on `code`, not parse `message`. Current stable codes are
 - `GIT_HISTORY_NOT_FOUND`: an implicit Git baseline could not be found.
 - `COMMAND_FAILED`: output, projection, encoding, or another command operation failed.
 
-stderr is reserved for zero or more human-readable or JSONL logs and
-diagnostics and is never part of the command result.
+stderr is reserved for zero or more JSONL logs and diagnostics and is never
+part of the command result. `--log-format text` selects human-readable stderr.
 
 Create a deterministic, versioned JSON schema snapshot:
 
@@ -296,8 +297,8 @@ overwritten. The first generation after upgrading from v0.9.3 through v0.11.0
 migrates and removes the old `.skelc-manifest.json` sidecar.
 
 Every generation command returns `{generated}` after committing its outputs.
-Non-fatal compiler diagnostics are written as logs to stderr; use
-`--log-format jsonl` when tooling needs structured log entries.
+Non-fatal compiler diagnostics are written as JSONL logs to stderr by default;
+use `--log-format text` for human-readable log entries.
 
 ## Generate Go modules
 

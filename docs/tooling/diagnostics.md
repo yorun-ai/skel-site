@@ -7,11 +7,11 @@ slug: /diagnostics
 ## Result and Log Formats
 
 Command results are always pretty-printed JSON on stdout. `check` returns every
-diagnostic in one `{valid,diagnostics}` result. stderr is reserved for logs;
-integrations can request JSONL log formatting with:
+diagnostic in one `{valid,diagnostics}` result. stderr is reserved for logs and
+uses JSONL by default. Human-facing invocations can select text formatting with:
 
 ```bash
-skelc --log-format jsonl gen go --skel-in ./skel --go-out ./generated/domain
+skelc --log-format text gen go --skel-in ./skel --go-out ./generated/domain
 ```
 
 Each diagnostic carries a stable `code`, `severity`, exact `range`, and
