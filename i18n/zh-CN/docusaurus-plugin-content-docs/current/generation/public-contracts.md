@@ -15,7 +15,7 @@ skelc gen skel \
 
 ## 闭包规则
 
-公开声明引用了本 domain 的 data、enum、actor 或 resource，那这些被引用的也都要显式标上 `pub`。skelc 不会偷偷帮你扩大公开面——缺了标记就报错，这样反而更安全。
+公开声明引用了本 domain 的 data、enum、actor 或 resource，那这些被引用的也都要显式标上 `pub`。skelc 不会悄悄扩大公开面——缺了标记就报错，这样反而更安全。
 
 ## 消费方式
 

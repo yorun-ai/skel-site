@@ -1,3 +1,41 @@
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Editors / IDEs
+.idea/
+.vscode/
+
+# Dependencies
+node_modules/
+.pnpm-store/
+.npm/
+
+# Docusaurus generated output
 .docusaurus/
 build/
-node_modules/
+
+# Build / test caches and tooling artifacts
+.cache/
+.turbo/
+coverage/
+dist/
+*.tsbuildinfo
+.eslintcache
+.stylelintcache
+
+# Logs
+*.log
+pnpm-debug.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Cloudflare Wrangler
+.wrangler/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+.dev.vars

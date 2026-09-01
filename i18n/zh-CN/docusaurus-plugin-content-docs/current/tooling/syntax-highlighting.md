@@ -55,7 +55,7 @@ const html = Prism.highlight(
 
 这个包只提供词法高亮，不会解析或校验契约。接入 Monaco 或 CodeMirror 适配器也不会自动获得诊断和补全；这些能力需要由客户端连接 `skelc lsp`。
 
-如果需要开箱即用的诊断、补全、格式化和导航，请使用 [VS Code 扩展](/docs/editor)。
+如果需要完整的诊断、补全、格式化和导航，请使用 [VS Code 扩展](/docs/editor)。
 
 ## 开发语法高亮包
 

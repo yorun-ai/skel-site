@@ -84,7 +84,7 @@ skelc check --skel-in ./demo/skel
 
 `format` 把源码整理成标准格式；`check` 解析名称和类型，校验 actor、权限边界与公共契约闭包。
 
-生成前先运行 `format` 和 `check`——generator 不会帮你修复无效契约，但 `check` 的诊断信息比生成失败时的报错更清晰。
+生成前先运行 `format` 和 `check`——generator 不会修复无效契约，但 `check` 的诊断信息比生成失败时的报错更清晰。
 
 ## 生成 Go
 
@@ -96,7 +96,7 @@ skelc gen go \
   --go-out ./demo/skeled
 ```
 
-输出内容包含 data 与 enum 类型、actor 元数据、权限码、service interface 以及 Vine 注册辅助代码。业务代码去实现生成的 interface 就好；边界有变化时，改 `.skel` 重新生成，不要直接修改生成文件。
+输出内容包含 data 与 enum 类型、actor 元数据、权限码、service interface 以及 Vine 注册辅助代码。业务代码实现生成的 interface 即可；边界有变化时，改 `.skel` 重新生成，不要直接修改生成文件。
 
 生成独立 module 的话用 `gen go-module`，详见 [Go 生成](/docs/generation/go)。
 

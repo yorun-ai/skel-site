@@ -14,7 +14,7 @@ slug: /troubleshooting
 
 ## 公开依赖报错
 
-公开 service/event 引用的本地 data、enum、actor 或 resource 也需要标上 `pub`。推荐的做法是：要么缩小引用范围，要么显式公开依赖——总之不要绕过检查。
+公开 service/event 引用的本地 data、enum、actor 或 resource 也需要标上 `pub`。要么缩小引用范围，要么显式公开依赖，不要绕过检查。
 
 ## 生成文件没有被清理
 
@@ -26,7 +26,7 @@ skelc 会自动删除本次不再生成、且顶部附近仍带有
 
 ## 生成 Go 代码版本不兼容
 
-检查 `skelc version`、生成的 `go.mod` 和应用使用的 Vine 版本。升级后记得重新生成，不要只手动改 require。
+检查 `skelc version`、生成的 `go.mod` 和应用使用的 Vine 版本。升级后重新生成，不要只手动改 require。
 
 ## 仍有问题？
 

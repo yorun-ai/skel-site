@@ -4,7 +4,7 @@ slug: /overview
 
 # Start with Skel
 
-skelc enables a contract-first workflow: you describe domain types, callers, permissions, and capabilities in `.skel`, validate everything once, and generate the interfaces each language needs.
+skelc uses a contract-first workflow: you describe domain types, callers, permissions, and capabilities in `.skel`, validate everything once, and generate the interfaces each language needs.
 
 ## Compilation Pipeline
 

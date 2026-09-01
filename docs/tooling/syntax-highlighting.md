@@ -55,7 +55,7 @@ The [package README](https://github.com/yorun-ai/skel-editor-support/tree/main/p
 
 The package provides lexical highlighting only. It does not parse or validate contracts, and adding the Monaco or CodeMirror adapter does not automatically enable diagnostics or completion. Those features require a client connected to `skelc lsp`.
 
-Use the [VS Code extension](/docs/editor) when you want a ready-made editing environment with diagnostics, completion, formatting, and navigation.
+Use the [VS Code extension](/docs/editor) when you need a complete editing environment with diagnostics, completion, formatting, and navigation.
 
 ## Develop the Package
 

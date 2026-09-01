@@ -4,7 +4,7 @@ slug: /syntax
 
 # Syntax Index
 
-The tables below help you locate a declaration or rule. Follow the linked language guide when validation behavior depends on context.
+Use the tables below to locate a declaration or rule. Follow the linked language guide when validation behavior depends on context.
 
 ## File Form
 
