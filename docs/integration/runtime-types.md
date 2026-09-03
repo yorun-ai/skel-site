@@ -83,6 +83,13 @@ JSON has no native byte type, so Base64 is required. CBOR has a native byte type
 
 The TypeScript generator maps `Binary` to `Uint8Array`. A generated service spec includes sparse `wire` schemas only when method arguments or results actually contain Binary; normal JSON methods get no extra metadata. Applications inject a CBOR codec into `@yorun-ai/vrpc`.
 
+## Collection Types
+
+Go collection nullability, the skelc v0.15.0 migration, and its Vine version
+requirement are described in
+[Go Generation](/docs/generation/go#collection-nullability-and-validation).
+The `binary` scalar keeps its byte encoding and is not a `list<T>`.
+
 ## Domain Schema Registry
 
 Generated code calls this function during package initialization:

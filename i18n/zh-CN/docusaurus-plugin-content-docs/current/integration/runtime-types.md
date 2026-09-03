@@ -83,6 +83,10 @@ JSON 没有原生 bytes 类型，只能用 base64；CBOR 有原生 bytes 类型�
 
 TypeScript generator 会把 `Binary` 映射为 `Uint8Array`。只有 method arguments 或 result 实际包含 Binary 时，生成的 service spec 才会附带稀疏的 `wire` schema；普通 JSON method 不会生成额外 metadata。应用需要向 `@yorun-ai/vrpc` 注入 CBOR codec。
 
+## 集合类型
+
+Go 集合的可空性、skelc v0.15.0 迁移方式及其 Vine 版本要求见 [Go 生成](/docs/generation/go#集合可空性与校验)。`binary` 标量保留其字节编码，不属于 `list<T>`。
+
 ## Domain Schema 注册表
 
 生成代码会在 init 阶段调用：
