@@ -4,10 +4,6 @@ allowBuilds:
   esbuild: true
   workerd: true
 
-auditConfig:
-  ignoreGhsas:
-    - GHSA-5c6j-r48x-rmvq
-
 minimumReleaseAgeExclude:
   - '@easyops-cn/docusaurus-search-local@0.55.3'
 

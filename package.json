@@ -11,7 +11,6 @@
     "dev:en": "docusaurus start --locale en",
     "build": "node ./scripts/build-isolated.mjs",
     "typecheck": "tsc --noEmit",
-    "audit:security": "pnpm audit --prod --audit-level high --ignore GHSA-5c6j-r48x-rmvq",
     "serve": "docusaurus serve --no-open",
     "clear": "docusaurus clear"
   },
