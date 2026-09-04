@@ -6,7 +6,7 @@ slug: /installation
 
 ## 前提条件
 
-skelc 和生成的 Go module 目前需要 Go 1.27.0 及以上版本。生成 Go module 时，输出用的是 skelc 内置的默认 Vine 版本；当前默认版本是 `v0.13.1`。
+skelc v0.15.0 和生成的 Go module 需要 Go 1.27.0 及以上版本。生成的 Go module 要求 Vine `v0.14.0` 或更高版本，默认依赖为 `v0.14.0`。在已有 Go module 中生成时，需要自行更新依赖。
 
 ## 安装
 
@@ -22,10 +22,10 @@ skelc version
 CI 和需要可重复生成的场景建议锁死版本：
 
 ```bash
-go install go.yorun.ai/skelc/cmd/skelc@v0.10.3
+go install go.yorun.ai/skelc/cmd/skelc@v0.15.0
 ```
 
-项目升级 skelc 之后，记得重新生成契约并 review diff；不要让开发机和 CI 默默跑着不同版本。
+升级 skelc 之后，重新生成契约并 review diff。升级到 v0.15.0 时，请先阅读 [Go 集合迁移说明](/docs/generation/go#集合可空性与校验)，再重新生成。开发机和 CI 应使用相同的编译器版本。
 
 ## 查看版本信息
 
@@ -33,7 +33,7 @@ go install go.yorun.ai/skelc/cmd/skelc@v0.10.3
 skelc version
 ```
 
-JSON 输出适合给构建脚本读。生成 Go 代码时用 `--go-vine-version` 拉高目标 Vine 版本，但不能低于 skelc 内置的默认版本。
+JSON 输出适合给构建脚本读，其中会报告最低和默认 Vine 版本。生成 Go 代码时可以用 `--go-vine-version` 选择目标 Vine 版本，但不能低于 skelc 支持的最低版本。
 
 ## 添加编辑器支持
 

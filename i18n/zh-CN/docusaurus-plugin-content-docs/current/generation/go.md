@@ -27,7 +27,7 @@ skelc gen go-module \
 
 ## 集合可空性与校验
 
-以下 skelc v0.15.0 生成变更已在 `main` 实现，尚未发布。新生成代码要求 Vine v0.14.0 或更高版本；生成 module 的默认依赖也提升为 v0.14.0。在已有 module 中生成时，需要自行更新依赖。
+从 skelc v0.15.0 开始，生成的 Go 代码使用指针表示 nullable 集合，要求 Go 1.27.0 及以上版本和 Vine v0.14.0 或更高版本；生成 module 的默认 Vine 依赖为 v0.14.0。在已有 module 中生成时，需要自行更新依赖。
 
 | Skel 类型 | 生成的 Go 类型 |
 | --- | --- |
@@ -41,6 +41,8 @@ nil 指针表示 `null`；非 nil 指针表示集合，即使它指向的 slice 
 生成的 data（包括 actor 认证数据）不再提供 `Validate(path string) error`，Rpc method spec 的 `ValidateArguments` 和 `ValidateResult` 固定为 `nil`。移除的是集合 nil 校验，不是 Skel 源码检查或应用自身的业务校验。
 
 从 skelc v0.14.x 升级时，需要重新生成 package，并将赋值、集合访问和 service 签名适配到新的指针类型。Clone 方法会复制指针及其可变内容，保留 nil 状态，不做传输规范化。TypeScript 集合类型保持不变。
+
+与导入的 Go package 的维护者协调重新生成，建议先升级依赖方，再升级消费方。尤其应避免在使用新编码契约的类型中嵌套旧版 nullable slice/map 表示。删除对生成 `Validate` 方法的调用，保留业务校验，并测试消费方实际使用的 JSON 和 CBOR 链路。
 
 Vine v0.14.0 对 skelc v0.14.x 生成的 schema 继续保留 nil 编码为 null 的行为。仅升级 Vine 不会迁移 Go 类型；新编码契约根据 schema 的 `CompilerVersion` 选择，而不是根据校验 hook 是否存在。
 
