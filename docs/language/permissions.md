@@ -118,3 +118,7 @@ skelc resolves each path and verifies that its type matches the check argument. 
 When a public service refers to a local actor or resource, those declarations must also be `pub`. skelc doesn't silently expand public output. This makes the authorization surface visible in review.
 
 Continue with [Service Contracts](/docs/services), or see [Public Contracts](/docs/generation/public-contracts) for export rules.
+
+The development generator explicitly sets `CodeArgumentName` on every permission-check invocation, requiring Vine v0.15.0 or later. Business arguments may now be named `code`. The injected argument takes the first unused name among `code`, `code1`, `code2`, and so on, and remains the first `string` parameter. For example, business arguments named `code` and `code1` make the injected parameter `code2`.
+
+`PermCheckInvocation.Arguments` contains only business arguments. Neither `require` nor public Skel includes the injected argument. Public-contract regeneration and cross-domain imports use the same naming rule. After regeneration, align parameter names in check implementations with the new signatures.

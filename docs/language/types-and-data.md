@@ -96,6 +96,8 @@ A config name ends in `Config` and declares one lifecycle:
 
 Config fields are deliberately restricted. They can use scalars, enums, and supported list/map combinations, but not `data`, another `config`, or `binary`. This keeps generated configuration values portable and observable.
 
+Development config fields can use [`@noTrim`](/docs/metadata) to preserve string whitespace, including alongside `@sensitive`. This requires Vine v0.15.0 or later.
+
 ## Model Contract Shapes, Not Storage
 
 A database row often contains migration fields, internal state, or denormalized data that shouldn't become a client promise. Define a contract-specific `data` shape and map it at the application boundary. The extra mapping is cheaper than coupling storage evolution to every generated consumer.

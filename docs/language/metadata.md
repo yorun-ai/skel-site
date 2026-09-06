@@ -102,3 +102,27 @@ Generated TypeScript represents a Skel enum as a string union. An enum item's de
 Run `skelc check` after moving a decorator. Unsupported placement is an error — metadata is never silently ignored.
 
 Continue with [Contract Boundaries](/docs/contract-design) or use the [Syntax Index](/docs/syntax) for a compact declaration reference.
+
+## Preserve Config Whitespace (Unreleased)
+
+Development skelc accepts the argument-free `@noTrim` decorator on config
+fields. It is invalid on declarations, ordinary data fields, or method
+arguments. Duplicate markers and decorator arguments are errors.
+
+```skel
+config SecretConfig eternal {
+    @sensitive
+    @noTrim
+    password: string
+}
+```
+
+Generated Go fields use `skel:"noTrim"`, or `skel:"sensitive,noTrim"` when
+combined with `@sensitive`. Vine preserves leading and trailing whitespace in
+that field's string values, including nullable strings, list elements, and map
+values. Map keys, JSON, and enum values are unaffected by trimming. Both
+`eternal` and `instant` lifecycles support the marker.
+
+This output requires Vine v0.15.0 or later. Public Skel
+preserves the decorator and schema snapshots record `noTrim`. Changing it
+changes hashes and produces a `DANGEROUS` schema diff.
