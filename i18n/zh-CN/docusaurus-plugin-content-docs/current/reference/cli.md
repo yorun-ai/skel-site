@@ -439,3 +439,5 @@ skelc gen skel \
 - 输出会裁剪 `.skel` 定义，只保留标了 `pub` 的 data / enum / config / actor / resource / service / event
 - actor 的 `auth { credential / info }` 会渲染回 actor 内部，不额外输出顶层 data
 - pub service / method 的 `require` 如果引用本 domain resource，该 resource 必须标 `pub`
+
+开发版 schema snapshot 会在标记 `@noTrim` 的 config 字段上记录 `noTrim: true`；新增或移除该标记会在 `schema diff` 中报告 `data.member.no-trim.changed`（`DANGEROUS`）。
