@@ -46,7 +46,17 @@ pub resource Order {
 }
 ```
 
-A resource-level check works with any action. A check nested under an action belongs only to that action. skelc generates authenticated check-service methods and injects the current `PermissionCode`; write a check without user arguments as `check enabled {}`.
+A resource-level check works with any action. A check nested under an action belongs only to that action. skelc generates authenticated check-service methods and injects the current permission code as a `string`; write a check without user arguments as `check enabled {}`.
+
+Since skelc v0.16.0, generated Go resource-check methods receive an initial `code string` argument;
+`require` expressions supply only the declared business arguments. skelc tracks
+this injected argument separately and omits it from generated public Skel.
+Individual permission constants, such as `OrderReadPermission`, use Go `string`.
+Resource-wide `XxxPermissionCodes()` helpers are no longer generated; use schema
+metadata for permission discovery. `PermissionCode` is no longer a built-in contract type;
+use `string` in fields and omit the injected `code` argument from resource checks. When regenerating older packages, update
+check implementations from `skel.PermissionCode` to `string` and remove calls to
+the old list helpers. Vine retains its existing type for older generated code.
 
 Checks answer application-specific questions like "does this order exist?" or "does this order belong to the caller?" The contract declares the required inputs; the application implements the generated check interface.
 
