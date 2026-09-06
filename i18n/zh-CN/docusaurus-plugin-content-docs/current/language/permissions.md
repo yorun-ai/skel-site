@@ -46,7 +46,15 @@ pub resource Order {
 }
 ```
 
-resource 级别的 check 可用在任意 action；嵌套在 action 内的 check 只属于那个 action。skelc 会生成需要认证的 check service method，并注入当前的 `PermissionCode`。没有用户参数时写成 `check enabled {}`。
+resource 级别的 check 可用在任意 action；嵌套在 action 内的 check 只属于那个 action。skelc 会生成需要认证的 check service method，并以 `string` 注入当前权限码。没有用户参数时写成 `check enabled {}`。
+
+从 skelc v0.16.0 起，生成的 Go resource check 方法会接收首参数 `code string`；`require` 表达式只需提供声明的业务参数。
+skelc 单独标记这个注入参数，并在生成公开 Skel 时将其隐藏。
+`OrderReadPermission` 等单个权限常量使用 Go `string`。
+不再生成资源级 `XxxPermissionCodes()` 集合函数；权限发现应使用 schema 元数据。
+`PermissionCode` 不再是契约内置类型；字段应使用 `string`，resource check 中应省略自动注入的 `code` 参数。
+重新生成旧包时，需要将 check 实现中的 `skel.PermissionCode` 参数改为 `string`，并移除对旧集合函数的调用。
+Vine 保留原有类型，以兼容旧生成代码。
 
 check 用来回答“订单是不是存在”“订单是否属于当前调用者”这类应用问题。契约声明输入，应用实现生成的 check interface。
 
