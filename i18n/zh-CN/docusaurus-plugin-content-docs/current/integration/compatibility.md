@@ -41,3 +41,10 @@ Go 集成通过公开 facade `go.yorun.ai/skelc/schema` 解析这些命令输出
 以及严格的 `schema.Decode`、`schema.Validate`、`schema.Encode` 函数。严格解码
 会拒绝未知字段、尾随 JSON 值、不支持的格式版本、未知 wire 枚举值和格式错误的
 规范化结构。根 package `go.yorun.ai/skelc` 仍专注于解析和生成。
+
+## Actor 身份
+
+使用 `@identifier` 需要 skelc v0.17.0 或更高版本，以及 Vine v0.15.1 或更高版本。
+升级后请重新生成 actor 类型和 schema。如果程序使用 `go.yorun.ai/skelc/schema`
+读取 schema 输出，也应同步升级该依赖，以识别新增的 `identifierField`。
+标记的用法参见 [Actor 与访问入口](/docs/actors-and-access)。

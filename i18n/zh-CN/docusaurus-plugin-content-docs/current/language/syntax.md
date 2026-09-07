@@ -99,6 +99,7 @@ any(item, item)
 @example("示例值")
 @sensitive
 @noTrim
+@identifier
 @deprecated("请改用替代声明")
 ```
 

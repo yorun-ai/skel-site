@@ -99,6 +99,7 @@ Imported resources use a qualifier, such as `account.User:read`. Check arguments
 @example("Example value")
 @sensitive
 @noTrim
+@identifier
 @deprecated("Use the replacement declaration instead")
 ```
 
