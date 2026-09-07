@@ -19,8 +19,7 @@
 
 ## Versioning
 
-- Site documentation versions follow skelc releases.
-- Create snapshots with `pnpm docusaurus docs:version VERSION`.
+- Before skelc 1.0, maintain only current `next` documentation. Version snapshots begin with `v1.0.0`; see `README.md` for the snapshot command.
 - Do not manually edit generated version snapshots. Correct current documentation first, then create a new snapshot.
 - Compatibility documentation must state the relevant skelc and Vine versions when behavior depends on both.
 
@@ -29,4 +28,4 @@
 - Preserve the shared Yorun visual language and local Tailwind/shadcn theme implementation.
 - Keep links valid in both locales. Use `/docs/...` for this site and absolute `https://vine.yorun.ai/docs/...` links for Vine content.
 - Do not document planned syntax, commands, flags, or behavior as available.
-- Run `pnpm typecheck`, `pnpm build`, and `git diff --check` after changes.
+- Run `pnpm typecheck` and `pnpm build` after site source, content or configuration changes; run `git diff --check` for all changes.
