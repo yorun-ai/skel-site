@@ -126,3 +126,9 @@ values. Map keys, JSON, and enum values are unaffected by trimming. Both
 This output requires Vine v0.15.0 or later. Public Skel
 preserves the decorator and schema snapshots record `noTrim`. Changing it
 changes hashes and produces a `DANGEROUS` schema diff.
+
+## Identity Fields
+
+`@identifier` selects the field that identifies an actor's caller. See
+[Actors & Access](/docs/actors-and-access) for a complete example, allowed field
+types, and version requirements.

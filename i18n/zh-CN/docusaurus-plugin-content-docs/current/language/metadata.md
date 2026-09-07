@@ -118,3 +118,8 @@ config SecretConfig eternal {
 生成的 Go 字段使用 `skel:"noTrim"`，与 `@sensitive` 同用时为 `skel:"sensitive,noTrim"`。这个标记让 Vine 保留字段中字符串值的首尾空白，适用于可空字符串、列表元素及 map 值；map key、JSON 和 enum 值不受裁剪影响。`eternal` 和 `instant` 均适用。
 
 这些生成结果要求 Vine v0.15.0 或更高版本。公开 Skel 输出保留标记，schema snapshot 记录 `noTrim`，修改它会改变哈希并在 schema diff 中报告 `DANGEROUS`。
+
+## 身份标识字段
+
+`@identifier` 用于指定 actor 的调用者标识字段。
+完整示例、字段类型限制和版本要求见 [Actor 与访问入口](/docs/actors-and-access)。
