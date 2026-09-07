@@ -98,6 +98,8 @@ any(item, item)
 @desc("供人阅读的含义")
 @example("示例值")
 @sensitive
+@noTrim
+@identifier
 @deprecated("请改用替代声明")
 ```
 

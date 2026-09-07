@@ -101,3 +101,5 @@ config 字段有意做了限制：能用标量、enum 以及允许的 list/map �
 数据库行经常包含迁移字段、内部状态或反规范化数据，这些不该直接变成客户端的承诺。为边界单独定义 `data`，在应用层做映射，远比让存储演进牵动所有生成代码来得稳妥。
 
 接下来阅读[调用者与入口](/docs/actors-and-access)或[服务契约](/docs/services)。
+
+开发版 config 字段可通过 [`@noTrim`](/docs/metadata) 保留字符串首尾空白，支持与 `@sensitive` 同用。该能力要求 Vine v0.15.0 或更高版本。

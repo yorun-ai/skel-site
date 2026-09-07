@@ -38,6 +38,7 @@ pub actor CustomerActor {
         }
 
         info {
+            @identifier
             customerId: uuid
             tenantId: string
         }
@@ -51,6 +52,17 @@ pub actor CustomerActor {
 - `info` 是应用代码拿到的认证身份，能用普通的 Skel 字段类型。
 
 skelc 会生成 actor 专属的 credential、info 数据类型和认证服务元数据。字段或 block 如果不想出现在明文日志里，加上 `@sensitive` 标记就行。
+
+## Actor 标识符
+
+用 `@identifier` 标记 `auth.info` 中用于标识调用者的字段，如上例的 `customerId`。
+每个 actor 最多标记一个顶层字段，类型必须是非可空的 `string`、`uuid` 或 `int`。
+该标记不接受参数，也不能用于 `credential` 或其他数据声明。
+不需要提供调用者标识符时，可以省略标记。
+
+`@identifier` 从 skelc v0.17.0 开始支持，生成的 Go 代码要求 Vine v0.15.1 或更高版本。
+修改契约后，请重新生成代码。运行时如何读取身份信息，参见
+[Vine 身份文档](https://vine.yorun.ai/zh-CN/docs/meta)。
 
 ## 启用权限查询
 

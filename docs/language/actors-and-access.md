@@ -38,6 +38,7 @@ pub actor CustomerActor {
         }
 
         info {
+            @identifier
             customerId: uuid
             tenantId: string
         }
@@ -51,6 +52,19 @@ An `auth` block holds both `credential` and `info`:
 - `info` is the authenticated identity returned to application code. It can use normal Skel field types.
 
 skelc generates actor-specific credential and info data models along with the authentication service metadata. Mark credentials or identity fields `@sensitive` when logs and schema consumers must treat them as confidential.
+
+## Actor Identifier
+
+Use `@identifier` on the `auth.info` field that identifies the caller, such as
+`customerId` in the example above. Each actor may mark at most one top-level
+field, whose type must be a non-nullable `string`, `uuid`, or `int`. The marker
+takes no arguments and cannot be used in `credential` or other data declarations.
+Omit it when the actor does not need a caller identifier.
+
+`@identifier` is supported starting with skelc v0.17.0; generated Go code requires
+Vine v0.15.1 or later. Regenerate code after changing the contract. For reading
+identity information at runtime, see the
+[Vine identity documentation](https://vine.yorun.ai/docs/meta).
 
 ## Enable Permission Lookup
 

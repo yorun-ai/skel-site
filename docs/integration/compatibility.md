@@ -45,3 +45,10 @@ typed constants, and strict `schema.Decode`, `schema.Validate`, and
 decoding rejects unknown fields, trailing JSON values, unsupported format
 versions, unknown wire enum values, and malformed normalized structures. The
 root `go.yorun.ai/skelc` package remains focused on parsing and generation.
+
+## Actor Identity
+
+Using `@identifier` requires skelc v0.17.0 or later and Vine v0.15.1 or later.
+Regenerate actor types and schemas after upgrading. Applications that read schema
+output with `go.yorun.ai/skelc/schema` should also update that dependency to recognize
+`identifierField`. See [Actors & Access](/docs/actors-and-access) for marker usage.
