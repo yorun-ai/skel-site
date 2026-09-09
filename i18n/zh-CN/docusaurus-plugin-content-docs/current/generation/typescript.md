@@ -32,8 +32,8 @@ function createFileResultWireSchema(): VrpcWireSchema {
   };
 }
 
-export const FileServiceSpec = {
-  serviceName: 'demo.file.FileService',
+export const FileApiServiceSpec = {
+  serviceName: 'demo.file.FileApiService',
   methods: {
     ping: 'ping',
     upload: 'upload',
@@ -69,12 +69,12 @@ export const FileServiceSpec = {
 
 ```ts
 return client.invoke({
-  serviceName: FileServiceSpec.serviceName,
-  methodName: FileServiceSpec.methods.upload,
+  serviceName: FileApiServiceSpec.serviceName,
+  methodName: FileApiServiceSpec.methods.upload,
   params,
   options: {
     ...options,
-    wire: FileServiceSpec.wire.upload,
+    wire: FileApiServiceSpec.wire.upload,
   },
 });
 ```

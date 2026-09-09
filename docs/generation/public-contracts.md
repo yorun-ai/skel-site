@@ -27,3 +27,5 @@ A consumer declares the domain with `import` and maps `--skel-import domain=PATH
 - Renaming a symbol, field, method, or permission code is a compatibility change.
 - Regenerate every language output and notify consumers after public changes land.
 - Distribute public contracts through versioned modules or packages, not through accidental neighboring paths.
+
+skelc v0.19.0 preserves `open service` and its local type dependencies in `gen skel --pub` output, so consumers can generate a Go public package with server interfaces.

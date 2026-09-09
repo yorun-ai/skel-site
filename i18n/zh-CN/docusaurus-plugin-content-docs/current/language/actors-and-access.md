@@ -78,7 +78,7 @@ actor StaffActor {
 ## 将 Actor 绑定到 Service
 
 ```skel
-api service OrderService {
+api service OrderApiService {
     for CustomerActor via client
     for StaffActor
 

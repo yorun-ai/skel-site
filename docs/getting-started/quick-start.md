@@ -53,7 +53,7 @@ pub resource Order {
     action read
 }
 
-api service OrderService {
+api service OrderApiService {
     for CustomerActor via client
     auth
     require Order:read

@@ -130,6 +130,10 @@ For domain `shop.order`, this derives module `example.com/gen/shop/orderapi` and
 
 API clients depend on `go.yorun.ai/vrpc` v0.12.0 or later, configurable with `--go-vrpc-version`. Scalar types come from `go.yorun.ai/vrpc/skel`. Cross-domain types are imported from the corresponding `xxxapi` package, and API clients never depend on Vine.
 
-Construct a client with `NewOrderServiceClient(client)`, passing a `*vrpc.Client` you configure for the Portal endpoint. The constructor returns the `OrderServiceClient` interface, so you can supply your own implementation or mock in tests. Each method takes `context.Context`, the declared business parameters, and any optional `vrpc.InvokeOption` values, and returns the business result with `error`, or just `error` when the method has no result.
+Construct a client with `NewOrderApiServiceClient(client)`, passing a `*vrpc.Client` you configure for the Portal endpoint. The constructor returns the `OrderApiServiceClient` interface, so you can supply your own implementation or mock in tests. Each method takes `context.Context`, the declared business parameters, and any optional `vrpc.InvokeOption` values, and returns the business result with `error`, or just `error` when the method has no result.
 
 skelc v0.18.0 requires Vine v0.15.4 or later for backend Go output and uses v0.15.4 by default; when generating into an existing module, update the application dependency yourself. `--api` clients use vRPC and do not require Vine.
+
+For `open service`, skelc v0.19.0 generates clients plus the Server/ERServer interfaces and their default implementations in the public package. The regular package reuses these server types through aliases, avoiding duplicate registration. Ordinary `pub service` output stays client-only in public packages.
+
+skelc v0.19.0 raises the minimum and default Vine version for backend Go output to v0.15.5.

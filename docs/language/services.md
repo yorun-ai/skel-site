@@ -6,6 +6,8 @@ slug: /services
 
 A service defines callable methods independently of their Go implementation or TypeScript client. skelc generates both sides from the same method names and types.
 
+API service names must end with `ApiService`, such as `OrderApiService`; other services still end with `Service`.
+
 ## Service Boundaries
 
 Use `pub service` for backend calls between domains and `api service` for entry points that clients call through Portal. The two modifiers are mutually exclusive, and service names are unique across both kinds within a domain. An API service is reached through Portal, so it is not invoked through a backend Rpc client.
@@ -14,10 +16,25 @@ Declare `for Actor`, `auth`/`noauth`, or `require` only on API services, includi
 
 During migration an unmodified `service` keeps its old backend behavior and warns you to declare `pub` or `api`. A non-API service that declares client rules also warns and stays reachable by backend and API callers for now; explicitly declared API services do not get this compatibility.
 
+### Open Server Contracts
+
+skelc v0.19.0 adds `open service` for services that other domains need to implement. It is as public as `pub service`, and its Go public package also contains the Server/ERServer interfaces, default implementations, and server registration. When you generate split regular and public packages, the regular package reuses these server types through aliases.
+
+```skel
+open service StorageService {
+    method get {
+        input { key: string }
+        output binary
+    }
+}
+```
+
+`open` is valid only on services and is mutually exclusive with `pub` and `api`. Names still end with `Service`. It does not disable authentication or expose a Portal API. To implement the exported server interface, embed the generated default server type and override the methods you need.
+
 ## Declare a Service
 
 ```skel
-api service OrderService {
+api service OrderApiService {
     for CustomerActor via client
     auth
 
@@ -30,12 +47,12 @@ api service OrderService {
 }
 ```
 
-A service name ends in `Service` and contains at least one method. Method names and input fields use `lowerCamelCase`.
+A service name ends in `Service`, or in `ApiService` for API services, and contains at least one method. Method names and input fields use `lowerCamelCase`.
 
 Sections inside a method must appear in this order: `auth`/`noauth`, `require`, `input`, then `output`. Both input and output are optional:
 
 ```skel
-api service HealthService {
+api service HealthApiService {
     noauth
 
     method ping {}
@@ -76,7 +93,7 @@ Don't wrap every result in a generic response envelope. Transport status, struct
 ## Combine Method and Permission Rules
 
 ```skel
-api service OrderService {
+api service OrderApiService {
     for StaffActor via client
     auth
     require Order:read
