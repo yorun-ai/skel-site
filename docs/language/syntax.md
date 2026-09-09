@@ -42,7 +42,7 @@ pub data UserSummary {
 }
 ```
 
-`api` is supported only on services and is mutually exclusive with `pub`. Use `pub service` for backend calls and `api service` for Portal clients. Unmodified services remain accepted with a migration warning; `--strict` rejects them and rejects client admission rules on non-API services.
+`api` is supported only on services and is mutually exclusive with `pub`. skelc v0.19.0 adds `open service`, which exports both client and server contracts; `open` is mutually exclusive with `pub` and `api`. API service names must end with `ApiService`, such as `OrderApiService`. Use `pub service` for backend calls and `api service` for Portal clients. Unmodified services remain accepted with a migration warning, and `--strict` rejects them and rejects client admission rules on non-API services.
 
 ## Type Forms
 
@@ -65,7 +65,7 @@ T?
 ## Service Method Form
 
 ```skel
-api service OrderService {
+api service OrderApiService {
     for CustomerActor via client
     auth
     require Order:read

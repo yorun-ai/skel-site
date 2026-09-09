@@ -63,7 +63,7 @@ Checks answer application-specific questions like "does this order exist?" or "d
 ## Require Permissions
 
 ```skel
-api service OrderService {
+api service OrderApiService {
     require Order:read
 
     method get {

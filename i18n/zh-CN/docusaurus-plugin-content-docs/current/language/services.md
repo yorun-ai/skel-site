@@ -6,6 +6,8 @@ slug: /services
 
 service 独立于 Go 实现和 TypeScript client，描述可调用的 method。skelc 从同一组名称和类型生成两侧的接口。
 
+API 服务名必须以 `ApiService` 结尾，例如 `OrderApiService`；其他 service 仍以 `Service` 结尾。
+
 ## 服务边界
 
 `pub service` 用于跨领域后端调用，`api service` 用于客户端经 Portal 访问的入口。两修饰符互斥，同一领域的服务名在两种类型间统一判重。API 服务经 Portal 访问，不通过后端 Rpc 客户端调用。
@@ -14,10 +16,25 @@ service 独立于 Go 实现和 TypeScript client，描述可调用的 method。s
 
 迁移期内，无修饰符的 `service` 保留旧后端行为，并提示你声明 `pub` 或 `api`。非 API 服务含客户端准入规则时也会给 warning，暂时同时支持后端和 API 调用方；显式 `api service` 不使用这条兼容规则。
 
+### 公开服务端契约
+
+skelc v0.19.0 新增 `open service`，用于让其他领域实现该服务。它与 `pub service` 具有相同的公开可见性，生成的 Go pub 包还包含 Server/ERServer 接口、默认实现和服务端注册。分包生成 regular 和 pub 包时，regular 包通过类型别名复用这些服务端类型。
+
+```skel
+open service StorageService {
+    method get {
+        input { key: string }
+        output binary
+    }
+}
+```
+
+`open` 仅适用于 service，与 `pub`、`api` 互斥，名称仍以 `Service` 结尾。它不表示免认证，也不表示开放 Portal API。要实现公开的服务端接口，可嵌入生成的默认 Server 类型，并覆盖所需方法。
+
 ## 声明 Service
 
 ```skel
-api service OrderService {
+api service OrderApiService {
     for CustomerActor via client
     auth
 
@@ -30,12 +47,12 @@ api service OrderService {
 }
 ```
 
-service 名以 `Service` 结尾，至少包含一个 method。method 和 input 字段用 `lowerCamelCase`。
+service 名以 `Service` 结尾（API 服务为 `ApiService`），至少包含一个 method。method 和 input 字段用 `lowerCamelCase`。
 
 method 内部顺序为：`auth`/`noauth`、`require`、`input`、`output`。input 和 output 都可省略：
 
 ```skel
-api service HealthService {
+api service HealthApiService {
     noauth
 
     method ping {}
@@ -76,7 +93,7 @@ method create {
 ## 组合 Method 与权限规则
 
 ```skel
-api service OrderService {
+api service OrderApiService {
     for StaffActor via client
     auth
     require Order:read

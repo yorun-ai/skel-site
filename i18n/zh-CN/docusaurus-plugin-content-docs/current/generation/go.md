@@ -90,6 +90,10 @@ skelc gen go-module --api \
 
 API 客户端依赖 `go.yorun.ai/vrpc` v0.12.0 或更高版本，可用 `--go-vrpc-version` 指定。基础类型来自 `go.yorun.ai/vrpc/skel`。跨领域类型依赖指向对应 `xxxapi` 包，不依赖 Vine。
 
-调用 `NewOrderServiceClient(client)`，传入为你配置好的 `*vrpc.Client`（指向 Portal 地址）。构造函数返回 `OrderServiceClient` 接口，你可以在测试中提供自己的实现或 mock。每个生成方法接受 `context.Context`、声明的业务参数和任意可选 `vrpc.InvokeOption`，返回业务结果与 `error`；无结果的方法仅返回 `error`。
+调用 `NewOrderApiServiceClient(client)`，传入为你配置好的 `*vrpc.Client`（指向 Portal 地址）。构造函数返回 `OrderApiServiceClient` 接口，你可以在测试中提供自己的实现或 mock。每个生成方法接受 `context.Context`、声明的业务参数和任意可选 `vrpc.InvokeOption`，返回业务结果与 `error`；无结果的方法仅返回 `error`。
 
 skelc v0.18.0 要求后端 Go 输出使用 Vine v0.15.4 或更高版本，生成的 module 默认使用 v0.15.4。生成到已有 module 时，需要自行更新应用依赖。`--api` 客户端使用 vRPC，不依赖 Vine。
+
+skelc v0.19.0 会为 `open service` 在 pub 包中同时生成 Client、Server/ERServer 及默认实现；regular 包使用类型别名复用服务端接口，避免重复注册。普通 `pub service` 的 pub 包仍只生成客户端。
+
+skelc v0.19.0 将后端 Go 输出的最低及默认 Vine 版本提高到 v0.15.5。

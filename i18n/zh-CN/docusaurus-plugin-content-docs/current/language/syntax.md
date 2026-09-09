@@ -42,7 +42,7 @@ pub data UserSummary {
 }
 ```
 
-`api` 仅支持 service，与 `pub` 互斥。后端调用使用 `pub service`，Portal 客户端入口使用 `api service`。无修饰符 service 暂时兼容并给出迁移 warning；`--strict` 会将其视为错误，也会拒绝在非 API service 中声明客户端准入规则。
+`api` 仅支持 service，与 `pub` 互斥。skelc v0.19.0 新增 `open service`，同时公开 Client 和 Server 契约；`open` 与 `pub`、`api` 互斥。API 服务名必须以 `ApiService` 结尾，例如 `OrderApiService`。后端调用使用 `pub service`，Portal 客户端入口使用 `api service`。无修饰符 service 暂时兼容并给出迁移 warning；`--strict` 会将其视为错误，也会拒绝在非 API service 中声明客户端准入规则。
 
 ## 类型形式
 
@@ -65,7 +65,7 @@ T?
 ## Service Method 形式
 
 ```skel
-api service OrderService {
+api service OrderApiService {
     for CustomerActor via client
     auth
     require Order:read
