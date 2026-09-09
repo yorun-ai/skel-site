@@ -10,7 +10,7 @@ A single domain model produces artifacts for different consumers:
 | --- | --- | --- |
 | Go source | `gen go` | An existing Go module |
 | Go module | `gen go-module` | Independent regular/public modules |
-| TypeScript | `gen ts` | Web or Node clients |
+| TypeScript | `gen ts --api` | Web or Node clients |
 | Public Skel | `gen skel --pub` | Compiler input for another domain |
 
 ## Shared Rules

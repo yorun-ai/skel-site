@@ -12,7 +12,7 @@ Split a domain when two groups of declarations have independent release decision
 
 ## Keep the Public Surface Small
 
-`pub` is a dependency promise, not a visibility decoration. Local data, enums, actors, and resources referenced by a public service must also be public. Start with the smallest public surface and export only what another domain or client needs.
+`pub` is a dependency promise, not a visibility decoration. Data and enum dependencies are collected automatically. Referenced actors and resources retain their public visibility requirements. Start with the smallest public surface and export only what another domain or client needs.
 
 ```skel
 pub data UserSummary {

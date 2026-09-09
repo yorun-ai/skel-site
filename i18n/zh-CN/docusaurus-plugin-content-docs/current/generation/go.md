@@ -27,7 +27,7 @@ skelc gen go-module \
 
 ## 集合可空性与校验
 
-从 skelc v0.15.0 开始，生成的 Go 代码使用指针表示 nullable 集合，要求 Go 1.27.0 及以上版本和 Vine v0.14.0 或更高版本。开发版生成器为支持 `index(n)` 和 `noTrim` 标签，最低及默认 Vine 依赖已提高到 v0.15.0。在已有 module 中生成时，需要自行更新依赖。
+从 skelc v0.15.0 开始，生成的 Go 代码使用指针表示 nullable 集合，要求 Go 1.27.0 及以上版本和 Vine v0.14.0 或更高版本。从 skelc v0.18.0 开始，后端 Go 输出的最低及默认 Vine 依赖为 v0.15.4。在已有 module 中生成时，需要自行更新依赖。
 
 | Skel 类型 | 生成的 Go 类型 |
 | --- | --- |
@@ -46,11 +46,11 @@ nil 指针表示 `null`；非 nil 指针表示集合，即使它指向的 slice 
 
 Vine v0.14.0 对 skelc v0.14.x 生成的 schema 继续保留 nil 编码为 null 的行为。仅升级 Vine 不会迁移 Go 类型；新编码契约根据 schema 的 `CompilerVersion` 选择，而不是根据校验 hook 是否存在。
 
-## 参数标签（未发布）
+## 参数标签
 
-开发版生成器使用 `skel:"index(0)"` 表示 service method 和 resource check 的参数位置。敏感参数合并为一个标签，例如 `skel:"index(0),sensitive"`；JSON 字段名保持不变。这将替代 skelc v0.16.0 生成的 `arg:"0"` 标签。
+生成器使用 `skel:"index(0)"` 表示 service method 和 resource check 的参数位置。敏感参数合并为一个标签，例如 `skel:"index(0),sensitive"`；JSON 字段名保持不变。这替代了 skelc v0.16.0 生成的 `arg:"0"` 标签。
 
-这些生成结果要求 Vine v0.15.0 或更高版本，生成 module 默认依赖 v0.15.0；旧版本无法注册使用新标签的参数。
+新标签要求 Vine v0.15.0 或更高版本，更早的版本无法注册使用新标签的参数。skelc v0.18.0 将后端 Go 输出的整体最低及默认 Vine 依赖提高到 v0.15.4。
 
 ## 进程内 Rpc 值隔离
 
@@ -76,3 +76,20 @@ Vine v0.14.0 对 skelc v0.14.x 生成的 schema 继续保留 nil 编码为 null 
 ```
 
 如果用的是统一的命名规则，用 `--go-module-prefix` 就能自动推导路径，无需逐个配置。生成完后运行 `gofmt` 和 `go test`，检查 `go.mod` 和 API diff。完整参数清单见 [CLI 参考](/docs/cli)。
+
+## Portal API 客户端
+
+```bash
+skelc gen go-module --api \
+  --skel-in ./skel \
+  --go-out ./generated/orderapi \
+  --go-module-prefix example.com/gen
+```
+
+领域为 `shop.order` 时，推导 module 为 `example.com/gen/shop/orderapi`，包名为 `orderapi`。`--go-module` 可覆盖 module 路径；`gen go --api` 写入已有模块。`--api` 与 `--pub` 互斥；默认 Go 生成用于后端实现，`--pub` 选择后端公共契约。
+
+API 客户端依赖 `go.yorun.ai/vrpc` v0.12.0 或更高版本，可用 `--go-vrpc-version` 指定。基础类型来自 `go.yorun.ai/vrpc/skel`。跨领域类型依赖指向对应 `xxxapi` 包，不依赖 Vine。
+
+调用 `NewOrderServiceClient(client)`，传入为你配置好的 `*vrpc.Client`（指向 Portal 地址）。构造函数返回 `OrderServiceClient` 接口，你可以在测试中提供自己的实现或 mock。每个生成方法接受 `context.Context`、声明的业务参数和任意可选 `vrpc.InvokeOption`，返回业务结果与 `error`；无结果的方法仅返回 `error`。
+
+skelc v0.18.0 要求后端 Go 输出使用 Vine v0.15.4 或更高版本，生成的 module 默认使用 v0.15.4。生成到已有 module 时，需要自行更新应用依赖。`--api` 客户端使用 vRPC，不依赖 Vine。

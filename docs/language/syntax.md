@@ -42,6 +42,8 @@ pub data UserSummary {
 }
 ```
 
+`api` is supported only on services and is mutually exclusive with `pub`. Use `pub service` for backend calls and `api service` for Portal clients. Unmodified services remain accepted with a migration warning; `--strict` rejects them and rejects client admission rules on non-API services.
+
 ## Type Forms
 
 ```text
@@ -63,7 +65,7 @@ T?
 ## Service Method Form
 
 ```skel
-service OrderService {
+api service OrderService {
     for CustomerActor via client
     auth
     require Order:read

@@ -12,7 +12,7 @@ domain 名应该体现稳定的业务所有权，比如 `account.user`，而不�
 
 ## 保持小而明确的公共表面
 
-`pub` 是依赖承诺，不是可见性装饰。公开 service 引用了本地的 data、enum、actor 或 resource 时，这些也得跟着公开。推荐从最小的公开面起步，只导出其他 domain 或客户端真正需要的东西。
+`pub` 是依赖承诺，不是可见性装饰。公开契约的数据和枚举依赖自动收集，不要求加 `pub`；actor 和 resource 仍遵守公开可见性要求。推荐从最小的公开面起步，只导出其他 domain 或客户端真正需要的东西。
 
 ```skel
 pub data UserSummary {

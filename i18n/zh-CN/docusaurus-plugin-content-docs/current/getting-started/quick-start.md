@@ -53,7 +53,7 @@ pub resource Order {
     action read
 }
 
-pub service OrderService {
+api service OrderService {
     for CustomerActor via client
     auth
     require Order:read
@@ -73,7 +73,7 @@ pub service OrderService {
 - credential 被标记为敏感值。
 - service 要求具名权限 `Order:read`。
 - 结果返回生成的 `Order` 或者 null。
-- client 需要的声明全部显式标记了 `pub`。
+- 客户端需要的数据和枚举依赖会自动包含。
 
 ## 格式化并校验
 
@@ -103,13 +103,12 @@ skelc gen go \
 ## 生成 TypeScript
 
 ```bash
-skelc gen ts \
-  --pub \
+skelc gen ts --api \
   --skel-in ./demo/skel \
   --ts-out ./demo/client
 ```
 
-输出包含公共 data、enum、service spec 和基于 `@yorun-ai/vrpc` 的 client factory。`--pub` 会防止私有声明进入 client package。
+输出包含 API service 及其数据依赖，以及显式 pub 的 data 和 enum。Client factory 基于 `@yorun-ai/vrpc`；TypeScript 生成必须指定 `--api`。
 
 package metadata、跨 domain import 和 binary wire schema 见 [TypeScript 输出](/docs/generation/typescript)。
 

@@ -5,12 +5,12 @@ slug: /generation/typescript
 # TypeScript 输出
 
 ```bash
-skelc gen ts \
+skelc gen ts --api \
   --skel-in ./skel \
   --ts-out ./generated/typescript
 ```
 
-默认会生成当前 domain 的 data、enum，以及符合条件的 service client。注意：只有面向 `via client` actor 的 service，才会生成客户端代码。
+必须传 `--api`；省略或传 `--pub` 都会报错。输出包含 API 服务客户端、所需数据依赖，以及显式公开的 data、enum。旧服务含客户端准入规则时仍生成客户端，同时给出迁移 warning。
 
 ## 弃用输出
 
@@ -81,9 +81,9 @@ return client.invoke({
 
 普通 method 继续直接透传 `options`。CBOR codec 由应用在创建 vRPC client 时自己提供，生成代码和 skelc 不会内置它。
 
-## 公开输出
+## 共享类型
 
-加上 `--pub`，只生成公开的 data、enum 和符合条件的公开 service client。
+没有 API 服务的领域也可以生成纯类型 API 包。跨领域类型依赖指向对方 API 包，包括显式公开的 data、enum。本领域的数据依赖自动收集，无需声明 `pub`。
 
 ## Package 元数据
 

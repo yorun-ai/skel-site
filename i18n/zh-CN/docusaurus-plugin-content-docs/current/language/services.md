@@ -6,10 +6,18 @@ slug: /services
 
 service 独立于 Go 实现和 TypeScript client，描述可调用的 method。skelc 从同一组名称和类型生成两侧的接口。
 
+## 服务边界
+
+`pub service` 用于跨领域后端调用，`api service` 用于客户端经 Portal 访问的入口。两修饰符互斥，同一领域的服务名在两种类型间统一判重。API 服务经 Portal 访问，不通过后端 Rpc 客户端调用。
+
+只有 API 服务应声明 `for Actor`、`auth/noauth` 或 `require`，包括方法级规则。未声明认证时默认 `auth`；audience 和 transport 仍按显式声明处理，不由默认值推导。执行认证、权限和资源检查的服务属于后端服务，不作为客户端入口。
+
+迁移期内，无修饰符的 `service` 保留旧后端行为，并提示你声明 `pub` 或 `api`。非 API 服务含客户端准入规则时也会给 warning，暂时同时支持后端和 API 调用方；显式 `api service` 不使用这条兼容规则。
+
 ## 声明 Service
 
 ```skel
-pub service OrderService {
+api service OrderService {
     for CustomerActor via client
     auth
 
@@ -27,7 +35,7 @@ service 名以 `Service` 结尾，至少包含一个 method。method 和 input �
 method 内部顺序为：`auth`/`noauth`、`require`、`input`、`output`。input 和 output 都可省略：
 
 ```skel
-service HealthService {
+api service HealthService {
     noauth
 
     method ping {}
@@ -68,7 +76,7 @@ method create {
 ## 组合 Method 与权限规则
 
 ```skel
-pub service OrderService {
+api service OrderService {
     for StaffActor via client
     auth
     require Order:read
