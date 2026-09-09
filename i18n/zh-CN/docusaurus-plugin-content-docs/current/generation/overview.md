@@ -10,7 +10,7 @@ slug: /generation
 | --- | --- | --- |
 | Go 源码 | `gen go` | 已有 Go module 内部 |
 | Go module | `gen go-module` | 独立 regular/pub module |
-| TypeScript | `gen ts` | Web 或 Node 客户端 |
+| TypeScript | `gen ts --api` | Web 或 Node 客户端 |
 | 公开 Skel | `gen skel --pub` | 其他 domain 的编译输入 |
 
 ## 共同规则

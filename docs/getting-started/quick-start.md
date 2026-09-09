@@ -53,7 +53,7 @@ pub resource Order {
     action read
 }
 
-pub service OrderService {
+api service OrderService {
     for CustomerActor via client
     auth
     require Order:read
@@ -73,7 +73,7 @@ The contract says more than "call a method":
 - The credential is marked for sensitive-value handling.
 - `Order:read` is a named permission the service requires.
 - The result is either one generated `Order` value or null.
-- Every declaration a client needs is explicitly `pub`.
+- Client-facing data and enum dependencies are included automatically.
 
 ## Format and Check
 
@@ -103,13 +103,12 @@ Use `gen go-module` instead when publishing the generated contract as an indepen
 ## Generate TypeScript
 
 ```bash
-skelc gen ts \
-  --pub \
+skelc gen ts --api \
   --skel-in ./demo/skel \
   --ts-out ./demo/client
 ```
 
-The output contains public data and enums, a service specification, and a client factory backed by `@yorun-ai/vrpc`. `--pub` keeps private declarations out of the client package.
+The output contains API services and their data dependencies, plus explicitly public data and enums. Client factories use `@yorun-ai/vrpc`; TypeScript generation requires `--api`.
 
 See [TypeScript Output](/docs/generation/typescript) for package metadata, cross-domain imports, and binary wire schemas.
 

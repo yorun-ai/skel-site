@@ -80,7 +80,7 @@ actor StaffActor {
 ## Bind Actors to Services
 
 ```skel
-service OrderService {
+api service OrderService {
     for CustomerActor via client
     for StaffActor
 

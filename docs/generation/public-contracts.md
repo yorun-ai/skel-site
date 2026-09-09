@@ -15,7 +15,7 @@ skelc gen skel \
 
 ## Closure Rules
 
-Any local data, enums, actors, or resources a public declaration references must also be explicitly `pub`. skelc never silently widens the public surface -- missing markers are hard errors.
+Local data and enum dependencies are included automatically, including nested and generic dependencies. They do not need `pub`. Explicit `pub data/enum` also exports a type independently, allowing direct cross-domain Skel references; inclusion as a dependency alone does not grant that visibility. Referenced actors and resources retain their existing public visibility requirements.
 
 ## Consumption
 

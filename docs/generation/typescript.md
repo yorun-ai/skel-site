@@ -5,12 +5,12 @@ slug: /generation/typescript
 # TypeScript Output
 
 ```bash
-skelc gen ts \
+skelc gen ts --api \
   --skel-in ./skel \
   --ts-out ./generated/typescript
 ```
 
-skelc generates data, enums, and eligible service clients for the current domain. A service produces a client when an actor has `via client`.
+`--api` is required; omitting it or passing `--pub` is an error. skelc generates API service clients, their data dependencies, and explicitly public data and enums. Legacy services with client admission rules are included with a migration warning.
 
 ## Deprecation Output
 
@@ -81,9 +81,9 @@ return client.invoke({
 
 Normal methods continue to pass `options` straight through. The application supplies the CBOR codec when creating its vRPC client -- neither generated code nor skelc bundles one.
 
-## Public Output
+## Shared Types
 
-With `--pub`, only public data, enums, and eligible public service clients are emitted.
+A domain without API services can still generate a types-only API package. Cross-domain imports reference the other domain’s API package, including its explicitly public data and enums. Local data dependencies are included without requiring `pub`.
 
 ## Package Metadata
 
