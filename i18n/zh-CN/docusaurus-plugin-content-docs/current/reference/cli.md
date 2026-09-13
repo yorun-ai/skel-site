@@ -35,13 +35,7 @@ skelc lsp --help
 skelc version
 ```
 
-添加 `--features` 可在版本结果中附带 `features` 对象：
-
-```bash
-skelc version --features
-```
-
-`features.apiModifier` 为 `true` 表示编译器支持 `api service` 及通过 `--api` 生成 API 客户端。不传 `--features` 时省略该对象。集成方应将缺失或值为 `false` 的特性视为不支持；旧版编译器会对 `--features` 返回 `INVALID_ARGUMENT` 错误。
+集成方应使用 `skelc version` 返回的 `version` 字段检查所需的最低版本。`api service` 和通过 `--api` 生成客户端需要 skelc v0.18.0 或更高版本。
 
 除 LSP 外，每个命令都在 stdout 输出恰好一个格式化 JSON 结果。help 保持文本，
 LSP 使用 JSON-RPC。stderr 只保留日志和诊断，默认使用 JSONL；需要人类可读日志时
