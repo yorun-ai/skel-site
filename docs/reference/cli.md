@@ -391,13 +391,7 @@ Display compiler, platform, Go, and default Vine version information:
 skelc version
 ```
 
-Add `--features` to include the `features` object in the version response:
-
-```bash
-skelc version --features
-```
-
-`features.apiModifier` is `true` when the compiler supports `api service` and API client generation with `--api`. The object is omitted without `--features`. Integrations should treat a missing or `false` feature as unsupported; older compilers reject `--features` with an `INVALID_ARGUMENT` error.
+Compare the `version` field returned by `skelc version` against the minimum your integration requires. `api service` and `--api` client generation require skelc v0.18.0 or later.
 
 For language rules referenced by these commands, see the [Skel syntax reference](/docs/syntax).
 
