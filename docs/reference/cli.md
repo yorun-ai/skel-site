@@ -358,6 +358,34 @@ Both `gen go` and `gen go-module` accept `--api` for Portal clients or `--pub` f
 
 With `--api`, use `--go-vrpc-version` to override vRPC v0.12.0; `--go-vine-version` does not apply. A module prefix derives `example.com/gen/shop/orderapi` for domain `shop.order`, and foreign domains use their corresponding API modules. Backend Go output requires Vine v0.15.7 or later; `skelc version` reports `minimumVineVersion`.
 
+### Module parameters
+
+- `--skel-import domain=PATH`: external Skel domain path; repeat for transitive imports
+- `--go-module MODULE`: explicit module path for the current output
+- `--go-pub-out PATH`: public Go module output directory; requires `--go-out`
+- `--go-pub-module MODULE`: explicit public output module; defaults to the current module plus `pub`
+- `--go-import domain=PACKAGE`: Go import path for an external domain; repeatable
+- `--go-module-prefix PREFIX`: derives Go module and import paths
+
+`--go-module-prefix`, `--go-module`, and `--go-pub-module` must not end with `/`.
+
+### Generation behavior
+
+- `gen go` writes into an existing module and never creates `go.mod`.
+- Without `--go-pub-out`, a Go module contains the full data, enum, config, actor, resource, service, event, web, and task surface.
+- With `--go-pub-out`, skelc writes a public and a regular module together and registers each non-full schema on only one side; a regular or full schema can cover a public one.
+- A `pub` service produces a client spec in the public module and a server spec in the regular module.
+- A `pub` event produces a listener spec in the public module and an emitter spec in the regular module.
+- A `pub` actor's auth service produces a server spec in the public module, and its credential, info, and actor permission services follow the actor.
+- A `pub` resource produces permission code constants, its check service server, and its schema in the public module; the regular module exposes a facade in `pub.go`.
+- The regular module requires the public module and re-exports its symbols through type aliases and facades in `pub.go`, so the regular package is a symbol superset.
+- When a `pub` service or method `require` references a local resource, that resource must be `pub`.
+- Local data and enum dependencies of a public contract are collected automatically and do not need `pub`; actors and resources still require public visibility.
+- `web` does not support `pub`, and ordinary Go generation emits a `web.WebSpec` for every `web`.
+- A `web` server interface is named like `UserPortalWebServer`, and its default implementation like `DefaultUserPortalWebServer`.
+- The default `web` implementation is only a shell; Go code supplies routing by implementing `Routes(*web.Router)`.
+- `--go-module-prefix` derives a public import path as `<prefix>/<domain parts except last>/<last-domain>pub`, for example `example.com/demo/skeled/userpub`.
+
 ## Generate TypeScript
 
 Generate TypeScript source:
@@ -368,9 +396,16 @@ skelc gen ts --api \
   --ts-out ./domain/user/pub/skel/typescript
 ```
 
-`gen ts` requires `--api` and rejects `--pub`. It emits API clients, their data dependencies, and explicitly public data and enums. Legacy services with client rules are included with warnings.
+`gen ts` requires `--api` and rejects `--pub`. It emits API clients, their data dependencies, and explicitly public data and enums; a domain without API services can still produce a types-only API package. Legacy services with client rules are included with warnings.
 
-To generate package metadata, add `--ts-as-module` and identify the package with `--ts-module` or `--ts-module-scope`. Map external domains with repeatable `--ts-import domain=package` flags.
+To generate package metadata, add `--ts-as-module` and identify the package with `--ts-module` or `--ts-module-scope`. Map external domains with repeatable `--ts-import domain=package` flags:
+
+```bash
+skelc gen ts --api \
+  --skel-in ./domain/user/skel \
+  --ts-out ./domain/user/pub/skel/typescript \
+  --skel-import demo.user=./domain/user/pub/skel
+```
 
 Generated package names and dependency package names must be valid lowercase npm names, such as `@example/client`. Explicit version constraints for the same npm package must agree, and conflicting constraints fail generation. Inferred wildcard versions do not override explicit constraints.
 
@@ -385,7 +420,7 @@ skelc gen skel \
   --skel-out ./domain/user/pub/skel
 ```
 
-`gen skel` requires `--pub`. It retains public data, enums, configuration, actors, resources, services, events, and the public dependencies they require.
+`gen skel` requires `--pub`. It retains public data, enums, configuration, actors, resources, services, events, and the public dependencies they require; implicit data dependencies keep their original visibility markers. An actor's `auth { credential / info }` is rendered back inside the actor rather than as extra top-level data. When a `pub` service or method `require` references a local resource, that resource must be `pub`.
 
 ## Version information
 
