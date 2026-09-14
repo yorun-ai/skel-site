@@ -361,11 +361,13 @@ skelc gen go-module \
 
 - `--skel-in PATH`：输入 `.skel` 文件或目录
 - `--go-out PATH`：Go 代码输出目录
-- `--go-vine-version VERSION`：指定生成代码使用的 Vine module version；必须是带 `v` 前缀且不低于最低支持版本的语义版本。最低支持版本可以低于默认版本，`skelc version` 会报告这两个值。
+- `--go-vine-version VERSION`：指定生成代码使用的 Vine module version；必须是完整的、带 `v` 前缀的语义版本（例如 `v0.15.7`），与 Go module 路径兼容，且不低于最低支持版本。`skelc version` 会报告该最低版本，以及未指定该参数时写入的默认版本。
 
 `gen go` 和 `gen go-module` 均支持 `--skel-import`、`--go-import`，以及互斥的 `--api` / `--pub`。这两个模式不能与 `--go-pub-out` 或 `--go-pub-module` 合用。
 
-`--api` 生成 Portal 客户端，可用 `--go-vrpc-version` 覆盖默认的 vRPC v0.12.0，不接受 `--go-vine-version`。后端 Go 输出要求 Vine v0.15.4 或更高版本；`skelc version` 的 `minimumVineVersion` 和 `minimumApiServiceVineVersion` 会报告此要求。
+生成前会校验写入的 module 元数据。主 module、pub module 及由 prefix 推导的路径都必须是有效 Go module 路径，Go import 的版本必须是完整、带 `v` 前缀且与 module 路径兼容的语义版本。指向同一 Go module 的映射必须使用一致的版本；版本冲突（包括覆盖所选 runtime 依赖）会导致生成失败。
+
+`--api` 生成 Portal 客户端，可用 `--go-vrpc-version` 覆盖默认的 vRPC v0.12.0，不接受 `--go-vine-version`。后端 Go 输出要求 Vine v0.15.7 或更高版本；`skelc version` 的 `minimumVineVersion` 会报告此要求。
 
 `gen go-module` 的 module 参数：
 
@@ -405,6 +407,8 @@ skelc gen go-module \
 写入 stderr；需要人类可读日志时使用 `--log-format text`。
 
 ## 7. 生成 TypeScript 代码
+
+生成的包名及依赖包名必须是有效的小写 npm 包名，例如 `@example/client`。指向同一 npm 包的显式版本约束必须一致，冲突会导致生成失败。自动推导出的通配版本不会覆盖显式约束。
 
 ```bash
 skelc gen ts --api \
