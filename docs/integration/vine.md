@@ -8,7 +8,7 @@ Generated Go code uses Vine public packages as its runtime contract. Output incl
 
 ## Version Relationship
 
-`skelc version` reports both the minimum supported and default Vine versions. Generated Go modules write the default version to `go.mod`; `--go-vine-version` may select another version as long as it is not older than the minimum. The current generated Go contract requires Vine v0.13.1 or newer for typed in-process Rpc value isolation.
+Generated Go contracts currently require Vine v0.15.7 or newer. `skelc version` reports both the minimum supported and default Vine versions; generated Go modules write the default version to `go.mod`, and `--go-vine-version` may select another version as long as it is not older than the minimum. A higher version is not guaranteed to be compatible, so pin a specific version, regenerate, and run application tests when upgrading.
 
 ## Recommended Workflow
 
