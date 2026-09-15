@@ -6,7 +6,7 @@ slug: /installation
 
 ## 前提条件
 
-skelc v0.15.0 和生成的 Go module 需要 Go 1.27.0 及以上版本。生成的 Go module 要求 Vine `v0.14.0` 或更高版本，默认依赖为 `v0.14.0`。在已有 Go module 中生成时，需要自行更新依赖。
+skelc v0.15.0 和生成的 Go module 需要 Go 1.27.0 及以上版本。生成的 Go module 要求 Vine `v0.15.7` 或更高版本，默认依赖为 `v0.15.7`。在已有 Go module 中生成时，需要自行更新依赖。
 
 ## 安装
 
