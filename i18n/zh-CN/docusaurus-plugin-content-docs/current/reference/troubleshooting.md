@@ -14,7 +14,7 @@ slug: /troubleshooting
 
 ## 公开依赖报错
 
-公开 service/event 引用的本地 data、enum、actor 或 resource 也需要标上 `pub`。要么缩小引用范围，要么显式公开依赖，不要绕过检查。
+公开 service/event 引用的 actor、resource，以及导入的 data、enum 需要标上 `pub`；本领域的 data、enum 依赖会自动收集，无需该标记。要么缩小引用范围，要么显式公开依赖，不要绕过检查。
 
 ## 生成文件没有被清理
 

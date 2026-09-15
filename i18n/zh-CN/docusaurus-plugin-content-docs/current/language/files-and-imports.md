@@ -12,7 +12,7 @@ skelc 的输入接受单个 `.skel` 文件，或代表一个 domain 的目录。
 domain commerce.order
 ```
 
-同一次输入加载的所有文件必须声明同一个 domain。目录模式下必须包含 `domain.skel`，而且这个文件只能放 domain 声明和可选的 `@desc`：
+同一次输入加载的所有文件必须声明同一个 domain。目录模式下必须包含 `domain.skel`，而且这个文件只能放 domain 声明、可选的 `@desc` 和 import：
 
 ```skel title="skel/domain.skel"
 @desc("订单领域契约")

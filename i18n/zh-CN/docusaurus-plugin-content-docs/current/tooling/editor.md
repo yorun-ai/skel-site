@@ -47,6 +47,7 @@ slug: /editor
 | `skelc.schemaCompatibility.includeCompatible` | `false` | 同时把 `COMPATIBLE` 变化报告为 hint。 |
 | `skelc.schemaCompatibility.codeLens` | `true` | 在 domain 声明上方显示兼容性 CodeLens。 |
 | `skelc.schemaCompatibility.baseline` | 空 | 相对于 domain 源目录的显式 baseline；留空时使用 Git `HEAD`。 |
+| `skelc.strict` | `false` | 把迁移警告视为错误。需要 skelc v0.18.0 或更高版本；修改后会重启语言服务器。 |
 
 命令面板中提供：
 

@@ -14,7 +14,7 @@ Make sure every file declares the same domain, imports come before top-level dec
 
 ## Public Dependency Error
 
-Local data, enums, actors, or resources referenced by a public service or event also need `pub`. Either reduce the reference or explicitly publish the dependency -- do not bypass the check.
+Actors, resources, and imported data or enums referenced by a public service or event need `pub`. Local data and enum dependencies are collected automatically and do not need the marker. Either reduce the reference or explicitly publish the dependency -- do not bypass the check.
 
 ## A Generated File Was Not Removed
 

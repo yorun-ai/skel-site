@@ -46,7 +46,7 @@ skelc --strict check --skel-in ./domain/user/skel
 skelc --strict gen go --skel-in ./domain/user/skel --go-out ./generated/user
 ```
 
-严格模式拒绝没有 `pub` / `api` 的 service，以及在非 API service 中声明 actor audience、`auth` / `noauth` 或 `require`。忽略隐藏文件等普通 warning 保持不变。诊断码和位置不变，只改变 severity。
+严格模式拒绝没有 `pub` / `open` / `api` 的 service，以及在非 API service 中声明 actor audience、`auth` / `noauth` 或 `require`。忽略隐藏文件等普通 warning 保持不变。诊断码和位置不变，只改变 severity。
 
 严格 `check` 未通过时退出码为 `1`；生成、schema、格式化命令因严格检查编译失败时退出码为 `2`。严格格式化先验证输入，失败时不改写文件。`schema diff` 严格检查候选代码，历史基线仍保留旧写法，以便对比迁移前后的差异。
 
@@ -330,15 +330,6 @@ skelc gen go-module \
 
 当所有 domain 遵循统一命名规则时，`--go-module-prefix` 可以推导外部 pub module 路径；显式 `--go-import domain=module` 映射优先。
 
-```bash
-skelc gen go-module \
-  --skel-in ./domain/booker/skel \
-  --go-out ./domain/booker/skeled/golang \
-  --skel-import app=./domain/app/pub/skel/skel \
-  --skel-import user=./domain/user/pub/skel/skel \
-  --go-module-prefix example.com/demo/skeled
-```
-
 `gen go` 和 `gen go-module` 均支持 `--skel-import`、`--go-import`，以及互斥的 `--api` / `--pub`。这两个模式不能与 `--go-pub-out` 或 `--go-pub-module` 合用。
 
 生成前会校验写入的 module 元数据。主 module、pub module 及由 prefix 推导的路径都必须是有效 Go module 路径，Go import 的版本必须是完整、带 `v` 前缀且与 module 路径兼容的语义版本。指向同一 Go module 的映射必须使用一致的版本；版本冲突（包括覆盖所选 runtime 依赖）会导致生成失败。
@@ -360,16 +351,14 @@ skelc gen go-module \
 
 - `gen go` 写入已有模块，不创建 `go.mod`
 - 未指定 `--go-pub-out` 时，Go module 输出完整的 data / enum / config / actor / resource / service / event / web / task
-- 指定 `--go-pub-out` 时，会同时生成 pub module 和 regular module；schema 只跟随 pub 的 client/listener 或非 pub 的完整定义生成一次
+- 指定 `--go-pub-out` 时，会同时生成 pub module 和 regular module；同一个非 full schema 只在一侧注册，且 regular 或 full schema 可以覆盖 pub schema
 - pub service 在 pub module 中生成 client spec，在 regular module 中生成 server spec
 - pub event 在 pub module 中生成 listener spec，在 regular module 中生成 emitter spec
-- pub actor 的 auth service 在 pub module 中生成 server spec
-- pub actor 的 credential / info / actor permission service 跟随 pub actor 生成
+- pub actor 的 auth service 在 pub module 中生成 server spec，credential / info / actor permission service 跟随 pub actor 生成
 - pub resource 在 pub module 中生成权限码常量、check service server 和 schema；regular module 会在 `pub.go` 里生成 facade
 - regular module 会 require pub module，并通过 `pub.go` 暴露 pub 符号的 type alias / facade；regular 包是符号超集
 - pub service / method 的 `require` 引用本 domain resource 时，该 resource 必须标 `pub`
 - 公开契约的本领域 data / enum 依赖自动收集，无需 `pub`；actor / resource 仍要求公开可见性
-- schema 只在 pub 或 regular/full 一侧出现，不会两边同时注册同一个非 full schema；regular/full schema 能覆盖 pub schema
 - `web` 不支持 `pub`，普通 Go 生成会为每个 `web` 生成 `web.WebSpec`
 - `web` 生成的 server interface 形如 `UserPortalWebServer`，默认实现形如 `DefaultUserPortalWebServer`
 - `web` 默认实现只提供空壳，具体路由仍然由 Go 代码实现 `Routes(*web.Router)`
@@ -406,19 +395,8 @@ skelc gen ts --api \
 ```bash
 skelc gen skel \
   --pub \
-  --skel-in ./domain/booker/skel \
-  --skel-out ./domain/booker/pub/skel/skel
-```
-
-带依赖：
-
-```bash
-skelc gen skel \
-  --pub \
-  --skel-in ./domain/booker/skel \
-  --skel-out ./domain/booker/pub/skel/skel \
-  --skel-import app=./domain/app/pub/skel/skel \
-  --skel-import user=./domain/user/pub/skel/skel
+  --skel-in ./domain/user/skel \
+  --skel-out ./domain/user/pub/skel
 ```
 
 `gen skel` 必须传 `--pub`。输出保留公开的 data、enum、config、actor、resource、service、event 及其所需的公开依赖；隐式数据依赖保留原有可见性标记。actor 的 `auth { credential / info }` 会渲染回 actor 内部，不额外输出顶层 data。pub service / method 的 `require` 引用本 domain resource 时，该 resource 必须标 `pub`。

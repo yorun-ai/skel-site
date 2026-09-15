@@ -39,7 +39,7 @@ method cancel {
 currency: string
 ```
 
-`@example` 必须有值，而且同一位置必须有 `@desc`。data-like 字段、service input、service output、resource check input、task trigger input 以及 actor credential/info 字段支持示例。
+`@example` 必须有值，而且同一位置必须有 `@desc`。data-like 字段、method input 参数、method output 块、resource check input、task trigger input 以及 actor credential/info 字段支持示例；method input 块本身不支持。
 
 示例只是文档值，不是校验表达式。除非应用代码加了规则，否则字段仍然接受类型允许的所有值。
 
@@ -103,9 +103,9 @@ data User {
 
 接下来阅读[契约边界](/docs/contract-design)，或者用[语法速查](/docs/syntax)快速定位声明。
 
-## 配置空白保留（未发布）
+## 配置空白保留
 
-开发版 skelc 支持在 config 字段上使用无参数的 `@noTrim`。声明本身、普通 data 字段及 method 参数不支持这个标记；重复标记或提供参数会报错。
+skelc 支持在 config 字段上使用无参数的 `@noTrim`。声明本身、普通 data 字段及 method 参数不支持这个标记；重复标记或提供参数会报错。
 
 ```skel
 config SecretConfig eternal {

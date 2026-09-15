@@ -48,7 +48,7 @@ pub actor CustomerActor {
 
 `auth` 同时包含 `credential` 和 `info`：
 
-- `credential` 是调用者提交的凭据，至少一个字段，每个字段都是非 nullable 的 `string`。
+- `credential` 是调用者提交的凭据，至少一个字段，每个字段是 `string` 或 `string?`，且至少有一个非 nullable 的 `string` 字段。
 - `info` 是应用代码拿到的认证身份，能用普通的 Skel 字段类型。
 
 skelc 会生成 actor 专属的 credential、info 数据类型和认证服务元数据。字段或 block 如果不想出现在明文日志里，加上 `@sensitive` 标记就行。

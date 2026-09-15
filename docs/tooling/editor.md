@@ -47,6 +47,7 @@ The extension is a thin client: parsing, formatting, diagnostics, completion, na
 | `skelc.schemaCompatibility.includeCompatible` | `false` | Also report `COMPATIBLE` changes as hints. |
 | `skelc.schemaCompatibility.codeLens` | `true` | Show the compatibility CodeLens above domain declarations. |
 | `skelc.schemaCompatibility.baseline` | empty | Explicit baseline relative to the domain source directory; empty uses Git `HEAD`. |
+| `skelc.strict` | `false` | Treat migration warnings as errors. Requires skelc v0.18.0 or newer; changing it restarts the language server. |
 
 The Command Palette provides:
 
