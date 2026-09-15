@@ -26,7 +26,7 @@ user/
 └── pub/
 ```
 
-`domain.skel` 只负责 domain 声明和可选的说明文字；其他文件声明同一个 domain，按职责拆开。skelc 按文件名字典序加载，隐藏文件、子目录和非 `.skel` 文件会自动忽略。
+`domain.skel` 只负责 domain 声明、可选的说明文字和该 domain 需要的 import；其他文件声明同一个 domain，按职责拆开。skelc 按文件名字典序加载，隐藏文件、子目录和非 `.skel` 文件会自动忽略。
 
 ## 外部 domain
 

@@ -39,7 +39,7 @@ Descriptions flow into generated metadata and schemas. Write what a consumer nee
 currency: string
 ```
 
-`@example` needs a value and must appear alongside `@desc` at the same location. You can use it on data-like fields, service inputs, service output, resource-check inputs, task-trigger inputs, and actor credential/info fields.
+`@example` needs a value and must appear alongside `@desc` at the same location. You can use it on data-like fields, method input arguments, the method output block, resource-check inputs, task-trigger inputs, and actor credential/info fields. A method input block itself does not accept it.
 
 Examples are documentation values, not validation expressions. A field still accepts every value its type allows unless application code enforces a narrower rule.
 
@@ -103,9 +103,9 @@ Run `skelc check` after moving a decorator. Unsupported placement is an error â€
 
 Continue with [Contract Boundaries](/docs/contract-design) or use the [Syntax Index](/docs/syntax) for a compact declaration reference.
 
-## Preserve Config Whitespace (Unreleased)
+## Preserve Config Whitespace
 
-Development skelc accepts the argument-free `@noTrim` decorator on config
+skelc accepts the argument-free `@noTrim` decorator on config
 fields. It is invalid on declarations, ordinary data fields, or method
 arguments. Duplicate markers and decorator arguments are errors.
 

@@ -48,7 +48,7 @@ pub actor CustomerActor {
 
 An `auth` block holds both `credential` and `info`:
 
-- `credential` is what the caller presents. It needs at least one field; every field is a non-nullable `string`.
+- `credential` is what the caller presents. It needs at least one field; every field is `string` or `string?`, and at least one field must be a non-nullable `string`.
 - `info` is the authenticated identity returned to application code. It can use normal Skel field types.
 
 skelc generates actor-specific credential and info data models along with the authentication service metadata. Mark credentials or identity fields `@sensitive` when logs and schema consumers must treat them as confidential.

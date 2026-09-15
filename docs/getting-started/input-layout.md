@@ -26,7 +26,7 @@ user/
 └── pub/
 ```
 
-`domain.skel` holds the domain declaration and an optional description. Other files declare the same domain and split contracts by responsibility. skelc loads files in filename order, skipping hidden files, subdirectories, and anything that isn't a `.skel` file.
+`domain.skel` holds the domain declaration, an optional description, and any imports the domain needs. Other files declare the same domain and split contracts by responsibility. skelc loads files in filename order, skipping hidden files, subdirectories, and anything that isn't a `.skel` file.
 
 ## External Domains
 

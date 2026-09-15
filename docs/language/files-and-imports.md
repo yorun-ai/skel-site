@@ -12,7 +12,7 @@ A Skel input is either one `.skel` file or one directory representing a domain. 
 domain commerce.order
 ```
 
-All files loaded for one input must declare the same domain. In directory mode, `domain.skel` is required and may contain only the domain declaration and its optional `@desc`:
+All files loaded for one input must declare the same domain. In directory mode, `domain.skel` is required and may contain only the domain declaration, its optional `@desc`, and imports:
 
 ```skel title="skel/domain.skel"
 @desc("Ordering contracts")

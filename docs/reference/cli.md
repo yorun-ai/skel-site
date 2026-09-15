@@ -48,7 +48,7 @@ skelc --strict check --skel-in ./domain/user/skel
 skelc --strict gen go --skel-in ./domain/user/skel --go-out ./generated/user
 ```
 
-Strict mode rejects services that lack `pub` or `api`, and non-API services that declare actor audiences, `auth`/`noauth`, or `require`. Ordinary warnings, such as an ignored hidden file, remain warnings. Diagnostic codes and source locations stay the same; only the severity changes.
+Strict mode rejects services that lack `pub`, `open`, or `api`, and non-API services that declare actor audiences, `auth`/`noauth`, or `require`. Ordinary warnings, such as an ignored hidden file, remain warnings. Diagnostic codes and source locations stay the same; only the severity changes.
 
 A strict `check` that fails returns exit code `1`; a strict compilation failure in generation, schema, or formatting returns `2`. Strict formatting validates the input before it rewrites any file. `schema diff` checks the candidate strictly while letting the historical baseline keep legacy declarations, so you can still compare migrations.
 
