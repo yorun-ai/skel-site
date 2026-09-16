@@ -30,6 +30,10 @@ CI 和开发环境要用同一个 skelc 版本。输入、import 映射和输出
 
 schema 命令不接受 import 路径映射。
 
+声明了 `mount` 的 Web 会在 schema 中记录 `mountPath`，修改该值会以 `BREAKING` 影响级别
+报告 `web.mount-path.changed`。严格解码快照的消费者必须识别这个字段（skelc v0.20.0 新增）；
+读取更新版本编译器生成的快照前，请先升级 `go.yorun.ai/skelc/schema`。
+
 diff 直接读取 baseline 和 candidate 的 Skel 源文件或目录，不接受 schema 快照
 JSON 作为 diff 输入。
 

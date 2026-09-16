@@ -6,7 +6,7 @@ slug: /installation
 
 ## Prerequisites
 
-skelc v0.15.0 and generated Go modules need Go 1.27.0 or later. Generated Go modules require Vine `v0.15.7` or later and default to `v0.15.7`. When generating into an existing Go module, update its dependencies yourself.
+skelc v0.15.0 and generated Go modules need Go 1.27.0 or later. Generated Go modules require Vine `v0.19.0` or later and default to `v0.19.0`. When generating into an existing Go module, update its dependencies yourself.
 
 ## Install
 
@@ -22,10 +22,10 @@ Make sure the Go binary directory is on `PATH`. If the shell can't find skelc, c
 CI and reproducible generation environments should pin an exact version:
 
 ```bash
-go install go.yorun.ai/skelc/cmd/skelc@v0.15.0
+go install go.yorun.ai/skelc/cmd/skelc@v0.20.0
 ```
 
-After upgrading skelc, regenerate contracts and review the diff. For v0.15.0, follow the [Go collection migration notes](/docs/generation/go#collection-nullability-and-validation) before regenerating. Keep developer machines and CI on the same compiler version.
+After upgrading skelc, regenerate contracts and review the diff. Review the [Go collection migration notes](/docs/generation/go#collection-nullability-and-validation) when upgrading from skelc v0.15.0 or earlier, before regenerating. Keep developer machines and CI on the same compiler version.
 
 ## Inspect Version Information
 
