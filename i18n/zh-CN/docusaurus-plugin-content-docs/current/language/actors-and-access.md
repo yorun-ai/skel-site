@@ -105,6 +105,25 @@ web CustomerPortalWeb {
 
 web 名以 `Web` 结尾，至少声明一个 actor。它说明谁能进入一个 Web 能力，但不声明 HTTP method、path 或 handler。注意 web 是本地运行能力，不能标记 `pub`。
 
+### 固定前端挂载路径
+
+当前端构建需要固定不变的公开 URL 前缀时，加上 `mount`：
+
+```skel
+web ConsoleWeb {
+    mount /console
+    for ClientActor via client
+}
+```
+
+mount 是入口及其静态资源的不可变前缀。当客户端、书签、CDN 规则或反向代理配置依赖该前缀时就应该声明它，并把取值视为已发布契约的一部分：修改它会改变 Web 哈希，`schema diff` 会以 `BREAKING` 报告 `web.mount-path.changed`。
+
+mount 路径是字面绝对路径：必须以 `/` 开头，不能包含路由参数、query 或 fragment 分隔符、转义、空白、空段（`//`）以及 `.`、`..` 段；允许以 `/` 结尾。同一个 Web 最多声明一次 `mount`。
+
+不写 `mount` 表示该 Web 不受已声明的挂载路径限制，而 `mount /` 显式声明根路径，两者并不等价：只有显式声明根路径才会把 Web 限制在 `/`。
+
+生成的 `web.WebSpec` 与 runtime domain schema 都会以 `MountPath` 携带该值；Go 侧使用挂载能力需要 Vine v0.19.0 或更高版本。生成的 Web 产物见 [Go 生成](/docs/generation/go#web-生成)。
+
 ## 控制 Actor 粒度
 
 当调用者在 credential、身份信息、入口或权限行为上确实不一样的时候，拆成不同的 actor。不建议按页面或 service method 去创建 actor；稳定的 actor 应该覆盖一组相关的功能。

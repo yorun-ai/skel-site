@@ -107,6 +107,35 @@ web CustomerPortalWeb {
 
 A `web` name ends in `Web` and declares at least one actor. It describes who may enter a web capability; it doesn't define HTTP methods, paths, or handler code. Web declarations are local runtime capabilities and can't be marked `pub`.
 
+### Pin a Frontend Mount Path
+
+Add `mount` when a frontend build must answer on a fixed public URL prefix:
+
+```skel
+web ConsoleWeb {
+    mount /console
+    for ClientActor via client
+}
+```
+
+The mount is an immutable prefix for the entry point and its static assets. Declare
+it when clients, bookmarks, CDN rules, or reverse-proxy configuration depend on that
+prefix, and treat the value as part of the published contract: changing it changes the
+Web hash, and `schema diff` reports `web.mount-path.changed` as `BREAKING`.
+
+A mount path is a literal absolute path. It must start with `/`, and it cannot contain
+route parameters, query or fragment delimiters, escapes, whitespace, empty segments
+(`//`), or `.` and `..` segments. A trailing slash is allowed. Include `mount` at most
+once per Web.
+
+Omitting `mount` leaves the Web unrestricted by a declared mount path, while `mount /`
+declares the root path explicitly. The two are not interchangeable: only the declared
+root restricts the Web to `/`.
+
+The generated `web.WebSpec` and the runtime domain schema carry the value as
+`MountPath`, and a mounted Web requires Vine v0.19.0 or later on the Go side. See
+[Go Generation](/docs/generation/go#web-generation) for the generated Web surface.
+
 ## Keep Actor Scope Deliberate
 
 Create separate actors when callers have meaningfully different credentials, identity data, transports, or permission behavior. Don't spin up a new actor for every UI screen or service method. A stable actor represents a caller role that spans several capabilities.
