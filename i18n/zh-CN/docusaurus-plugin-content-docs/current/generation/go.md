@@ -27,7 +27,7 @@ skelc gen go-module \
 
 ## 集合可空性与校验
 
-从 skelc v0.15.0 开始，生成的 Go 代码使用指针表示 nullable 集合，要求 Go 1.27.0 及以上版本和 Vine v0.14.0 或更高版本。后端 Go 输出当前要求 Vine v0.15.7 或更高版本，并默认使用 v0.15.7。在已有 module 中生成时，需要自行更新依赖。
+从 skelc v0.15.0 开始，生成的 Go 代码使用指针表示 nullable 集合，要求 Go 1.27.0 及以上版本和 Vine v0.14.0 或更高版本。后端 Go 输出当前要求 Vine v0.19.0 或更高版本，并默认使用 v0.19.0。在已有 module 中生成时，需要自行更新依赖。
 
 | Skel 类型 | 生成的 Go 类型 |
 | --- | --- |
@@ -50,7 +50,7 @@ Vine v0.14.0 对 skelc v0.14.x 生成的 schema 继续保留 nil 编码为 null 
 
 生成器使用 `skel:"index(0)"` 表示 service method 和 resource check 的参数位置。敏感参数合并为一个标签，例如 `skel:"index(0),sensitive"`；JSON 字段名保持不变。这替代了 skelc v0.16.0 生成的 `arg:"0"` 标签。
 
-新标签要求 Vine v0.15.0 或更高版本，更早的版本无法注册使用新标签的参数。后端 Go 输出的整体最低及默认 Vine 依赖当前为 v0.15.7。
+新标签要求 Vine v0.15.0 或更高版本，更早的版本无法注册使用新标签的参数。后端 Go 输出的整体最低及默认 Vine 依赖当前为 v0.19.0。
 
 ## 进程内 Rpc 值隔离
 
@@ -77,6 +77,25 @@ Vine v0.14.0 对 skelc v0.14.x 生成的 schema 继续保留 nil 编码为 null 
 
 如果用的是统一的命名规则，用 `--go-module-prefix` 就能自动推导路径，无需逐个配置。生成完后运行 `gofmt` 和 `go test`，检查 `go.mod` 和 API diff。完整参数清单见 [CLI 参考](/docs/cli)。
 
+## Web 生成
+
+普通 Go 生成会为每个 `web` 声明输出一个 `web.WebSpec`，并在 `init` 中注册。Web 能力不能标记 `pub`，因此 pub 契约 module 不包含 Web 产物。
+
+```go
+var _PortalWebSpec = &web.WebSpec{
+    Name:              "PortalWeb",
+    SkelName:          "demo.portal.PortalWeb",
+    Hash:              "6c64f7ed",
+    MountPath:         "/portal",
+    ServerType:        reflect.TypeFor[PortalWebServer](),
+    DefaultServerType: reflect.TypeFor[*DefaultPortalWebServer](),
+}
+```
+
+服务端接口命名为 `<WebName>Server`，默认实现命名为 `Default<WebName>Server`。生成的接口带有包内私有 seal 方法，因此其他包的实现需要嵌入默认类型并覆盖所需路由。该默认类型只是空壳：在 Go 代码提供路由之前，它的 `Routes(*web.Router)` 会 panic。
+
+声明的 `mount` 会以 `MountPath` 写入 `WebSpec` 和 runtime domain schema。使用挂载能力需要 Vine v0.19.0 或更高版本，这也当前所有后端 Go 输出的依赖版本。
+
 ## Portal API 客户端
 
 ```bash
@@ -92,6 +111,6 @@ API 客户端依赖 `go.yorun.ai/vrpc` v0.12.0 或更高版本，可用 `--go-vr
 
 调用 `NewOrderApiServiceClient(client)`，传入为你配置好的 `*vrpc.Client`（指向 Portal 地址）。构造函数返回 `OrderApiServiceClient` 接口，你可以在测试中提供自己的实现或 mock。每个生成方法接受 `context.Context`、声明的业务参数和任意可选 `vrpc.InvokeOption`，返回业务结果与 `error`；无结果的方法仅返回 `error`。
 
-后端 Go 输出当前要求 Vine v0.15.7 或更高版本，生成的 module 默认使用 v0.15.7。生成到已有 module 时，需要自行更新应用依赖。`--api` 客户端使用 vRPC，不依赖 Vine。
+后端 Go 输出当前要求 Vine v0.19.0 或更高版本，生成的 module 默认使用 v0.19.0。生成到已有 module 时，需要自行更新应用依赖。`--api` 客户端使用 vRPC，不依赖 Vine。
 
 skelc v0.19.0 会为 `open service` 在 pub 包中同时生成 Client、Server/ERServer 及默认实现；regular 包使用类型别名复用服务端接口，避免重复注册。普通 `pub service` 的 pub 包仍只生成客户端。

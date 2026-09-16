@@ -32,6 +32,11 @@ owns each declaration and makes import paths unnecessary for schema checks.
 
 Schema commands do not accept import-path mappings.
 
+A Web that declares `mount` records it as `mountPath`, and changing that value
+appears as `web.mount-path.changed` at `BREAKING` impact. Consumers that decode
+snapshots strictly must recognize the field, which skelc v0.20.0 added; update
+`go.yorun.ai/skelc/schema` before reading snapshots from a newer compiler.
+
 Diff reads the baseline and candidate Skel source files or directories directly;
 schema snapshot JSON is not accepted as diff input.
 

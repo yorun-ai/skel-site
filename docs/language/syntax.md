@@ -31,7 +31,7 @@ Every file declares a domain. Imports follow the domain and precede declarations
 | `resource Name { action read }` | At least one action | Yes | [Permission Model](/docs/permissions) |
 | `service NameService { method get {} }` | At least one method | Yes | [Service Contracts](/docs/services) |
 | `event NameEvent { payload { ... } }` | One payload | Yes | [Events & Tasks](/docs/events-and-tasks#events) |
-| `web NameWeb { for NameActor }` | At least one actor | No | [Actors & Access](/docs/actors-and-access#declare-web-capabilities) |
+| `web NameWeb { for NameActor }` | At least one actor; `mount /path` is optional | No | [Actors & Access](/docs/actors-and-access#declare-web-capabilities) |
 | `task NameTask { trigger run {} }` | At least one trigger | No | [Events & Tasks](/docs/events-and-tasks#tasks-and-triggers) |
 
 `pub` appears before a supported declaration:

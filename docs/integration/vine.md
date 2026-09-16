@@ -8,7 +8,15 @@ Generated Go code uses Vine public packages as its runtime contract. Output incl
 
 ## Version Relationship
 
-Generated Go contracts currently require Vine v0.15.7 or newer. `skelc version` reports both the minimum supported and default Vine versions; generated Go modules write the default version to `go.mod`, and `--go-vine-version` may select another version as long as it is not older than the minimum. A higher version is not guaranteed to be compatible, so pin a specific version, regenerate, and run application tests when upgrading.
+Generated Go contracts currently require Vine v0.19.0 or newer. `skelc version` reports both the minimum supported and default Vine versions; generated Go modules write the default version to `go.mod`, and `--go-vine-version` may select another version as long as it is not older than the minimum. A higher version is not guaranteed to be compatible, so pin a specific version, regenerate, and run application tests when upgrading.
+
+## Declared Web Mount Paths
+
+A `web` that declares `mount` carries the value into generated code twice: as
+`WebSpec.MountPath` in the Web spec, and as `MountPath` in the runtime domain schema.
+Reading it from either place is enough; do not restate the prefix in application
+configuration. What a running Vine does with the value, including how Portal resolves
+entry rules for a mounted site, belongs to the [Vine documentation](https://vine.yorun.ai/docs/portal).
 
 ## Recommended Workflow
 

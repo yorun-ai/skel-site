@@ -31,7 +31,7 @@ import commerce.catalog as catalog
 | `resource Name { action read }` | 至少一个 action | 支持 | [权限模型](/docs/permissions) |
 | `service NameService { method get {} }` | 至少一个 method | 支持 | [服务契约](/docs/services) |
 | `event NameEvent { payload { ... } }` | 一个 payload | 支持 | [事件与任务](/docs/events-and-tasks#event) |
-| `web NameWeb { for NameActor }` | 至少一个 actor | 不支持 | [调用者与入口](/docs/actors-and-access#声明-web-能力) |
+| `web NameWeb { for NameActor }` | 至少一个 actor；`mount /path` 可选 | 不支持 | [调用者与入口](/docs/actors-and-access#声明-web-能力) |
 | `task NameTask { trigger run {} }` | 至少一个 trigger | 不支持 | [事件与任务](/docs/events-and-tasks#task-与-trigger) |
 
 支持的声明在关键字前写 `pub`：

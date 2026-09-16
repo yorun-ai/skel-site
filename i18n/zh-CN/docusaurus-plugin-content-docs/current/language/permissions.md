@@ -115,6 +115,6 @@ skelc 会解析路径并检查参数类型。字段改名或类型变化会在�
 
 接下来阅读[服务契约](/docs/services)或[公共契约](/docs/generation/public-contracts)。
 
-开发版生成器会为每次权限检查调用显式生成 `CodeArgumentName`，要求 Vine v0.15.0 或更高版本。业务参数现在可以叫 `code`；注入参数依次尝试 `code`、`code1`、`code2`，选择第一个未占用的名称，并保持为首个 `string` 参数。例如，业务参数为 `code` 和 `code1` 时，注入参数名为 `code2`。
+生成器会为每次权限检查调用显式生成 `CodeArgumentName`，要求 Vine v0.15.0 或更高版本。业务参数可以叫 `code`；注入参数依次尝试 `code`、`code1`、`code2`，选择第一个未占用的名称，并保持为首个 `string` 参数。例如，业务参数为 `code` 和 `code1` 时，注入参数名为 `code2`。
 
 `PermCheckInvocation.Arguments` 只记录业务参数；`require` 和公开 Skel 不包含注入参数。公开契约重新生成及跨域导入使用同一避让规则。重新生成后，应按新签名调整资源检查实现中的参数名。
