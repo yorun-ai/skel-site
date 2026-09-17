@@ -16,7 +16,7 @@ API 服务名必须以 `ApiService` 结尾，例如 `OrderApiService`；其他 s
 
 ### 公开服务端契约
 
-`open service` 用于让其他领域实现该服务。它与 `pub service` 具有相同的公开可见性，生成的 Go pub 包还包含 Server/ERServer 接口、默认实现和服务端注册。分包生成 regular 和 pub 包时，regular 包通过类型别名复用这些服务端类型。
+`open service` 用于让其他领域实现该服务。它与 `pub service` 具有相同的公开可见性，生成的 Go pub 包还包含 Server/ERServer 接口、默认实现和服务端注册。分包生成 regular 和 pub 包时，regular 包也会暴露这些服务端类型。
 
 ```skel
 open service StorageService {

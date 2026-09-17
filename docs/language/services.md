@@ -16,7 +16,7 @@ Declare `for Actor`, `auth`/`noauth`, or `require` only on API services, includi
 
 ### Open Server Contracts
 
-`open service` is for services that other domains need to implement. It is as public as `pub service`, and its Go public package also contains the Server/ERServer interfaces, default implementations, and server registration. When you generate split regular and public packages, the regular package reuses these server types through aliases.
+`open service` is for services that other domains need to implement. It is as public as `pub service`, and its Go public package also contains the Server/ERServer interfaces, default implementations, and server registration. When you generate split regular and public packages, the regular package exposes those server types as well.
 
 ```skel
 open service StorageService {

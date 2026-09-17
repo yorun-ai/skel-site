@@ -63,7 +63,7 @@ The marker can apply to:
 - A resource-check `input` or input field
 - A task-trigger `input` or input field
 
-Generated sensitive structures define a marker, so `skelSensitive` is a reserved field name.
+`skelSensitive` is a reserved field name in generated sensitive structures.
 
 Sensitivity is a handling instruction, not an access rule. Use actors, authentication, and permissions to control who may receive the value.
 

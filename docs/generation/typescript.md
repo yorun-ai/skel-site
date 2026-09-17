@@ -59,14 +59,10 @@ export const FileApiServiceSpec = {
 } as const;
 ```
 
-How generation works:
-
-- A service without Binary methods gets no `wire` property or wire-schema import.
-- Normal JSON methods still emit string method names without any empty configuration.
-- Binary arguments emit only `wire.<method>.arguments`.
-- Binary results emit only `wire.<method>.result`.
-- Schemas support nested data, nullable values, lists, every legal map key, generics, and recursive references. UUID and enum keys use the string-key wire shape.
-- The business-facing type of `binary` stays `Uint8Array`, and map types stay `Record`.
+Generated wire schemas support nested data, nullable values, lists, every legal
+map key, generics, and recursive references. UUID and enum keys use the
+string-key wire shape. The business-facing type of `binary` stays `Uint8Array`,
+and map types stay `Record`.
 
 A Binary method carries its wire metadata automatically, so you never pass it
 yourself; normal methods pass `options` straight through. The application supplies

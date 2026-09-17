@@ -55,10 +55,9 @@ When no explicit baseline is supplied, diff reads the candidate source from Git
 Go integrations consume these command outputs through the public facade
 `go.yorun.ai/skelc/schema`. It exposes the response and nested wire types,
 typed constants, and strict `schema.Decode`, `schema.Validate`, and
-`schema.Encode` functions, keeping the implementation internal. Strict
-decoding rejects unknown fields, trailing JSON values, unsupported format
-versions, unknown wire enum values, and malformed normalized structures. The
-root `go.yorun.ai/skelc` package remains focused on parsing and generation.
+`schema.Encode` functions. Strict decoding rejects unknown fields, trailing JSON
+values, unsupported format versions, unknown wire enum values, and malformed
+normalized structures.
 
 ## Actor Identity
 

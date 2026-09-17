@@ -63,7 +63,7 @@ data AccessCredential {
 - resource check `input` 或字段
 - task trigger `input` 或字段
 
-生成的敏感结构会定义一个标记，因此 `skelSensitive` 是保留字段名。
+在生成的敏感结构中，`skelSensitive` 是保留字段名。
 
 敏感标记是处理要求，不是访问规则。谁能拿到这个值仍然由 actor、认证和权限来控制。
 

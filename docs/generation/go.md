@@ -95,9 +95,10 @@ The server interface is named `<WebName>Server` and the default implementation
 type and overrides the routes it needs. That default type is only a shell: its
 `Routes(*web.Router)` panics until Go code supplies routing.
 
-A declared `mount` reaches the `WebSpec` and the runtime domain schema as
-`MountPath`. Mounted output needs Vine v0.19.0 or later; the current dependency
-for all backend Go output is v0.20.2.
+A declared `mount` reaches the generated Web spec and the runtime domain schema;
+see [Vine Integration](/docs/vine-integration#declared-web-mount-paths). Mounted
+output needs Vine v0.19.0 or later; the current dependency for all backend Go
+output is v0.20.2.
 
 ## Portal API Clients
 
@@ -116,4 +117,4 @@ Construct a client with `NewOrderApiServiceClient(client)`, passing a `*vrpc.Cli
 
 `--api` clients use vRPC and do not require Vine.
 
-For `open service`, skelc generates clients plus the Server/ERServer interfaces and their default implementations in the public package. The regular package reuses these server types through aliases, avoiding duplicate registration. Ordinary `pub service` output stays client-only in public packages.
+For `open service`, skelc generates clients plus the Server/ERServer interfaces and their default implementations in the public package; the regular package exposes those server types as well. Ordinary `pub service` output stays client-only in public packages.

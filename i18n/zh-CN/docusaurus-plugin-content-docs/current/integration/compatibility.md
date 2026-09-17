@@ -47,10 +47,9 @@ JSON 作为 diff 输入。
 可用历史的仓库必须传入 `--baseline-skel-in`。
 
 Go 集成通过公开 facade `go.yorun.ai/skelc/schema` 解析这些命令输出。该 package
-保持实现 internal，同时对外提供响应类型、嵌套 wire 类型、带类型的常量，
-以及严格的 `schema.Decode`、`schema.Validate`、`schema.Encode` 函数。严格解码
-会拒绝未知字段、尾随 JSON 值、不支持的格式版本、未知 wire 枚举值和格式错误的
-规范化结构。根 package `go.yorun.ai/skelc` 仍专注于解析和生成。
+对外提供响应类型、嵌套 wire 类型、带类型的常量，以及严格的
+`schema.Decode`、`schema.Validate`、`schema.Encode` 函数。严格解码会拒绝未知字段、
+尾随 JSON 值、不支持的格式版本、未知 wire 枚举值和格式错误的规范化结构。
 
 ## Actor 身份
 

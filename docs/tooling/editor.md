@@ -35,7 +35,7 @@ Once connected, the extension provides:
 - Rename for top-level declarations and their references
 - Best-effort navigation while the current document contains a syntax error
 
-The extension is a thin client: parsing, formatting, diagnostics, completion, navigation, and rename are all provided by the compiler's language server rather than reimplemented in JavaScript.
+Parsing, formatting, diagnostics, completion, navigation, and rename are all provided by `skelc lsp`.
 
 ## Configuration
 

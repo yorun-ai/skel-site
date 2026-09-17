@@ -110,5 +110,3 @@ skelc 会解析路径并检查参数类型。字段改名或类型变化会在�
 公共 service 引用了本地 actor 或 resource 时，这些声明也必须标记 `pub`。skelc 不会静默扩大公共输出，因此授权表面在 review 中能直接看清楚。
 
 接下来阅读[服务契约](/docs/services)或[公共契约](/docs/generation/public-contracts)。
-
-业务参数可以命名为 `code`：注入的权限码参数依次尝试 `code`、`code1`、`code2`，选择第一个未占用的名称，并保持为首个 `string` 参数。例如，业务参数为 `code` 和 `code1` 时，注入参数名为 `code2`。`require` 和公开 Skel 都不包含该注入参数。重新生成后，请按新签名调整自己的 check 实现中的参数名。

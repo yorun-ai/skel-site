@@ -373,15 +373,15 @@ With `--api`, use `--go-vrpc-version` to override vRPC v0.12.0; `--go-vine-versi
 
 - `gen go` writes into an existing module and never creates `go.mod`.
 - Without `--go-pub-out`, a Go module contains the full data, enum, config, actor, resource, service, event, web, and task surface.
-- With `--go-pub-out`, skelc writes a public and a regular module together and registers each non-full schema on only one side; a regular or full schema can cover a public one.
+- With `--go-pub-out`, skelc writes a public and a regular module together and registers each non-full schema on only one side.
 - A `pub` service produces a client spec in the public module and a server spec in the regular module.
 - A `pub` event produces a listener spec in the public module and an emitter spec in the regular module.
 - A `pub` actor's auth service produces a server spec in the public module, and its credential, info, and actor permission services follow the actor.
-- A `pub` resource produces permission code constants, its check service server, and its schema in the public module; the regular module exposes a facade in `pub.go`.
-- The regular module requires the public module and re-exports its symbols through type aliases and facades in `pub.go`, so the regular package is a symbol superset.
+- A `pub` resource produces permission code constants, its check service server, and its schema in the public module; the regular module exposes a facade for them.
+- The regular module requires the public module and exposes the public module's symbols, so the regular package is a symbol superset.
 - When a `pub` service or method `require` references a local resource, that resource must be `pub`.
 - Local data and enum dependencies of a public contract are collected automatically and do not need `pub`; actors and resources still require public visibility.
-- `web` does not support `pub`, and ordinary Go generation emits a `web.WebSpec` for every `web`.
+- `web` does not support `pub`, and ordinary Go generation produces a Web spec for every `web`.
 - A `web` server interface is named like `UserPortalWebServer`, and its default implementation like `DefaultUserPortalWebServer`.
 - The default `web` implementation is only a shell; Go code supplies routing by implementing `Routes(*web.Router)`.
 - A declared `web` mount path reaches the generated spec and the runtime schema; see [Vine Integration](/docs/vine-integration#declared-web-mount-paths).

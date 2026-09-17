@@ -71,7 +71,7 @@ nil 指针表示 `null`；非 nil 指针表示集合，即使它指向的 slice 
 
 服务端接口命名为 `<WebName>Server`，默认实现命名为 `Default<WebName>Server`。其他包的实现需要嵌入默认类型并覆盖所需路由。该默认类型只是空壳：在 Go 代码提供路由之前，它的 `Routes(*web.Router)` 会 panic。
 
-声明的 `mount` 会以 `MountPath` 写入 `WebSpec` 和 runtime domain schema。使用挂载能力需要 Vine v0.19.0 或更高版本；当前所有后端 Go 输出的依赖版本为 v0.20.2。
+声明的 `mount` 会写入生成的 Web spec 和 runtime domain schema，详见 [Vine 集成](/docs/vine-integration#声明的-web-挂载路径)。使用挂载能力需要 Vine v0.19.0 或更高版本；当前所有后端 Go 输出的依赖版本为 v0.20.2。
 
 ## Portal API 客户端
 
@@ -90,4 +90,4 @@ API 客户端依赖 `go.yorun.ai/vrpc` v0.12.0 或更高版本，可用 `--go-vr
 
 `--api` 客户端使用 vRPC，不依赖 Vine。
 
-skelc 会为 `open service` 在 pub 包中同时生成 Client、Server/ERServer 及默认实现；regular 包使用类型别名复用服务端接口，避免重复注册。普通 `pub service` 的 pub 包仍只生成客户端。
+skelc 会为 `open service` 在 pub 包中同时生成 Client、Server/ERServer 及默认实现；regular 包也会暴露这些服务端类型。普通 `pub service` 的 pub 包仍只生成客户端。

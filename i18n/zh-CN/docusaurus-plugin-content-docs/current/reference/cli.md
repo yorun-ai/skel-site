@@ -350,15 +350,15 @@ skelc gen go-module \
 
 - `gen go` 写入已有模块，不创建 `go.mod`
 - 未指定 `--go-pub-out` 时，Go module 输出完整的 data / enum / config / actor / resource / service / event / web / task
-- 指定 `--go-pub-out` 时，会同时生成 pub module 和 regular module；同一个非 full schema 只在一侧注册，且 regular 或 full schema 可以覆盖 pub schema
+- 指定 `--go-pub-out` 时，会同时生成 pub module 和 regular module；同一个非 full schema 只在一侧注册
 - pub service 在 pub module 中生成 client spec，在 regular module 中生成 server spec
 - pub event 在 pub module 中生成 listener spec，在 regular module 中生成 emitter spec
 - pub actor 的 auth service 在 pub module 中生成 server spec，credential / info / actor permission service 跟随 pub actor 生成
-- pub resource 在 pub module 中生成权限码常量、check service server 和 schema；regular module 会在 `pub.go` 里生成 facade
-- regular module 会 require pub module，并通过 `pub.go` 暴露 pub 符号的 type alias / facade；regular 包是符号超集
+- pub resource 在 pub module 中生成权限码常量、check service server 和 schema；regular module 会为其生成 facade
+- regular module 会 require pub module，并暴露 pub module 的符号；regular 包是符号超集
 - pub service / method 的 `require` 引用本 domain resource 时，该 resource 必须标 `pub`
 - 公开契约的本领域 data / enum 依赖自动收集，无需 `pub`；actor / resource 仍要求公开可见性
-- `web` 不支持 `pub`，普通 Go 生成会为每个 `web` 生成 `web.WebSpec`
+- `web` 不支持 `pub`，普通 Go 生成会为每个 `web` 生成 Web spec
 - `web` 生成的 server interface 形如 `UserPortalWebServer`，默认实现形如 `DefaultUserPortalWebServer`
 - `web` 默认实现只提供空壳，具体路由仍然由 Go 代码实现 `Routes(*web.Router)`
 - 已声明的 `web` 挂载路径会写入生成的 spec 和 runtime schema，详见 [Vine 集成](/docs/vine-integration#声明的-web-挂载路径)。

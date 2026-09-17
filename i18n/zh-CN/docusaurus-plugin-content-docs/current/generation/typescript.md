@@ -59,14 +59,7 @@ export const FileApiServiceSpec = {
 } as const;
 ```
 
-具体规则：
-
-- service 没有 Binary method 时，不生成 `wire` 和 wire schema import。
-- 普通 JSON method 仍然只生成字符串形式的 method name，不会有多余的空配置。
-- arguments 包含 Binary 时，只生成 `wire.<method>.arguments`。
-- result 包含 Binary 时，只生成 `wire.<method>.result`。
-- schema 支持嵌套 data、nullable、list、所有合法 map key、泛型和递归引用；UUID 与 enum key 使用 string-key wire shape。
-- `binary` 的业务类型仍然是 `Uint8Array`，map 的业务类型仍然是 `Record`。
+生成的 wire schema 支持嵌套 data、nullable、list、所有合法 map key、泛型和递归引用，UUID 与 enum key 使用 string-key wire shape；`binary` 的业务类型仍然是 `Uint8Array`，map 的业务类型仍然是 `Record`。
 
 Binary method 会自动携带 wire metadata，调用方无需自己传入；普通 method 直接透传 `options`。CBOR codec 由应用在创建 vRPC client 时提供，生成代码和 skelc 都不会内置。
 

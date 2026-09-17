@@ -115,10 +115,3 @@ skelc resolves each path and verifies that its type matches the check argument. 
 When a public service refers to a local actor or resource, those declarations must also be `pub`. skelc doesn't silently expand public output. This makes the authorization surface visible in review.
 
 Continue with [Service Contracts](/docs/services), or see [Public Contracts](/docs/generation/public-contracts) for export rules.
-
-Business arguments may be named `code`: the injected permission-code argument
-takes the first unused name among `code`, `code1`, `code2`, and so on, and remains
-the first `string` parameter. For example, business arguments named `code` and
-`code1` make the injected parameter `code2`. Neither `require` nor public Skel
-includes the injected argument. After regeneration, align parameter names in your
-check implementations with the new signatures.
