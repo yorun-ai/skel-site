@@ -10,11 +10,15 @@ skelc gen ts --api \
   --ts-out ./generated/typescript
 ```
 
-必须传 `--api`；省略或传 `--pub` 都会报错。输出包含 API 服务客户端、所需数据依赖，以及显式公开的 data、enum。旧服务含客户端准入规则时仍生成客户端，同时给出迁移 warning。
+必须传 `--api`；省略或传 `--pub` 都会报错。输出包含 API 服务客户端、所需数据依赖，以及显式公开的 data、enum。
 
 ## 弃用输出
 
 生成的声明、字段、service、method 和参数会使用 `@deprecated` JSDoc tag。Skel enum 会生成字符串联合类型，因此 enum item 的解释会保留在对应联合分支旁边，但无法触发 item 级 TypeScript 弃用警告。
+
+## 说明注释
+
+单行说明会以行内 `/** ... */` 注释渲染在声明上方；更长的说明仍使用多行注释块。
 
 ## vRPC Binary 与 CBOR
 
@@ -55,31 +59,9 @@ export const FileApiServiceSpec = {
 } as const;
 ```
 
-具体规则：
+生成的 wire schema 支持嵌套 data、nullable、list、所有合法 map key、泛型和递归引用，UUID 与 enum key 使用 string-key wire shape；`binary` 的业务类型仍然是 `Uint8Array`，map 的业务类型仍然是 `Record`。
 
-- service 没有 Binary method 时，不生成 `wire` 和 wire schema import。
-- 普通 JSON method 仍然只生成字符串形式的 method name，不会有多余的空配置。
-- arguments 包含 Binary 时，只生成 `wire.<method>.arguments`。
-- result 包含 Binary 时，只生成 `wire.<method>.result`。
-- schema 支持嵌套 data、nullable、list、所有合法 map key、泛型和递归引用；UUID 与 enum key 使用 string-key wire shape。
-- 生成的 schema 用 `satisfies VrpcWireSchema` 保留字面量推导，同时执行类型校验。
-- `binary` 的业务类型仍然是 `Uint8Array`，map 的业务类型仍然是 `Record`。
-
-生成的 service wrapper 只会对 Binary method 注入 wire，并让生成的 metadata 覆盖调用方的同名字段：
-
-```ts
-return client.invoke({
-  serviceName: FileApiServiceSpec.serviceName,
-  methodName: FileApiServiceSpec.methods.upload,
-  params,
-  options: {
-    ...options,
-    wire: FileApiServiceSpec.wire.upload,
-  },
-});
-```
-
-普通 method 继续直接透传 `options`。CBOR codec 由应用在创建 vRPC client 时自己提供，生成代码和 skelc 不会内置它。
+Binary method 会自动携带 wire metadata，调用方无需自己传入；普通 method 直接透传 `options`。CBOR codec 由应用在创建 vRPC client 时提供，生成代码和 skelc 都不会内置。
 
 ## 共享类型
 

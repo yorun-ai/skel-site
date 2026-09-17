@@ -42,7 +42,7 @@ pub data UserSummary {
 }
 ```
 
-`api` is supported only on services and is mutually exclusive with `pub`. skelc v0.19.0 adds `open service`, which exports both client and server contracts; `open` is mutually exclusive with `pub` and `api`. API service names must end with `ApiService`, such as `OrderApiService`. Use `pub service` for backend calls and `api service` for Portal clients. Unmodified services remain accepted with a migration warning, and `--strict` rejects them and rejects client admission rules on non-API services.
+`api` is supported only on services and is mutually exclusive with `pub`. `open service` exports both client and server contracts, and `open` is mutually exclusive with `pub` and `api`. API service names must end with `ApiService`, such as `OrderApiService`. Use `pub service` for backend calls and `api service` for Portal clients. `--strict` rejects a service that declares no modifier, and rejects client admission rules on non-API services.
 
 ## Type Forms
 
@@ -118,9 +118,8 @@ Imported resources use a qualifier, such as `account.User:read`. Check arguments
 | Enum item | `SCREAMING_SNAKE_CASE` |
 
 Identifiers can't begin with `_`. `UNSPECIFIED` is reserved for enum output,
-and `skelSensitive` is reserved in generated sensitive structures. Data and
-actor authentication fields can't be named `clone` or `cloneBy`; those names
-are reserved for generated Go value-isolation methods.
+and `skelSensitive` is reserved in generated sensitive structures. No other name
+is reserved.
 
 Validate the current input after every contract change:
 

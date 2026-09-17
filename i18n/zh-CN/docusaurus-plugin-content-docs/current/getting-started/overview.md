@@ -8,11 +8,8 @@ skelc 解决的核心问题是“契约先于实现”：在 `.skel` 文件里�
 
 ## 编译流程
 
-1. loader 发现单文件或目录里的 Skel 输入。
-2. parser 解析语法，建立 domain 语义模型。
-3. compiler 检查命名、类型、引用、权限和公开边界。
-4. generator 输出 Go、TypeScript 或者精简后的公开 Skel。
-5. formatter 和 symbol 命令负责日常维护。
+skelc 加载 `.skel` 输入，校验整个 domain，再生成你要求的产物。format 与 schema 命令用于
+日常维护。
 
 ## 适合用 Skel 表达的内容
 

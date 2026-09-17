@@ -8,11 +8,8 @@ skelc uses a contract-first workflow: you describe domain types, callers, permis
 
 ## Compilation Pipeline
 
-1. The loader discovers a single file or directory input.
-2. The parser builds the domain semantic model.
-3. The compiler validates naming, types, references, permissions, and public boundaries.
-4. Generators emit Go, TypeScript, or reduced public Skel.
-5. Formatter and symbol commands support daily maintenance.
+skelc loads your `.skel` input, validates the whole domain, and generates the
+outputs you ask for. Formatting and schema commands support daily maintenance.
 
 ## What Belongs in Skel
 

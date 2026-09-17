@@ -21,6 +21,15 @@ CI and developer environments should use the same skelc version. Version your in
 
 Versioned documentation explains historical behavior; when fixing current contracts, consult the current docs and the relevant release notes.
 
+## Generated Output Contract
+
+Generated Go modules depend on Vine v0.20.2 or later, which is the version written
+to the module's `go.mod`. Application code that needs its own copy of a generated
+bean uses `vine/util/vbean.DeepClone`.
+
+When reviewing a generated schema diff, compare keys rather than positions:
+keyed fields can appear in any order.
+
 ## Domain Schema Checks
 
 Snapshot and diff each domain independently. References to imported domains are
@@ -34,8 +43,8 @@ Schema commands do not accept import-path mappings.
 
 A Web that declares `mount` records it as `mountPath`, and changing that value
 appears as `web.mount-path.changed` at `BREAKING` impact. Consumers that decode
-snapshots strictly must recognize the field, which skelc v0.20.0 added; update
-`go.yorun.ai/skelc/schema` before reading snapshots from a newer compiler.
+snapshots strictly must recognize the field, so keep `go.yorun.ai/skelc/schema` in
+step with the compiler that produced the snapshot.
 
 Diff reads the baseline and candidate Skel source files or directories directly;
 schema snapshot JSON is not accepted as diff input.
@@ -46,14 +55,13 @@ When no explicit baseline is supplied, diff reads the candidate source from Git
 Go integrations consume these command outputs through the public facade
 `go.yorun.ai/skelc/schema`. It exposes the response and nested wire types,
 typed constants, and strict `schema.Decode`, `schema.Validate`, and
-`schema.Encode` functions, keeping the implementation internal. Strict
-decoding rejects unknown fields, trailing JSON values, unsupported format
-versions, unknown wire enum values, and malformed normalized structures. The
-root `go.yorun.ai/skelc` package remains focused on parsing and generation.
+`schema.Encode` functions. Strict decoding rejects unknown fields, trailing JSON
+values, unsupported format versions, unknown wire enum values, and malformed
+normalized structures.
 
 ## Actor Identity
 
-Using `@identifier` requires skelc v0.17.0 or later and Vine v0.15.1 or later.
-Regenerate actor types and schemas after upgrading. Applications that read schema
-output with `go.yorun.ai/skelc/schema` should also update that dependency to recognize
-`identifierField`. See [Actors & Access](/docs/actors-and-access) for marker usage.
+Regenerate actor types and schemas after changing an actor. Applications that read
+schema output with `go.yorun.ai/skelc/schema` update that dependency alongside the
+compiler so both recognize `identifierField`. See
+[Actors & Access](/docs/actors-and-access) for marker usage.

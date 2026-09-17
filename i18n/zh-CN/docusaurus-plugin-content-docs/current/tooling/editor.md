@@ -10,7 +10,7 @@ slug: /editor
 
 ## 快速配置
 
-1. 安装 skelc v0.14.0 或更高版本，并确认 VS Code 所在环境能找到它：
+1. 安装 skelc，并确认 VS Code 所在环境能找到它：
 
    ```bash
    go install go.yorun.ai/skelc/cmd/skelc@latest
@@ -35,7 +35,7 @@ slug: /editor
 - 顶层声明及其引用的重命名
 - 当前文档存在语法错误时仍尽可能提供导航
 
-扩展本身只是一个轻量客户端：解析、格式化、诊断、补全、导航和重命名全部由 skelc 的语言服务器提供，不会在 JavaScript 中重复实现。
+解析、格式化、诊断、补全、导航和重命名全部由 `skelc lsp` 提供。
 
 ## 配置
 
@@ -47,7 +47,7 @@ slug: /editor
 | `skelc.schemaCompatibility.includeCompatible` | `false` | 同时把 `COMPATIBLE` 变化报告为 hint。 |
 | `skelc.schemaCompatibility.codeLens` | `true` | 在 domain 声明上方显示兼容性 CodeLens。 |
 | `skelc.schemaCompatibility.baseline` | 空 | 相对于 domain 源目录的显式 baseline；留空时使用 Git `HEAD`。 |
-| `skelc.strict` | `false` | 把迁移警告视为错误。需要 skelc v0.18.0 或更高版本；修改后会重启语言服务器。 |
+| `skelc.strict` | `false` | 把迁移警告视为错误；修改后会重启语言服务器。 |
 
 命令面板中提供：
 

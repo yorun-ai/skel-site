@@ -60,7 +60,6 @@ skelc 会生成 actor 专属的 credential、info 数据类型和认证服务元
 该标记不接受参数，也不能用于 `credential` 或其他数据声明。
 不需要提供调用者标识符时，可以省略标记。
 
-`@identifier` 从 skelc v0.17.0 开始支持，生成的 Go 代码要求 Vine v0.15.1 或更高版本。
 修改契约后，请重新生成代码。运行时如何读取身份信息，参见
 [Vine 身份文档](https://vine.yorun.ai/zh-CN/docs/meta)。
 
@@ -116,13 +115,13 @@ web ConsoleWeb {
 }
 ```
 
-mount 是入口及其静态资源的不可变前缀。当客户端、书签、CDN 规则或反向代理配置依赖该前缀时就应该声明它，并把取值视为已发布契约的一部分：修改它会改变 Web 哈希，`schema diff` 会以 `BREAKING` 报告 `web.mount-path.changed`。
+mount 是入口及其静态资源的不可变前缀。当客户端、书签、CDN 规则或反向代理配置依赖该前缀时就应该声明它，并把取值视为已发布契约的一部分：修改它会让 `schema diff` 以 `BREAKING` 报告 `web.mount-path.changed`。
 
 mount 路径是字面绝对路径：必须以 `/` 开头，不能包含路由参数、query 或 fragment 分隔符、转义、空白、空段（`//`）以及 `.`、`..` 段；允许以 `/` 结尾。同一个 Web 最多声明一次 `mount`。
 
 不写 `mount` 表示该 Web 不受已声明的挂载路径限制，而 `mount /` 显式声明根路径，两者并不等价：只有显式声明根路径才会把 Web 限制在 `/`。
 
-生成的 `web.WebSpec` 与 runtime domain schema 都会以 `MountPath` 携带该值；Go 侧使用挂载能力需要 Vine v0.19.0 或更高版本。生成的 Web 产物见 [Go 生成](/docs/generation/go#web-生成)。
+该值如何进入生成代码见 [Vine 集成](/docs/vine-integration#声明的-web-挂载路径)，生成的 Web 产物见 [Go 生成](/docs/generation/go#web-生成)。
 
 ## 控制 Actor 粒度
 

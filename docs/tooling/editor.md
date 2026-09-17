@@ -10,7 +10,7 @@ The extension does not bundle the compiler. It starts `skelc lsp`, so install sk
 
 ## Quick Setup
 
-1. Install skelc v0.14.0 or newer and confirm that VS Code can find it:
+1. Install skelc and confirm that VS Code can find it:
 
    ```bash
    go install go.yorun.ai/skelc/cmd/skelc@latest
@@ -35,7 +35,7 @@ Once connected, the extension provides:
 - Rename for top-level declarations and their references
 - Best-effort navigation while the current document contains a syntax error
 
-The extension is a thin client: parsing, formatting, diagnostics, completion, navigation, and rename are all provided by the compiler's language server rather than reimplemented in JavaScript.
+Parsing, formatting, diagnostics, completion, navigation, and rename are all provided by `skelc lsp`.
 
 ## Configuration
 
@@ -47,7 +47,7 @@ The extension is a thin client: parsing, formatting, diagnostics, completion, na
 | `skelc.schemaCompatibility.includeCompatible` | `false` | Also report `COMPATIBLE` changes as hints. |
 | `skelc.schemaCompatibility.codeLens` | `true` | Show the compatibility CodeLens above domain declarations. |
 | `skelc.schemaCompatibility.baseline` | empty | Explicit baseline relative to the domain source directory; empty uses Git `HEAD`. |
-| `skelc.strict` | `false` | Treat migration warnings as errors. Requires skelc v0.18.0 or newer; changing it restarts the language server. |
+| `skelc.strict` | `false` | Treat migration warnings as errors. Changing it restarts the language server. |
 
 The Command Palette provides:
 

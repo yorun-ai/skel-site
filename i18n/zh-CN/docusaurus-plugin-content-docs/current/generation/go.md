@@ -25,9 +25,9 @@ skelc gen go-module \
 
 如果还需要对外暴露 module，加上 `--go-pub-out` 和 `--go-pub-module` 就行。regular module 包含完整契约和服务端能力，pub module 则只暴露公开的 client/listener 和必要的类型。
 
-## 集合可空性与校验
+## 集合编码与校验
 
-从 skelc v0.15.0 开始，生成的 Go 代码使用指针表示 nullable 集合，要求 Go 1.27.0 及以上版本和 Vine v0.14.0 或更高版本。后端 Go 输出当前要求 Vine v0.19.0 或更高版本，并默认使用 v0.19.0。在已有 module 中生成时，需要自行更新依赖。
+生成的 Go 代码使用指针表示 nullable 集合，生成的 module 需要 Go 1.27.0 及以上版本。在已有 module 中生成时，需要自行更新依赖。
 
 | Skel 类型 | 生成的 Go 类型 |
 | --- | --- |
@@ -36,29 +36,15 @@ skelc gen go-module \
 | `map<K, V>` | `map[K]V` |
 | `map<K, V>?` | `*map[K]V` |
 
-nil 指针表示 `null`；非 nil 指针表示集合，即使它指向的 slice 或 map 为 nil。v0.15 编码契约会把 nil slice/map 编码为 JSON 和 CBOR 的空数组、空 map。因此非 nullable 集合不再需要 nil 检查；输入 `null` 不会触发生成校验错误，再次编码时会输出空集合。
+nil 指针表示 `null`；非 nil 指针表示集合，即使它指向的 slice 或 map 为 nil。v0.15 编码契约会把 nil slice/map 编码为 JSON 和 CBOR 的空数组、空 map。非 nullable 集合因此不需要 nil 检查：输入 `null` 不会触发生成校验错误，再次编码时会输出空集合。
 
-生成的 data（包括 actor 认证数据）不再提供 `Validate(path string) error`，Rpc method spec 的 `ValidateArguments` 和 `ValidateResult` 固定为 `nil`。移除的是集合 nil 校验，不是 Skel 源码检查或应用自身的业务校验。
-
-从 skelc v0.14.x 升级时，需要重新生成 package，并将赋值、集合访问和 service 签名适配到新的指针类型。Clone 方法会复制指针及其可变内容，保留 nil 状态，不做传输规范化。TypeScript 集合类型保持不变。
-
-与导入的 Go package 的维护者协调重新生成，建议先升级依赖方，再升级消费方。尤其应避免在使用新编码契约的类型中嵌套旧版 nullable slice/map 表示。删除对生成 `Validate` 方法的调用，保留业务校验，并测试消费方实际使用的 JSON 和 CBOR 链路。
-
-Vine v0.14.0 对 skelc v0.14.x 生成的 schema 继续保留 nil 编码为 null 的行为。仅升级 Vine 不会迁移 Go 类型；新编码契约根据 schema 的 `CompilerVersion` 选择，而不是根据校验 hook 是否存在。
-
-## 参数标签
-
-生成器使用 `skel:"index(0)"` 表示 service method 和 resource check 的参数位置。敏感参数合并为一个标签，例如 `skel:"index(0),sensitive"`；JSON 字段名保持不变。这替代了 skelc v0.16.0 生成的 `arg:"0"` 标签。
-
-新标签要求 Vine v0.15.0 或更高版本，更早的版本无法注册使用新标签的参数。后端 Go 输出的整体最低及默认 Vine 依赖当前为 v0.19.0。
+生成器或 runtime 变化时，应连同应用一起重新生成 package，并在使用到的地方同时测试 JSON 和 CBOR 链路。生成的 package 与加载它们的 runtime 应使用同一个 skelc 版本构建。
 
 ## 进程内 Rpc 值隔离
 
-生成的非泛型 data 类型会提供 `Clone()`，泛型 data 类型则提供 `CloneBy(...)`，每个类型参数对应一个类型安全的 clone callback。生成的 Rpc method spec 会组合这些方法，形成类型安全的请求和结果 clone hook。Vine 用这些 hook 防止可变参数和结果泄漏到进程内 caller/handler 边界之外。
+生成的 package 不需要为进程内隔离编写任何代码：Vine 会让进程内调用的参数和结果与调用方、Handler 相互独立，覆盖 Skel 契约能承载的生成标量、list、map、nullable 值和 bean。应用代码需要自己的生成 bean 副本时使用 [`vbean.DeepClone`](https://pkg.go.dev/go.yorun.ai/vine/util/vbean)。
 
-这项契约只保证值隔离。JSON 或 CBOR 编解码、传输规范化、自定义 marshal/unmarshal 方法和 codec 错误都不在进程内契约范围内，行为可能随生成的 spec 而异。软递归 data 也使用生成的 clone 方法。
-
-导入的生成 data 必须提供 `Clone()` 或 `CloneBy(...)`。从 skelc v0.11.x 升级前，请先重新生成所有导入的 package。
+这项保证只覆盖值隔离。JSON 或 CBOR 编解码、传输规范化、自定义 marshal/unmarshal 方法和 codec 错误都不在进程内契约范围内。导入的生成 package 行为一致，请一起重新生成，让它们的 schema 来自同一个编译器版本。
 
 ## 生成包所有权
 
@@ -66,7 +52,7 @@ Vine v0.14.0 对 skelc v0.14.x 生成的 schema 继续保留 nil 编码为 null 
 
 ## 弃用输出
 
-`@deprecated` 会变成生成 Go 声明、method、常量和字段上的标准 `Deprecated:` 文档段落，支持 Go 的编辑器可以据此展示弃用符号。生成的 domain schema 还会携带 `Deprecated` 和 `DeprecatedReason`，供 Vine 工具消费。多行解释文本也会保持为合法的 Go 文档。
+`@deprecated` 会变成生成 Go 声明、method、常量和字段上的标准 `Deprecated:` 文档段落，支持 Go 的编辑器可以据此展示弃用符号。多行解释文本也会保持为合法的 Go 文档。
 
 ## 外部依赖
 
@@ -77,24 +63,15 @@ Vine v0.14.0 对 skelc v0.14.x 生成的 schema 继续保留 nil 编码为 null 
 
 如果用的是统一的命名规则，用 `--go-module-prefix` 就能自动推导路径，无需逐个配置。生成完后运行 `gofmt` 和 `go test`，检查 `go.mod` 和 API diff。完整参数清单见 [CLI 参考](/docs/cli)。
 
+后端 Go 输出要求 Vine v0.20.2 或更高版本，并默认使用 v0.20.2。在已有 module 中生成时，需要自行更新依赖。
+
 ## Web 生成
 
-普通 Go 生成会为每个 `web` 声明输出一个 `web.WebSpec`，并在 `init` 中注册。Web 能力不能标记 `pub`，因此 pub 契约 module 不包含 Web 产物。
+普通 Go 生成为每个 `web` 声明注册一个 Web spec。Web 能力不能标记 `pub`，因此 pub 契约 module 不包含 Web 产物。
 
-```go
-var _PortalWebSpec = &web.WebSpec{
-    Name:              "PortalWeb",
-    SkelName:          "demo.portal.PortalWeb",
-    Hash:              "6c64f7ed",
-    MountPath:         "/portal",
-    ServerType:        reflect.TypeFor[PortalWebServer](),
-    DefaultServerType: reflect.TypeFor[*DefaultPortalWebServer](),
-}
-```
+服务端接口命名为 `<WebName>Server`，默认实现命名为 `Default<WebName>Server`。其他包的实现需要嵌入默认类型并覆盖所需路由。该默认类型只是空壳：在 Go 代码提供路由之前，它的 `Routes(*web.Router)` 会 panic。
 
-服务端接口命名为 `<WebName>Server`，默认实现命名为 `Default<WebName>Server`。生成的接口带有包内私有 seal 方法，因此其他包的实现需要嵌入默认类型并覆盖所需路由。该默认类型只是空壳：在 Go 代码提供路由之前，它的 `Routes(*web.Router)` 会 panic。
-
-声明的 `mount` 会以 `MountPath` 写入 `WebSpec` 和 runtime domain schema。使用挂载能力需要 Vine v0.19.0 或更高版本，这也当前所有后端 Go 输出的依赖版本。
+声明的 `mount` 会写入生成的 Web spec 和 runtime domain schema，详见 [Vine 集成](/docs/vine-integration#声明的-web-挂载路径)。使用挂载能力需要 Vine v0.19.0 或更高版本；当前所有后端 Go 输出的依赖版本为 v0.20.2。
 
 ## Portal API 客户端
 
@@ -111,6 +88,6 @@ API 客户端依赖 `go.yorun.ai/vrpc` v0.12.0 或更高版本，可用 `--go-vr
 
 调用 `NewOrderApiServiceClient(client)`，传入为你配置好的 `*vrpc.Client`（指向 Portal 地址）。构造函数返回 `OrderApiServiceClient` 接口，你可以在测试中提供自己的实现或 mock。每个生成方法接受 `context.Context`、声明的业务参数和任意可选 `vrpc.InvokeOption`，返回业务结果与 `error`；无结果的方法仅返回 `error`。
 
-后端 Go 输出当前要求 Vine v0.19.0 或更高版本，生成的 module 默认使用 v0.19.0。生成到已有 module 时，需要自行更新应用依赖。`--api` 客户端使用 vRPC，不依赖 Vine。
+`--api` 客户端使用 vRPC，不依赖 Vine。
 
-skelc v0.19.0 会为 `open service` 在 pub 包中同时生成 Client、Server/ERServer 及默认实现；regular 包使用类型别名复用服务端接口，避免重复注册。普通 `pub service` 的 pub 包仍只生成客户端。
+skelc 会为 `open service` 在 pub 包中同时生成 Client、Server/ERServer 及默认实现；regular 包也会暴露这些服务端类型。普通 `pub service` 的 pub 包仍只生成客户端。

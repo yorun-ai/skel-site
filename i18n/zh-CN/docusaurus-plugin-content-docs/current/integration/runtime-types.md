@@ -85,22 +85,16 @@ TypeScript generator 会把 `Binary` 映射为 `Uint8Array`。只有 method argu
 
 ## 集合类型
 
-Go 集合的可空性、skelc v0.15.0 迁移方式及其 Vine 版本要求见 [Go 生成](/docs/generation/go#集合可空性与校验)。`binary` 标量保留其字节编码，不属于 `list<T>`。
+Go 集合的可空性与编码契约见 [Go 生成](/docs/generation/go#集合编码与校验)。`binary` 标量保留其字节编码，不属于 `list<T>`。
 
 ## Domain Schema 注册表
 
-生成代码会在 init 阶段调用：
-
-```go
-skel.RegisterDomainSchema(schema)
-```
-
-注册后的 schema 可通过：
+每个生成的 package 都会注册自己的 domain schema，应用可通过以下方式读取已注册的 schema：
 
 ```go
 skel.RegisteredDomainSchemas()
 ```
 
-来读取。返回结果按 `Domain` 稳定排序，这样 App 注册、测试快照和日志对比都能保持确定性。
+返回结果按 `Domain` 稳定排序，这样 App 注册、测试快照和日志对比都能保持确定性。
 
-`RegisterDomainSchema` 会检查生成代码里的 skelc 版本，低于 `skel.MinSkelcVersion()` 的 schema 会在启动时报错退出。
+由低于 `skel.MinSkelcVersion()` 的编译器生成的 schema 会在应用启动时报错。

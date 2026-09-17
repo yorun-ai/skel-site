@@ -14,11 +14,9 @@ Use `pub service` for backend calls between domains and `api service` for entry 
 
 Declare `for Actor`, `auth`/`noauth`, or `require` only on API services, including at the method level. Authentication defaults to `auth` when it is not declared; audience and transport are still chosen explicitly, not inferred from that default. Services that perform authentication, permission, and resource checks are backend services, not client entry points.
 
-During migration an unmodified `service` keeps its old backend behavior and warns you to declare `pub`, `open`, or `api`. A non-API service that declares client rules also warns and stays reachable by backend and API callers for now; explicitly declared API services do not get this compatibility.
-
 ### Open Server Contracts
 
-skelc v0.19.0 adds `open service` for services that other domains need to implement. It is as public as `pub service`, and its Go public package also contains the Server/ERServer interfaces, default implementations, and server registration. When you generate split regular and public packages, the regular package reuses these server types through aliases.
+`open service` is for services that other domains need to implement. It is as public as `pub service`, and its Go public package also contains the Server/ERServer interfaces, default implementations, and server registration. When you generate split regular and public packages, the regular package exposes those server types as well.
 
 ```skel
 open service StorageService {
@@ -29,7 +27,7 @@ open service StorageService {
 }
 ```
 
-`open` is valid only on services and is mutually exclusive with `pub` and `api`. Names still end with `Service`. An `open` service is a server contract, not a Portal entry point, so client rules such as `for Actor` or `auth` produce the migration warning described above and fail under `--strict`. To implement the exported server interface, embed the generated default server type and override the methods you need.
+`open` is valid only on services and is mutually exclusive with `pub` and `api`. Names still end with `Service`. An `open` service is a server contract, not a Portal entry point, so client rules such as `for Actor` or `auth` fail under `--strict`. To implement the exported server interface, embed the generated default server type and override the methods you need.
 
 ## Declare a Service
 

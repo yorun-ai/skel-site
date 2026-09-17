@@ -30,15 +30,10 @@ domain commerce.order
 
 这些关注点应该各司其职。调用者身份用 actor 表达就好，不要塞进随意的 string 参数里；权限词汇由 resource 拥有，不要散落成业务代码里的常量。
 
-## Source、Model 与 Output
+## 一个模型，多种输出
 
-编译过程有三个清晰的边界：
-
-1. **Source**：`.skel` 文件、import、decorator 和声明顺序。
-2. **Semantic model**：解析后的类型、公共闭包、actor、权限表达式和兼容性 hash。
-3. **Output**：Go 契约、TypeScript client、公共 Skel 与运行时 schema。
-
-所有内置 generator 用的是同一个校验后的 model。不会出现两个模板各自解释源码，导致同一声明在 Go 和 TypeScript 里语义不一样的情况。
+所有 generator 都消费同一个校验后的 domain，因此同一声明在 Go、TypeScript 和公开 Skel 中
+含义一致。
 
 ## 实际建模顺序
 

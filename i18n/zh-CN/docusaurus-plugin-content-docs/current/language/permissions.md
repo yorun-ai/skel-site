@@ -48,13 +48,9 @@ pub resource Order {
 
 resource 级别的 check 可用在任意 action；嵌套在 action 内的 check 只属于那个 action。skelc 会生成需要认证的 check service method，并以 `string` 注入当前权限码。没有用户参数时写成 `check enabled {}`。
 
-从 skelc v0.16.0 起，生成的 Go resource check 方法会接收首参数 `code string`；`require` 表达式只需提供声明的业务参数。
-skelc 单独标记这个注入参数，并在生成公开 Skel 时将其隐藏。
-`OrderReadPermission` 等单个权限常量使用 Go `string`。
-不再生成资源级 `XxxPermissionCodes()` 集合函数；权限发现应使用 schema 元数据。
-`PermissionCode` 不再是契约内置类型；字段应使用 `string`，resource check 中应省略自动注入的 `code` 参数。
-重新生成旧包时，需要将 check 实现中的 `skel.PermissionCode` 参数改为 `string`，并移除对旧集合函数的调用。
-Vine 保留原有类型，以兼容旧生成代码。
+生成的 Go resource check 方法会接收首参数 `code string`；`require` 表达式只需提供声明的业务参数，
+注入参数不会出现在生成的公开 Skel 中。`OrderReadPermission` 等单个权限常量是 Go `string` 值；
+承载权限码的字段使用 `string`，resource check 在声明的入参中省略自动注入的 `code` 参数。
 
 check 用来回答“订单是不是存在”“订单是否属于当前调用者”这类应用问题。契约声明输入，应用实现生成的 check interface。
 
@@ -114,7 +110,3 @@ skelc 会解析路径并检查参数类型。字段改名或类型变化会在�
 公共 service 引用了本地 actor 或 resource 时，这些声明也必须标记 `pub`。skelc 不会静默扩大公共输出，因此授权表面在 review 中能直接看清楚。
 
 接下来阅读[服务契约](/docs/services)或[公共契约](/docs/generation/public-contracts)。
-
-生成器会为每次权限检查调用显式生成 `CodeArgumentName`，要求 Vine v0.15.0 或更高版本。业务参数可以叫 `code`；注入参数依次尝试 `code`、`code1`、`code2`，选择第一个未占用的名称，并保持为首个 `string` 参数。例如，业务参数为 `code` 和 `code1` 时，注入参数名为 `code2`。
-
-`PermCheckInvocation.Arguments` 只记录业务参数；`require` 和公开 Skel 不包含注入参数。公开契约重新生成及跨域导入使用同一避让规则。重新生成后，应按新签名调整资源检查实现中的参数名。

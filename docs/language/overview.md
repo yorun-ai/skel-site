@@ -30,15 +30,10 @@ Don't name a domain after a repository, process, team sprint, or current deploym
 
 Keeping these concerns separate matters. A service method shouldn't encode caller identity into an arbitrary string argument when an actor owns that identity. Permission names shouldn't live as ad-hoc constants when a resource owns them.
 
-## Source, Model, and Output
+## One Model, Several Outputs
 
-The compiler pipeline has three useful boundaries:
-
-1. **Source** — `.skel` files, imports, decorators, and declaration order.
-2. **Semantic model** — resolved types, public closure, actors, permission expressions, and compatibility hashes.
-3. **Output** — Go contracts, TypeScript clients, public Skel, and runtime schema.
-
-All built-in generators consume the same validated model. A declaration can't mean one thing to Go and another to TypeScript just because two templates interpreted the source differently.
+Every generator consumes the same validated domain, so a declaration means the
+same thing in Go, TypeScript, and public Skel.
 
 ## A Practical Modeling Order
 

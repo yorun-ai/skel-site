@@ -18,7 +18,7 @@ skelc --log-format text gen go --skel-in ./skel --go-out ./generated/domain
 `related` 或 `suggestion`。退出码 `0` 表示结果满足预期，`1` 表示检查完成但未通过，
 `2` 表示命令失败。
 
-`check` 会在顶层声明、block 成员、右花括号和 decorator 边界处恢复语法分析，一次运行中为每个 domain 收集最多 50 条相互独立的语法与语义诊断。无效声明会被隔离处理，由它引起的级联错误不会重复报告。warning 也使用同一套结构化诊断模型，但不会导致非零退出码。
+`check` 一次运行中为每个 domain 报告最多 50 条相互独立的语法与语义诊断，并隔离无效声明，避免级联错误重复报告。warning 也使用同一套结构化诊断模型，但不会导致非零退出码。
 
 ## 查询 schema
 
