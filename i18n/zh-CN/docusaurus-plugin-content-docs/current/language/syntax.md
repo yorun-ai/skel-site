@@ -42,7 +42,7 @@ pub data UserSummary {
 }
 ```
 
-`api` 仅支持 service，与 `pub` 互斥。skelc v0.19.0 新增 `open service`，同时公开 Client 和 Server 契约；`open` 与 `pub`、`api` 互斥。API 服务名必须以 `ApiService` 结尾，例如 `OrderApiService`。后端调用使用 `pub service`，Portal 客户端入口使用 `api service`。无修饰符 service 暂时兼容并给出迁移 warning；`--strict` 会将其视为错误，也会拒绝在非 API service 中声明客户端准入规则。
+`api` 仅支持 service，与 `pub` 互斥。`open service` 同时公开 Client 和 Server 契约；`open` 与 `pub`、`api` 互斥。API 服务名必须以 `ApiService` 结尾，例如 `OrderApiService`。后端调用使用 `pub service`，Portal 客户端入口使用 `api service`。`--strict` 会把未声明修饰符的 service 视为错误，也会拒绝在非 API service 中声明客户端准入规则。
 
 ## 类型形式
 
@@ -117,7 +117,7 @@ any(item, item)
 | 字段、method、via、action、check、trigger | `lowerCamelCase` |
 | Enum item | `SCREAMING_SNAKE_CASE` |
 
-标识符不能以 `_` 开头。`UNSPECIFIED` 预留给 enum 输出，`skelSensitive` 预留给生成的敏感结构。data 和 actor 认证字段不能命名为 `clone` 或 `cloneBy`；这些名称预留给生成的 Go 值隔离方法。
+标识符不能以 `_` 开头。`UNSPECIFIED` 预留给 enum 输出，`skelSensitive` 预留给生成的敏感结构；除此之外没有保留名称。
 
 每次修改契约后都运行一下：
 

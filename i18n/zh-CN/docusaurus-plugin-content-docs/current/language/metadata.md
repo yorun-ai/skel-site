@@ -63,7 +63,7 @@ data AccessCredential {
 - resource check `input` 或字段
 - task trigger `input` 或字段
 
-生成的 Go 字段带有 `skel:"sensitive"` tag；整体生成值会实现或携带对应的敏感元数据，domain schema 也会向 Vine 工具暴露该标记。注意 `skelSensitive` 是这些生成结构中的保留字段名。
+生成的敏感结构会定义一个标记，因此 `skelSensitive` 是保留字段名。
 
 敏感标记是处理要求，不是访问规则。谁能拿到这个值仍然由 actor、认证和权限来控制。
 
@@ -115,9 +115,9 @@ config SecretConfig eternal {
 }
 ```
 
-生成的 Go 字段使用 `skel:"noTrim"`，与 `@sensitive` 同用时为 `skel:"sensitive,noTrim"`。这个标记让 Vine 保留字段中字符串值的首尾空白，适用于可空字符串、列表元素及 map 值；map key、JSON 和 enum 值不受裁剪影响。`eternal` 和 `instant` 均适用。
+该标记让 Vine 保留字段中字符串值的首尾空白，适用于可空字符串、列表元素及 map 值；map key、JSON 和 enum 值不受裁剪影响。`eternal` 和 `instant` 均适用。
 
-这些生成结果要求 Vine v0.15.0 或更高版本。公开 Skel 输出保留标记，schema snapshot 记录 `noTrim`，修改它会改变哈希并在 schema diff 中报告 `DANGEROUS`。
+公开 Skel 输出保留标记，schema snapshot 记录 `noTrim`；新增或移除该标记会在 schema diff 中报告 `DANGEROUS`。
 
 ## 身份标识字段
 

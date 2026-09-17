@@ -50,9 +50,9 @@ skelc --strict gen go --skel-in ./domain/user/skel --go-out ./generated/user
 
 Strict mode rejects services that lack `pub`, `open`, or `api`, and non-API services that declare actor audiences, `auth`/`noauth`, or `require`. Ordinary warnings, such as an ignored hidden file, remain warnings. Diagnostic codes and source locations stay the same; only the severity changes.
 
-A strict `check` that fails returns exit code `1`; a strict compilation failure in generation, schema, or formatting returns `2`. Strict formatting validates the input before it rewrites any file. `schema diff` checks the candidate strictly while letting the historical baseline keep legacy declarations, so you can still compare migrations.
+A strict `check` that fails returns exit code `1`; a strict compilation failure in generation, schema, or formatting returns `2`. Strict formatting validates the input before it rewrites any file. `schema diff` checks the candidate strictly and reads the baseline as it was written.
 
-Go integrations set `skelc.Input{SkelIn: "./skel", Strict: true}` for parsing and compilation. Upgrading skelc may add strict checks as new migration rules appear.
+Go integrations set `skelc.Input{SkelIn: "./skel", Strict: true}` for parsing and compilation.
 
 ## Input modes
 
@@ -80,9 +80,9 @@ Validate a single file or directory:
 skelc check --skel-in ./domain/user/skel
 ```
 
-`check` returns `{valid,diagnostics}`. It recovers at declaration, block-member,
-closing-brace, and decorator boundaries and reports up to 50 independent syntax
-and semantic diagnostics per domain in one run. An invalid input completes the
+`check` returns `{valid,diagnostics}`. It reports independent syntax and semantic
+diagnostics in one run, up to 50 per domain, and isolates an invalid declaration
+so dependent errors do not cascade. An invalid input completes the
 command with exit code `1`, not a command failure.
 
 Format accepted files in place:
@@ -107,7 +107,8 @@ result always has a stable `changed` boolean and ordered `files` array:
 }
 ```
 
-Formatting validates all input and stages every changed file before writing. It preserves ownership, mode, and supported extended metadata, then synchronizes parent directories before reporting success. If a later write or durability sync fails, files already replaced by the command are restored. Formatting normalizes whitespace without reordering declarations or changing multiline comment indentation or triple-quoted string values.
+Formatting validates all input and either replaces every changed file or restores
+the files it already replaced. Formatting normalizes whitespace without reordering declarations or changing multiline comment indentation or triple-quoted string values.
 
 ## Run the language server
 
@@ -119,7 +120,7 @@ skelc lsp
 
 The language server reports multiple syntax and semantic issues as you edit. It also provides quick fixes, related diagnostic locations, document symbols, cross-file Go to Definition, Find All References, and schema compatibility CodeLens actions. Clients can enable live compatibility diagnostics and invoke the `skel.schema.diff` execute command to retrieve the complete structured report for the current in-memory domain.
 
-Compatibility analysis uses the same normalized projection and impact rules as `skelc schema diff`. By default it compares the domain's source file or directory with Git `HEAD`; clients may provide an explicit baseline source path. `BREAKING`, `DANGEROUS`, and optionally `COMPATIBLE` changes are reported as warning, information, and hint diagnostics.
+Compatibility analysis uses the same impact rules as `skelc schema diff`. By default it compares the domain's source file or directory with Git `HEAD`; clients may provide an explicit baseline source path. `BREAKING`, `DANGEROUS`, and optionally `COMPATIBLE` changes are reported as warning, information, and hint diagnostics.
 
 Clients configure the feature through `initializationOptions.schemaCompatibility` or `workspace/didChangeConfiguration`: `diagnostics` and `codeLens` enable the corresponding live features, `includeCompatible` reports `COMPATIBLE` changes as hints, and `baseline` selects a source file or directory relative to the domain source directory. An empty baseline uses Git `HEAD`. The server advertises `skel.schema.diff` through `executeCommandProvider`; invoke it with one document URI argument to receive the same complete report shape returned by the CLI. If Git history is unavailable, live compatibility diagnostics stay silent and an explicit command returns an actionable error.
 
@@ -233,8 +234,7 @@ Imported member, argument, and result types use the explicit
 ```
 
 Resolved references owned by the current domain retain their declaration kind:
-`enum`, `data`, `config`, or `event`. This distinction is part of the normalized
-schema and is shared with generated Vine runtime schema metadata.
+`enum`, `data`, `config`, or `event`.
 
 List every schema change between baseline and candidate Skel source files or directories:
 
@@ -305,7 +305,7 @@ skelc gen go \
   --go-out ./domain/user/src/server/skeled
 ```
 
-`--go-vine-version` overrides the Vine requirement written into generated module output. The value must be a complete `v`-prefixed semantic version, such as `v0.19.0`, that is compatible with the Go module path and no lower than skelc's minimum supported Vine version. `skelc version` reports that minimum and the default it writes when the flag is omitted.
+`--go-vine-version` overrides the Vine requirement written into generated module output. The value must be a complete `v`-prefixed semantic version, such as `v0.20.2`, that is compatible with the Go module path and no lower than skelc's minimum supported Vine version. `skelc version` reports that minimum and the default it writes when the flag is omitted.
 
 Generation marks ownership near the top of every output with
 `Code generated by skelc. DO NOT EDIT.`. Unmarked files are preserved.
@@ -356,7 +356,7 @@ Generation validates the module metadata it writes. Main and public module ident
 
 Both `gen go` and `gen go-module` accept `--api` for Portal clients or `--pub` for backend public contracts. The flags are mutually exclusive and cannot be combined with `--go-pub-out` or `--go-pub-module`. Both commands support `--skel-import` and `--go-import`.
 
-With `--api`, use `--go-vrpc-version` to override vRPC v0.12.0; `--go-vine-version` does not apply. A module prefix derives `example.com/gen/shop/orderapi` for domain `shop.order`, and foreign domains use their corresponding API modules. Backend Go output requires Vine v0.19.0 or later; `skelc version` reports `minimumVineVersion`.
+With `--api`, use `--go-vrpc-version` to override vRPC v0.12.0; `--go-vine-version` does not apply. A module prefix derives `example.com/gen/shop/orderapi` for domain `shop.order`, and foreign domains use their corresponding API modules. Backend Go output requires Vine v0.20.2 or later; `skelc version` reports `minimumVineVersion`.
 
 ### Module parameters
 
@@ -384,7 +384,7 @@ With `--api`, use `--go-vrpc-version` to override vRPC v0.12.0; `--go-vine-versi
 - `web` does not support `pub`, and ordinary Go generation emits a `web.WebSpec` for every `web`.
 - A `web` server interface is named like `UserPortalWebServer`, and its default implementation like `DefaultUserPortalWebServer`.
 - The default `web` implementation is only a shell; Go code supplies routing by implementing `Routes(*web.Router)`.
-- A declared `web` mount path is written to the generated Web spec and the runtime schema as `MountPath`, and requires Vine v0.19.0 or later.
+- A declared `web` mount path reaches the generated spec and the runtime schema; see [Vine Integration](/docs/vine-integration#declared-web-mount-paths).
 - `--go-module-prefix` derives a public import path as `<prefix>/<domain parts except last>/<last-domain>pub`, for example `example.com/demo/skeled/userpub`.
 
 ## Generate TypeScript
@@ -397,7 +397,7 @@ skelc gen ts --api \
   --ts-out ./domain/user/pub/skel/typescript
 ```
 
-`gen ts` requires `--api` and rejects `--pub`. It emits API clients, their data dependencies, and explicitly public data and enums; a domain without API services can still produce a types-only API package. Legacy services with client rules are included with warnings.
+`gen ts` requires `--api` and rejects `--pub`. It emits API clients, their data dependencies, and explicitly public data and enums; a domain without API services can still produce a types-only API package.
 
 To generate package metadata, add `--ts-as-module` and identify the package with `--ts-module` or `--ts-module-scope`. Map external domains with repeatable `--ts-import domain=package` flags:
 
@@ -431,7 +431,7 @@ Display compiler, platform, Go, and default Vine version information:
 skelc version
 ```
 
-Compare the `version` field returned by `skelc version` against the minimum your integration requires. `api service` and `--api` client generation require skelc v0.18.0 or later.
+Compare the `version` field returned by `skelc version` against the minimum your integration requires.
 
 For language rules referenced by these commands, see the [Skel syntax reference](/docs/syntax).
 

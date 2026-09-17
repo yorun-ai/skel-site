@@ -10,11 +10,15 @@ skelc gen ts --api \
   --ts-out ./generated/typescript
 ```
 
-`--api` is required; omitting it or passing `--pub` is an error. skelc generates API service clients, their data dependencies, and explicitly public data and enums. Legacy services with client admission rules are included with a migration warning.
+`--api` is required; omitting it or passing `--pub` is an error. skelc generates API service clients, their data dependencies, and explicitly public data and enums.
 
 ## Deprecation Output
 
 Generated declarations, fields, services, methods, and parameters use the `@deprecated` JSDoc tag. A Skel enum is generated as a string union, so an enum item's explanation remains beside its union branch but cannot produce an item-level TypeScript warning.
+
+## Description Comments
+
+A single-line description renders as an inline `/** ... */` comment above the declaration. A longer description keeps the multi-line comment block.
 
 ## vRPC Binary and CBOR
 
@@ -62,24 +66,12 @@ How generation works:
 - Binary arguments emit only `wire.<method>.arguments`.
 - Binary results emit only `wire.<method>.result`.
 - Schemas support nested data, nullable values, lists, every legal map key, generics, and recursive references. UUID and enum keys use the string-key wire shape.
-- Generated schemas use `satisfies VrpcWireSchema` to preserve literal inference and enforce type checking.
 - The business-facing type of `binary` stays `Uint8Array`, and map types stay `Record`.
 
-The generated service wrapper injects wire metadata only for Binary methods. Generated metadata takes precedence over a caller-provided field of the same name:
-
-```ts
-return client.invoke({
-  serviceName: FileApiServiceSpec.serviceName,
-  methodName: FileApiServiceSpec.methods.upload,
-  params,
-  options: {
-    ...options,
-    wire: FileApiServiceSpec.wire.upload,
-  },
-});
-```
-
-Normal methods continue to pass `options` straight through. The application supplies the CBOR codec when creating its vRPC client -- neither generated code nor skelc bundles one.
+A Binary method carries its wire metadata automatically, so you never pass it
+yourself; normal methods pass `options` straight through. The application supplies
+the CBOR codec when creating its vRPC client -- neither generated code nor skelc
+bundles one.
 
 ## Shared Types
 

@@ -61,8 +61,7 @@ field, whose type must be a non-nullable `string`, `uuid`, or `int`. The marker
 takes no arguments and cannot be used in `credential` or other data declarations.
 Omit it when the actor does not need a caller identifier.
 
-`@identifier` is supported starting with skelc v0.17.0; generated Go code requires
-Vine v0.15.1 or later. Regenerate code after changing the contract. For reading
+Regenerate code after changing the contract. For reading
 identity information at runtime, see the
 [Vine identity documentation](https://vine.yorun.ai/docs/meta).
 
@@ -120,8 +119,8 @@ web ConsoleWeb {
 
 The mount is an immutable prefix for the entry point and its static assets. Declare
 it when clients, bookmarks, CDN rules, or reverse-proxy configuration depend on that
-prefix, and treat the value as part of the published contract: changing it changes the
-Web hash, and `schema diff` reports `web.mount-path.changed` as `BREAKING`.
+prefix, and treat the value as part of the published contract: changing it makes
+`schema diff` report `web.mount-path.changed` as `BREAKING`.
 
 A mount path is a literal absolute path. It must start with `/`, and it cannot contain
 route parameters, query or fragment delimiters, escapes, whitespace, empty segments
@@ -132,8 +131,8 @@ Omitting `mount` leaves the Web unrestricted by a declared mount path, while `mo
 declares the root path explicitly. The two are not interchangeable: only the declared
 root restricts the Web to `/`.
 
-The generated `web.WebSpec` and the runtime domain schema carry the value as
-`MountPath`, and a mounted Web requires Vine v0.19.0 or later on the Go side. See
+See [Vine Integration](/docs/vine-integration#declared-web-mount-paths) for how the
+value reaches generated code, and
 [Go Generation](/docs/generation/go#web-generation) for the generated Web surface.
 
 ## Keep Actor Scope Deliberate

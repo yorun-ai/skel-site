@@ -21,6 +21,12 @@ CI 和开发环境要用同一个 skelc 版本。输入、import 映射和输出
 
 历史文档版本用于了解旧行为，但修复当前契约时，以当前文档和对应的 release note 为准。
 
+## 生成产物契约
+
+生成的 Go module 依赖 Vine v0.20.2 或更高版本，该版本号会写入 module 的 `go.mod`。应用代码需要自己的生成 bean 副本时使用 `vine/util/vbean.DeepClone`。
+
+review 生成的 schema 差异时，应比较 key 而不是位置：带 key 的字段可以出现在任意顺序。
+
 ## 按 domain 检查 schema
 
 每个 domain 独立生成快照和执行 diff。当前 domain 的 schema 只把 import domain 中的符号
@@ -31,8 +37,8 @@ CI 和开发环境要用同一个 skelc 版本。输入、import 映射和输出
 schema 命令不接受 import 路径映射。
 
 声明了 `mount` 的 Web 会在 schema 中记录 `mountPath`，修改该值会以 `BREAKING` 影响级别
-报告 `web.mount-path.changed`。严格解码快照的消费者必须识别这个字段（skelc v0.20.0 新增）；
-读取更新版本编译器生成的快照前，请先升级 `go.yorun.ai/skelc/schema`。
+报告 `web.mount-path.changed`。严格解码快照的消费者必须识别这个字段，因此请让 `go.yorun.ai/skelc/schema`
+与生成快照的编译器保持同一版本。
 
 diff 直接读取 baseline 和 candidate 的 Skel 源文件或目录，不接受 schema 快照
 JSON 作为 diff 输入。
@@ -48,7 +54,6 @@ Go 集成通过公开 facade `go.yorun.ai/skelc/schema` 解析这些命令输出
 
 ## Actor 身份
 
-使用 `@identifier` 需要 skelc v0.17.0 或更高版本，以及 Vine v0.15.1 或更高版本。
-升级后请重新生成 actor 类型和 schema。如果程序使用 `go.yorun.ai/skelc/schema`
-读取 schema 输出，也应同步升级该依赖，以识别新增的 `identifierField`。
+修改 actor 后请重新生成 actor 类型和 schema。如果程序使用 `go.yorun.ai/skelc/schema`
+读取 schema 输出，应与编译器一起升级该依赖，使两者都能识别 `identifierField`。
 标记的用法参见 [Actor 与访问入口](/docs/actors-and-access)。

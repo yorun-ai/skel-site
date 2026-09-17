@@ -14,11 +14,9 @@ API 服务名必须以 `ApiService` 结尾，例如 `OrderApiService`；其他 s
 
 只有 API 服务应声明 `for Actor`、`auth/noauth` 或 `require`，包括方法级规则。未声明认证时默认 `auth`；audience 和 transport 仍按显式声明处理，不由默认值推导。执行认证、权限和资源检查的服务属于后端服务，不作为客户端入口。
 
-迁移期内，无修饰符的 `service` 保留旧后端行为，并提示你声明 `pub`、`open` 或 `api`。非 API 服务含客户端准入规则时也会给 warning，暂时同时支持后端和 API 调用方；显式 `api service` 不使用这条兼容规则。
-
 ### 公开服务端契约
 
-skelc v0.19.0 新增 `open service`，用于让其他领域实现该服务。它与 `pub service` 具有相同的公开可见性，生成的 Go pub 包还包含 Server/ERServer 接口、默认实现和服务端注册。分包生成 regular 和 pub 包时，regular 包通过类型别名复用这些服务端类型。
+`open service` 用于让其他领域实现该服务。它与 `pub service` 具有相同的公开可见性，生成的 Go pub 包还包含 Server/ERServer 接口、默认实现和服务端注册。分包生成 regular 和 pub 包时，regular 包通过类型别名复用这些服务端类型。
 
 ```skel
 open service StorageService {
@@ -29,7 +27,7 @@ open service StorageService {
 }
 ```
 
-`open` 仅适用于 service，与 `pub`、`api` 互斥，名称仍以 `Service` 结尾。`open service` 是服务端契约，不是 Portal 入口，因此 `for Actor`、`auth` 等客户端规则会产生上文的迁移 warning，并在 `--strict` 下报错。要实现公开的服务端接口，可嵌入生成的默认 Server 类型，并覆盖所需方法。
+`open` 仅适用于 service，与 `pub`、`api` 互斥，名称仍以 `Service` 结尾。`open service` 是服务端契约，不是 Portal 入口，因此 `for Actor`、`auth` 等客户端规则在 `--strict` 下会报错。要实现公开的服务端接口，可嵌入生成的默认 Server 类型，并覆盖所需方法。
 
 ## 声明 Service
 

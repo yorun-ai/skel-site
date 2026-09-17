@@ -63,7 +63,7 @@ The marker can apply to:
 - A resource-check `input` or input field
 - A task-trigger `input` or input field
 
-Generated Go fields receive the `skel:"sensitive"` tag. Whole generated values implement or carry the matching sensitivity metadata, and the generated domain schema exposes the marker to Vine tooling. `skelSensitive` is reserved as a field name in these generated structures.
+Generated sensitive structures define a marker, so `skelSensitive` is a reserved field name.
 
 Sensitivity is a handling instruction, not an access rule. Use actors, authentication, and permissions to control who may receive the value.
 
@@ -117,15 +117,13 @@ config SecretConfig eternal {
 }
 ```
 
-Generated Go fields use `skel:"noTrim"`, or `skel:"sensitive,noTrim"` when
-combined with `@sensitive`. Vine preserves leading and trailing whitespace in
-that field's string values, including nullable strings, list elements, and map
-values. Map keys, JSON, and enum values are unaffected by trimming. Both
+Vine preserves leading and trailing whitespace in that field's string values,
+including nullable strings, list elements, and map values. Map keys, JSON, and enum values are unaffected by trimming. Both
 `eternal` and `instant` lifecycles support the marker.
 
-This output requires Vine v0.15.0 or later. Public Skel
-preserves the decorator and schema snapshots record `noTrim`. Changing it
-changes hashes and produces a `DANGEROUS` schema diff.
+Public Skel
+preserves the decorator and schema snapshots record `noTrim`. Adding or removing
+the decorator produces a `DANGEROUS` schema diff.
 
 ## Identity Fields
 

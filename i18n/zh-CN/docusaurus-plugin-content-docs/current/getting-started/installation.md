@@ -6,7 +6,7 @@ slug: /installation
 
 ## 前提条件
 
-skelc v0.15.0 和生成的 Go module 需要 Go 1.27.0 及以上版本。生成的 Go module 要求 Vine `v0.19.0` 或更高版本，默认依赖为 `v0.19.0`。在已有 Go module 中生成时，需要自行更新依赖。
+skelc v0.15.0 和生成的 Go module 需要 Go 1.27.0 及以上版本。生成的 Go module 要求 Vine `v0.20.2` 或更高版本，默认依赖为 `v0.20.2`。在已有 Go module 中生成时，需要自行更新依赖。
 
 ## 安装
 
@@ -22,10 +22,10 @@ skelc version
 CI 和需要可重复生成的场景建议锁死版本：
 
 ```bash
-go install go.yorun.ai/skelc/cmd/skelc@v0.20.0
+go install go.yorun.ai/skelc/cmd/skelc@v0.21.0
 ```
 
-升级 skelc 之后，重新生成契约并 review diff。从 skelc v0.15.0 或更早版本升级时，请先阅读 [Go 集合迁移说明](/docs/generation/go#集合可空性与校验)，再重新生成。开发机和 CI 应使用相同的编译器版本。
+升级 skelc 之后，重新生成契约并 review diff。生成的 Go module 依赖 Vine v0.20.2 或更高版本；进程内值隔离模型和应用代码复制生成 bean 的方式见 [Go 生成](/docs/generation/go#进程内-rpc-值隔离)。开发机和 CI 应使用相同的编译器版本。
 
 ## 查看版本信息
 
@@ -37,7 +37,7 @@ JSON 输出适合给构建脚本读，其中会报告最低和默认 Vine 版本
 
 ## 添加编辑器支持
 
-使用 VS Code 编写 `.skel` 文件时，安装 [Skeleton DSL Support](https://marketplace.visualstudio.com/items?itemName=yorun.skeleton)。扩展会使用 `PATH` 中的 skelc 可执行文件启动 `skelc lsp`，要求 skelc v0.14.0 或更高版本。
+使用 VS Code 编写 `.skel` 文件时，安装 [Skeleton DSL Support](https://marketplace.visualstudio.com/items?itemName=yorun.skeleton)。扩展会使用 `PATH` 中的 skelc 可执行文件启动 `skelc lsp`。
 
 如果要在文档站、代码查看器或浏览器编辑器中展示 Skel，安装 [`@yorun-ai/skel-highlight`](https://www.npmjs.com/package/@yorun-ai/skel-highlight)，并按需搭配项目正在使用的高亮器。
 

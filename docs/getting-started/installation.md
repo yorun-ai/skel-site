@@ -6,7 +6,7 @@ slug: /installation
 
 ## Prerequisites
 
-skelc v0.15.0 and generated Go modules need Go 1.27.0 or later. Generated Go modules require Vine `v0.19.0` or later and default to `v0.19.0`. When generating into an existing Go module, update its dependencies yourself.
+skelc v0.15.0 and generated Go modules need Go 1.27.0 or later. Generated Go modules require Vine `v0.20.2` or later and default to `v0.20.2`. When generating into an existing Go module, update its dependencies yourself.
 
 ## Install
 
@@ -22,10 +22,10 @@ Make sure the Go binary directory is on `PATH`. If the shell can't find skelc, c
 CI and reproducible generation environments should pin an exact version:
 
 ```bash
-go install go.yorun.ai/skelc/cmd/skelc@v0.20.0
+go install go.yorun.ai/skelc/cmd/skelc@v0.21.0
 ```
 
-After upgrading skelc, regenerate contracts and review the diff. Review the [Go collection migration notes](/docs/generation/go#collection-nullability-and-validation) when upgrading from skelc v0.15.0 or earlier, before regenerating. Keep developer machines and CI on the same compiler version.
+After upgrading skelc, regenerate contracts and review the diff. Generated Go modules depend on Vine v0.20.2 or later, and [Go generation](/docs/generation/go#in-process-rpc-value-isolation) describes the in-process value isolation model and the copy helper application code uses. Keep developer machines and CI on the same compiler version.
 
 ## Inspect Version Information
 
@@ -37,7 +37,7 @@ JSON output works well in build scripts and reports the minimum and default Vine
 
 ## Add Editor Support
 
-For authoring `.skel` files in VS Code, install [Skeleton DSL Support](https://marketplace.visualstudio.com/items?itemName=yorun.skeleton). The extension starts `skelc lsp` with the skelc executable on your `PATH` and requires skelc v0.14.0 or newer.
+For authoring `.skel` files in VS Code, install [Skeleton DSL Support](https://marketplace.visualstudio.com/items?itemName=yorun.skeleton). The extension starts `skelc lsp` with the skelc executable on your `PATH`.
 
 For documentation sites, code viewers, and browser editors, install [`@yorun-ai/skel-highlight`](https://www.npmjs.com/package/@yorun-ai/skel-highlight) together with the highlighter used by your application.
 

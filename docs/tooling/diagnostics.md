@@ -19,7 +19,7 @@ Each diagnostic carries a stable `code`, `severity`, exact `range`, and
 satisfied result, `1` for a check that completed unsatisfied, and `2` for a
 command failure.
 
-`check` recovers syntax analysis at top-level declarations, block members, closing braces, and decorator boundaries, then collects up to 50 independent syntax and semantic diagnostics per domain in one run. Invalid declarations are isolated so dependent errors don't cascade. Warnings use the same structured model without causing a non-zero exit code.
+`check` reports independent syntax and semantic diagnostics in one run, up to 50 per domain, and isolates an invalid declaration so dependent errors don't cascade. Warnings use the same structured model without causing a non-zero exit code.
 
 ## Inspect Schemas
 
