@@ -22,7 +22,7 @@ skelc version
 CI 和需要可重复生成的场景建议锁死版本：
 
 ```bash
-go install go.yorun.ai/skelc/cmd/skelc@v0.21.0
+go install go.yorun.ai/skelc/cmd/skelc@v0.22.1
 ```
 
 升级 skelc 之后，重新生成契约并 review diff。生成的 Go module 依赖 Vine v0.20.2 或更高版本；进程内值隔离模型和应用代码复制生成 bean 的方式见 [Go 生成](/docs/generation/go#进程内-rpc-值隔离)。开发机和 CI 应使用相同的编译器版本。
