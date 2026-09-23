@@ -92,7 +92,7 @@ all(item, item)
 any(item, item)
 ```
 
-Imported resources use a qualifier, such as `account.User:read`. Check arguments support field traversal and one list wildcard, like `orders[*].id`. See [Permission Model](/docs/permissions).
+An imported resource is referenced by its full domain name, such as `commerce.account.User:read`, or by the alias an `import ... as ...` declares. Check arguments support field traversal and one list wildcard, like `orders[*].id`. See [Permission Model](/docs/permissions).
 
 ## Decorators
 
