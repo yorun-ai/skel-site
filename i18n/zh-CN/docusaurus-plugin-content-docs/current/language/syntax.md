@@ -92,7 +92,7 @@ all(item, item)
 any(item, item)
 ```
 
-外部 resource 使用限定名，例如 `account.User:read`。check 参数支持字段级联和一个 list wildcard，例如 `orders[*].id`。详见[权限模型](/docs/permissions)。
+外部 resource 使用完整 domain 名引用，例如 `commerce.account.User:read`；声明 `import ... as ...` 后也可以使用别名。check 参数支持字段级联和一个 list wildcard，例如 `orders[*].id`。详见[权限模型](/docs/permissions)。
 
 ## Decorator
 

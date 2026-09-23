@@ -42,12 +42,12 @@ import identity.user
 import commerce.catalog as catalog
 
 data Order {
-    buyer: user.UserSummary
+    buyer: identity.user.UserSummary
     items: list<catalog.ProductRef>
 }
 ```
 
-Without `as`, the final segment becomes the qualifier: `identity.user` is referenced as `user`. An explicit alias helps when two domains end with the same segment or when a shorter name improves a frequently used type.
+Without `as`, references use the full domain name, such as `identity.user.UserSummary`. With `import identity.user as user`, references use the explicit alias, such as `user.UserSummary`. An alias is optional: two domains that end with the same segment can be imported, and referenced, without one.
 
 An import is a logical dependency. The source file doesn't contain a filesystem path. `skelc check` and the language server validate the current input while leaving imported symbols unresolved, so checking needs only the source input:
 

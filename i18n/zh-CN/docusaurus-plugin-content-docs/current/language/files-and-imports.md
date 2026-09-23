@@ -42,12 +42,12 @@ import identity.user
 import commerce.catalog as catalog
 
 data Order {
-    buyer: user.UserSummary
+    buyer: identity.user.UserSummary
     items: list<catalog.ProductRef>
 }
 ```
 
-没有 `as` 的时候，domain 的最后一段就是引用前缀：`identity.user` 用 `user`。当两个 domain 的末段同名，或者某个类型使用很频繁，显式设置别名就行。
+没有 `as` 时，引用使用完整 domain 名，例如 `identity.user.UserSummary`；声明 `import identity.user as user` 后，引用使用显式别名，例如 `user.UserSummary`。别名是可选的：末段同名的两个 domain 也可以不带别名直接导入并引用。
 
 `import` 表达的是逻辑依赖，不包含文件系统路径。`skelc check` 和语言服务器只校验当前输入，跨 domain 符号保持未解析，因此检查时只需提供源文件：
 
