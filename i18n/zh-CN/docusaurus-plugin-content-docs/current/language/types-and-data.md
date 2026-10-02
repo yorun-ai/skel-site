@@ -54,7 +54,7 @@ data UserPage {
 }
 ```
 
-只有 `data` 能声明类型参数。参数名以 `T` 开头并用 `CamelCase`，不能标成 nullable。引用泛型 data 时必须提供准确数量的类型参数。
+只有 `data` 能声明类型参数。参数名以 `T` 开头并用 `CamelCase`；参数声明不能标成 nullable。参数引用可以 nullable，例如 `value: TItem?`，泛型实参也可以 nullable。引用泛型 data 时必须提供准确数量的类型参数。
 
 硬引用形成的循环会被拒绝，因为它没法构造有限值。nullable 或集合边能引入间接层：
 
@@ -94,12 +94,25 @@ config 名以 `Config` 结尾，并声明一种生命周期：
 - `eternal`：应用生命周期内保持稳定。
 - `instant`：应用运行中可能发生变化。
 
-config 字段有意做了限制：能用标量、enum 以及允许的 list/map 组合，但不能引用 `data`、另一个 `config` 或 `binary`。这样生成的配置值更容易跨环境传递和观测。
+config 字段支持普通值类型：包含 `binary` 的标量、enum、嵌套 `data`、泛型 data 实例、nullable 值以及 list/map。Map key 仍只允许 `int`、`string`、`uuid` 或 enum。Config 和 event 是 final 声明：都不能作为值类型引用，包括普通 data 成员和泛型实参。
+
+```skel
+data ConfigEntry<TValue> {
+    value: TValue?
+}
+
+config AssetConfig eternal {
+    content: binary
+    entries: list<ConfigEntry<string>>
+}
+```
+
+结构化 config 需要 skelc v0.23.0 或更高版本，运行时需要 Vine v0.25.0 或更高版本。
+
+Vine runtime 会保留配置字符串的原始空白。JSON 或 YAML 中的 binary 值使用 base64 字符串；参见 [Vine 配置](https://vine.yorun.ai/zh-CN/docs/configuration)。
 
 ## 契约结构不等于存储结构
 
 数据库行经常包含迁移字段、内部状态或反规范化数据，这些不该直接变成客户端的承诺。为边界单独定义 `data`，在应用层做映射，远比让存储演进牵动所有生成代码来得稳妥。
 
 接下来阅读[调用者与入口](/docs/actors-and-access)或[服务契约](/docs/services)。
-
-config 字段可通过 [`@noTrim`](/docs/metadata) 保留字符串首尾空白，支持与 `@sensitive` 同用。

@@ -36,7 +36,7 @@ skelc gen go-module \
 | `map<K, V>` | `map[K]V` |
 | `map<K, V>?` | `*map[K]V` |
 
-nil 指针表示 `null`；非 nil 指针表示集合，即使它指向的 slice 或 map 为 nil。v0.15 编码契约会把 nil slice/map 编码为 JSON 和 CBOR 的空数组、空 map。非 nullable 集合因此不需要 nil 检查：输入 `null` 不会触发生成校验错误，再次编码时会输出空集合。
+nil 指针表示 `null`；非 nil 指针表示集合，即使它指向的 slice 或 map 为 nil。v0.15 编码契约会把 nil slice/map 编码为 JSON 和 CBOR 的空数组、空 map。非 nullable 集合因此不需要 nil 检查：输入 `null` 不会触发生成校验错误，再次编码时会输出空集合。类型参数的 nullable 引用（例如 `TValue?`）会生成指向实例化类型的指针（`*TValue`）。
 
 生成器或 runtime 变化时，应连同应用一起重新生成 package，并在使用到的地方同时测试 JSON 和 CBOR 链路。生成的 package 与加载它们的 runtime 应使用同一个 skelc 版本构建。
 

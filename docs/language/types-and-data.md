@@ -54,7 +54,7 @@ data UserPage {
 }
 ```
 
-Only `data` can declare type parameters. Parameter names begin with `T`, use `CamelCase`, and can't be nullable. Every reference to generic data supplies the exact number of type arguments.
+Only `data` can declare type parameters. Parameter names begin with `T` and use `CamelCase`; parameter declarations cannot be nullable. References to a parameter may be nullable, such as `value: TItem?`, and generic type arguments may also be nullable. Every reference to generic data supplies the exact number of type arguments.
 
 Hard reference cycles are rejected because they can't produce a finite value. A nullable or collection edge introduces indirection:
 
@@ -94,9 +94,23 @@ A config name ends in `Config` and declares one lifecycle:
 - `eternal` stays stable for the application lifetime.
 - `instant` can change while the application runs.
 
-Config fields are deliberately restricted. They can use scalars, enums, and supported list/map combinations, but not `data`, another `config`, or `binary`. This keeps generated configuration values portable and observable.
+Config fields support ordinary value types: scalars including `binary`, enums, nested `data`, generic data instantiations, nullable values, and lists/maps. Map keys retain the usual `int`, `string`, `uuid`, or enum restriction. Config and event declarations are final: neither can be referenced as a value type, including inside ordinary data or generic arguments.
 
-Config fields can use [`@noTrim`](/docs/metadata) to preserve string whitespace, including alongside `@sensitive`.
+```skel
+data ConfigEntry<TValue> {
+    value: TValue?
+}
+
+config AssetConfig eternal {
+    content: binary
+    entries: list<ConfigEntry<string>>
+}
+```
+
+Structured config values need skelc v0.23.0 or later and Vine v0.25.0 or later at runtime.
+
+The Vine runtime preserves config string whitespace. Represent binary values as base64 strings in JSON or YAML; see [Vine configuration](https://vine.yorun.ai/docs/configuration).
+
 
 ## Model Contract Shapes, Not Storage
 

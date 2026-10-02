@@ -434,5 +434,3 @@ skelc version
 Compare the `version` field returned by `skelc version` against the minimum your integration requires.
 
 For language rules referenced by these commands, see the [Skel syntax reference](/docs/syntax).
-
-Schema snapshots record `noTrim: true` on config fields marked `@noTrim`. Adding or removing the marker produces `data.member.no-trim.changed` (`DANGEROUS`) in `schema diff`.

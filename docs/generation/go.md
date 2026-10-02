@@ -43,6 +43,8 @@ including when the underlying slice or map is nil. With the v0.15 encoding
 contract, nil slices and maps encode as empty arrays and maps in JSON and CBOR.
 A non-nullable collection therefore needs no nil check: input `null` is accepted
 without a generated validation error and encodes back as an empty collection.
+A nullable reference to a type parameter, such as `TValue?`, maps to a pointer to
+the instantiated type (`*TValue`).
 
 Regenerate the packages together with the application when the generator or the
 runtime changes, and test consumers with both JSON and CBOR where they are used.
