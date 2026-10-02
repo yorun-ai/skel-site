@@ -100,7 +100,6 @@ An imported resource is referenced by its full domain name, such as `commerce.ac
 @desc("Human-readable meaning")
 @example("Example value")
 @sensitive
-@noTrim
 @identifier
 @deprecated("Use the replacement declaration instead")
 ```

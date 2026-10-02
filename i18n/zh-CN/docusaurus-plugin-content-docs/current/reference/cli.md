@@ -412,5 +412,3 @@ skelc version
 集成方应使用 `skelc version` 返回的 `version` 字段检查所需的最低版本。
 
 这些命令涉及的语言规则见 [Skel 语法参考](/docs/syntax)。
-
-schema snapshot 会在标记 `@noTrim` 的 config 字段上记录 `noTrim: true`；新增或移除该标记会在 `schema diff` 中报告 `data.member.no-trim.changed`（`DANGEROUS`）。

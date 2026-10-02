@@ -103,22 +103,6 @@ data User {
 
 接下来阅读[契约边界](/docs/contract-design)，或者用[语法速查](/docs/syntax)快速定位声明。
 
-## 配置空白保留
-
-skelc 支持在 config 字段上使用无参数的 `@noTrim`。声明本身、普通 data 字段及 method 参数不支持这个标记；重复标记或提供参数会报错。
-
-```skel
-config SecretConfig eternal {
-    @sensitive
-    @noTrim
-    password: string
-}
-```
-
-该标记让 Vine 保留字段中字符串值的首尾空白，适用于可空字符串、列表元素及 map 值；map key、JSON 和 enum 值不受裁剪影响。`eternal` 和 `instant` 均适用。
-
-公开 Skel 输出保留标记，schema snapshot 记录 `noTrim`；新增或移除该标记会在 schema diff 中报告 `DANGEROUS`。
-
 ## 身份标识字段
 
 `@identifier` 用于指定 actor 的调用者标识字段。
