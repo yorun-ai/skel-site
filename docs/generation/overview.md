@@ -27,5 +27,5 @@ import mappings.
 
 - Implementing a server inside an existing Go module? Use `gen go` -- see [Go generation](/docs/generation/go).
 - Independently versioned contracts? Use `gen go-module`.
-- A browser or Node consumer? Head to [TypeScript generation](/docs/generation/typescript).
+- A browser or Node consumer? Use [TypeScript generation](/docs/generation/typescript).
 - Minimal sharing between domains? Generate a [public contract](/docs/generation/public-contracts) first.

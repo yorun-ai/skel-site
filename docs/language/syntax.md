@@ -42,7 +42,11 @@ pub data UserSummary {
 }
 ```
 
-`api` is supported only on services and is mutually exclusive with `pub`. `ext service` exports the server contract for other domains to implement; `ext event` exports the Emitter contract for other domains to publish; `ext` applies to services and events and is mutually exclusive with `pub` and `api`. API service names must end with `ApiService`, such as `OrderApiService`. Every API service must declare at least one `for Actor`; omission is a compilation error. Anonymous APIs also declare an actor and use `noauth` to allow unauthenticated calls. Use `pub service` for backend calls and `api service` for Portal clients. `--strict` rejects a service that declares no modifier, and rejects client admission rules on non-API services.
+`api` is supported only on services and is mutually exclusive with `pub`. `ext service` exports the server contract for other domains to implement; `ext event` exports the Emitter contract for other domains to publish. `ext` applies to services and events and is mutually exclusive with `pub` and `api`.
+
+API service names must end with `ApiService`, such as `OrderApiService`. Every API service must declare at least one `for Actor`; omission is a compilation error. Anonymous APIs also declare an actor and use `noauth` to allow unauthenticated calls. Use `pub service` for backend calls and `api service` for Portal clients.
+
+`--strict` rejects a service that declares no modifier, and rejects client admission rules on non-API services.
 
 ## Type Forms
 

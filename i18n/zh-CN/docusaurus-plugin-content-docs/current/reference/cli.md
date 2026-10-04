@@ -123,7 +123,7 @@ skelc lsp
 
 客户端通过 `initializationOptions.schemaCompatibility` 或 `workspace/didChangeConfiguration` 配置这个功能：`diagnostics` 和 `codeLens` 分别启用实时诊断与 CodeLens，`includeCompatible` 把 `COMPATIBLE` 变化也报告为 hint 诊断，`baseline` 指定相对于 domain 源目录的源码文件或目录；留空时使用 Git `HEAD`。服务器通过 `executeCommandProvider` 声明 `skel.schema.diff`，调用时传入一个文档 URI 参数，即可获得与 CLI 相同结构的完整报告。找不到 Git 历史时，实时兼容性诊断保持安静；显式调用命令时，则返回可操作的错误信息。
 
-通过 `skelc --strict lsp` 开启严格诊断。客户端也可设置 `initializationOptions.strict`，或发送 `workspace/didChangeConfiguration`，内容为 `{ "strict": true }`（也支持 `{ "skelc": { "strict": true } }`）。显式初始化值覆盖启动参数；配置变化后立即刷新诊断，设为 `false` 恢复兼容模式。
+通过 `skelc --strict lsp` 开启严格诊断。客户端也可设置 `initializationOptions.strict`，或发送 `workspace/didChangeConfiguration`，内容为 `{ "strict": true }`（也支持 `{ "skelc": { "strict": true } }`）。显式初始化值覆盖启动参数；配置变化后立即刷新诊断，设为 `false` 关闭严格诊断。
 
 分析会包含尚未保存的修改。包含 `domain.skel` 的目录作为目录输入，同目录内声明同一 domain 的文件会一起分析。没有 `domain.skel` 时，每个文件都是独立输入，因此同目录的独立文件可以声明相同的 domain 和类型而不冲突。这与 `check` 的行为一致：校验时不解析 import；生成命令则根据显式的 `--skel-import` 映射校验完整的 import 图。
 
@@ -137,7 +137,7 @@ LSP 通信独占标准输入和标准输出，集成方不能向服务器的 std
 skelc schema import --skel-in ./domain/user/skel
 ```
 
-结果为 JSON 数组，每条声明包含 `domain`、可选的显式别名 `alias`、`file`，
+结果为 import 声明的 JSON 数组，每项包含 `domain`、可选的显式别名 `alias`、`file`，
 以及从 1 开始的 `line` 和 `column`。没有导入时返回 `[]`。
 同一领域在不同源文件中的重复导入分别保留，按文件和源位置排序。
 注释和描述文本不计为导入。
@@ -188,8 +188,7 @@ Skel 名称。因此 `TYPE` 是必填参数，也是声明身份的一部分。`
 }
 ```
 
-请求的声明不存在时，`get` 会返回 JSON `null` 和退出码 `0`。不存在是正常查询结果，
-不是命令失败。`schema list/get` 始终查询完整 domain，每个声明
+请求的声明不存在时，`get` 会返回 JSON `null` 和退出码 `0`——不存在是正常查询结果，而不是命令失败。`schema list/get` 始终查询完整 domain，每个声明
 保留自己的 `pub` 标记。
 
 每个正常完成的 schema 命令都会向 stdout 写入恰好一个 JSON 结果，并以退出码 `0`

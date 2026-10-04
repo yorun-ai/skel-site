@@ -32,7 +32,7 @@ The encoding preserves the decimal scale -- `1.00` is not normalized to `1`. Thi
 "2026-05-04T05:14:15.123456789Z"
 ```
 
-Reach for `LocalDateTime`, not `Timestamp`, when business data represents a local date and time without a time zone.
+Use `LocalDateTime` rather than `Timestamp` when business data represents a local date and time without a time zone.
 
 ### Duration (Time Span)
 
@@ -81,7 +81,7 @@ When `uuid` is a map key, generated Go uses `map[skel.UUID]T`, generated TypeScr
 
 JSON has no native byte type, so Base64 is required. CBOR has a native byte type and carries the binary payload directly.
 
-The TypeScript generator maps `Binary` to `Uint8Array`. A generated service spec includes sparse `wire` schemas only when method arguments or results actually contain Binary; normal JSON methods get no extra metadata. Applications inject a CBOR codec into `@yorun-ai/vrpc`.
+The TypeScript generator maps `Binary` to `Uint8Array`, and a generated service spec includes sparse `wire` schemas only when method arguments or results contain Binary; normal JSON methods get no extra metadata. [TypeScript output](/docs/generation/typescript) covers how applications inject the CBOR codec.
 
 ## Collection Types
 

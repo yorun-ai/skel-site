@@ -81,7 +81,7 @@ Skel 标量扩展遵循一个基本原则：
 
 JSON 没有原生 bytes 类型，只能用 base64；CBOR 有原生 bytes 类型，直接携带二进制 payload。
 
-TypeScript generator 会把 `Binary` 映射为 `Uint8Array`。只有 method arguments 或 result 实际包含 Binary 时，生成的 service spec 才会附带稀疏的 `wire` schema；普通 JSON method 不会生成额外 metadata。应用需要向 `@yorun-ai/vrpc` 注入 CBOR codec。
+TypeScript generator 会把 `Binary` 映射为 `Uint8Array`；只有 method arguments 或 result 包含 Binary 时，生成的 service spec 才会附带稀疏的 `wire` schema，普通 JSON method 不会生成额外 metadata。应用注入 CBOR codec 的方式见 [TypeScript 生成](/docs/generation/typescript)。
 
 ## 集合类型
 

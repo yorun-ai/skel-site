@@ -28,6 +28,4 @@ A consumer declares the domain with `import` and maps `--skel-import domain=PATH
 - Regenerate every language output and notify consumers after public changes land.
 - Distribute public contracts through versioned modules or packages, not through accidental neighboring paths.
 
-`gen skel --pub` preserves `ext service` and its local type dependencies, so consumers can generate a Go public package containing server contracts without clients.
-
-`gen skel --pub` also preserves `ext event` and its payload dependencies; the corresponding Go public package exports the Emitter.
+`gen skel --pub` preserves `ext service` and its local type dependencies, so consumers can generate a Go public package containing server contracts without clients. It also preserves `ext event` and its payload dependencies, so the corresponding Go public package exports the Emitter.

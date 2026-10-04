@@ -90,6 +90,4 @@ API 客户端依赖 `go.yorun.ai/vrpc` v0.12.0 或更高版本，可用 `--go-vr
 
 `--api` 客户端使用 vRPC，不依赖 Vine。
 
-`ext service` 的 pub 包只生成 Server/ERServer 及默认实现；regular 包生成 Client，并转发公共服务端类型。完整 Go 输出包含两侧。普通 `pub service` 的 pub 包只生成 Client，regular 包额外生成 Server，并转发 pub 包的 Client 类型。`ext service` 不进入 Go 或 TypeScript 的 `--api` 输出。
-
-`ext event` 的 pub 包只生成 Emitter，regular 包生成 Listener 与默认实现，并复用 pub 包的 payload 和 Emitter 类型。完整输出包含两侧。扩展契约需要 Vine v0.25.1 或更高版本，生成的运行时 schema 带有 `Ext: true`。
+`ext service` 的 pub 包只生成 Server/ERServer 及默认实现，regular 包生成 Client，并转发公共服务端类型；`ext event` 的 pub 包只生成 Emitter，regular 包生成 Listener 与默认实现，并复用 pub 包的 payload 和 Emitter 类型。完整 Go 输出包含两类契约的两侧。普通 `pub service` 的 pub 包只生成 Client，regular 包额外生成 Server，并转发 pub 包的 Client 类型。扩展契约不进入 Go 或 TypeScript 的 `--api` 输出，且需要 Vine v0.25.1 或更高版本；生成的运行时 schema 带有 `Ext: true`。

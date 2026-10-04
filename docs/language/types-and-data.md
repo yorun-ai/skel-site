@@ -54,7 +54,7 @@ data UserPage {
 }
 ```
 
-Only `data` can declare type parameters. Parameter names begin with `T` and use `CamelCase`; parameter declarations cannot be nullable. References to a parameter may be nullable, such as `value: TItem?`, and generic type arguments may also be nullable. Every reference to generic data supplies the exact number of type arguments.
+Only `data` can declare type parameters. Parameter names begin with `T` and use `CamelCase`; parameter declarations cannot be nullable. A parameter reference or a type argument may be nullable, such as `value: TItem?`. Every reference to generic data supplies the exact number of type arguments.
 
 Hard reference cycles are rejected because they can't produce a finite value. A nullable or collection edge introduces indirection:
 
@@ -107,10 +107,9 @@ config AssetConfig eternal {
 }
 ```
 
-Structured config values need skelc v0.23.0 or later and Vine v0.25.0 or later at runtime.
+Structured config values need skelc v0.23.0 or later, and the runtime needs Vine v0.25.0 or later.
 
 The Vine runtime preserves config string whitespace. Represent binary values as base64 strings in JSON or YAML; see [Vine configuration](https://vine.yorun.ai/docs/configuration).
-
 
 ## Model Contract Shapes, Not Storage
 

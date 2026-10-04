@@ -15,7 +15,7 @@ go install go.yorun.ai/skelc/cmd/skelc@latest
 skelc version
 ```
 
-Make sure the Go binary directory is on `PATH`. If the shell can't find skelc, check `go env GOBIN` and `go env GOPATH`.
+The Go binary directory must be on `PATH`. If the shell can't find skelc, check `go env GOBIN` and `go env GOPATH`.
 
 ## Pin a Version
 
@@ -25,7 +25,7 @@ CI and reproducible generation environments should pin an exact version:
 go install go.yorun.ai/skelc/cmd/skelc@v0.24.0
 ```
 
-After upgrading skelc, regenerate contracts and review the diff. Generated Go modules depend on Vine v0.25.1 or later, and [Go generation](/docs/generation/go#in-process-rpc-value-isolation) describes the in-process value isolation model and the copy helper application code uses. Keep developer machines and CI on the same compiler version.
+After upgrading skelc, regenerate contracts and review the diff, and keep developer machines and CI on the same compiler version. [Go generation](/docs/generation/go#in-process-rpc-value-isolation) describes the in-process value isolation model and the copy helper application code uses.
 
 ## Inspect Version Information
 

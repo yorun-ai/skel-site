@@ -126,7 +126,7 @@ Clients configure the feature through `initializationOptions.schemaCompatibility
 
 Analysis includes unsaved changes. A directory containing `domain.skel` is a directory input: files declaring the same domain in that directory are analyzed together. Without `domain.skel`, each file is an independent input, so standalone files in the same directory may declare the same domain and types without conflict. This matches `check`: imports remain unresolved during validation, while generation commands validate the complete import graph from explicit `--skel-import` mappings.
 
-Start `skelc --strict lsp` to enable strict diagnostics. Clients can also set `initializationOptions.strict` or send `workspace/didChangeConfiguration` with `{ "strict": true }` (or `{ "skelc": { "strict": true } }`). An explicit initialization value overrides the startup flag. Configuration changes immediately refresh diagnostics; set `false` to return to compatibility mode.
+Start `skelc --strict lsp` to enable strict diagnostics. Clients can also set `initializationOptions.strict` or send `workspace/didChangeConfiguration` with `{ "strict": true }` (or `{ "skelc": { "strict": true } }`). An explicit initialization value overrides the startup flag. Configuration changes immediately refresh diagnostics; set `false` to disable strict diagnostics.
 
 LSP traffic has exclusive use of standard input and output. Integrations must not write logs to the server's stdout.
 
@@ -138,7 +138,7 @@ List the domain imports declared directly in the input:
 skelc schema import --skel-in ./domain/user/skel
 ```
 
-The result is a JSON array of declarations, with `domain`, optional explicit
+The result is a JSON array of import declarations, with `domain`, optional explicit
 `alias`, `file`, and one-based `line` and `column` fields. No imports produces
 `[]`. Repeated imports in different source files remain separate entries,
 sorted by file and source position. Comments and descriptions are not imports.
@@ -190,7 +190,7 @@ including its type-specific data, enum, resource, service, or other body:
 ```
 
 If the requested declaration does not exist, `get` returns JSON `null` with
-exit code `0`. Absence is a normal query result rather than a command failure.
+exit code `0` — absence is a normal query result, not a command failure.
 
 Schema inspection covers declarations in the current input and does not resolve
 external domain definitions. External references use their canonical fully

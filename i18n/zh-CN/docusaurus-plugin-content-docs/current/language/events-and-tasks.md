@@ -26,7 +26,7 @@ payload 满足消费者需要就好，不必把整个内部模型复制过来。
 
 ## 扩展 Event
 
-`ext event` 由所属 domain 定义，供其他 domain 发出事件，所属 domain 负责接收。它与 `pub event` 的方向相反：
+`ext event` 由一个 domain 定义、其他 domain 发出，定义方负责监听。它与 `pub event` 的方向相反：
 
 | 声明 | Go pub 包 | Go regular 包 |
 | --- | --- | --- |
@@ -43,7 +43,7 @@ ext event AuditRecordedEvent {
 
 例如审计 domain 定义接入契约，其他 domain 用公开的 Emitter 发出审计事实。`ext` 与 `pub` 互斥，event 不支持 `api`。regular 包复用 pub 包的 payload 和 Emitter 类型；完整 Go 输出包含 Emitter 与 Listener 两侧。
 
-事件仍是异步广播，不承诺唯一处理者或返回结果。需要返回结果时用 service，需要具名后台工作时用 task。
+事件是异步广播，不承诺唯一处理者或返回结果。需要返回结果时用 service，需要具名后台工作时用 task。
 
 ## 敏感 Payload
 

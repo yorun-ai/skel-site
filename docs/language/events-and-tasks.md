@@ -40,7 +40,7 @@ event CredentialIssuedEvent {
 
 ## Extension Events
 
-An `ext event` is defined by the owning domain for other domains to emit. The owning domain receives it. Its direction is the reverse of `pub event`:
+An `ext event` is defined by one domain and emitted by other domains; the defining domain listens for it. Its direction is the reverse of `pub event`:
 
 | Declaration | Go public package | Go regular package |
 | --- | --- | --- |
@@ -57,7 +57,7 @@ ext event AuditRecordedEvent {
 
 For example, an audit domain defines its input contract and other domains use the public Emitter to publish audit facts. `ext` and `pub` are mutually exclusive; events do not support `api`. The regular package aliases the public payload and Emitter types. Full Go output contains both Emitter and Listener capabilities.
 
-Events remain asynchronous broadcasts without a unique handler or return value. Use a service for a result or a task for named background work.
+Events are asynchronous broadcasts with no unique handler and no return value. Use a service for a result or a task for named background work.
 
 ## Tasks and Triggers
 

@@ -94,7 +94,7 @@ api service OrderApiService {
 
 Each `for` line declares an allowed actor. Add `via` when the contract must pin a specific transport from the actor's options. Leave it off to keep the transport unspecified.
 
-A service doesn't have to declare `for` at all when it's only used inside an application boundary. Don't add a public actor just to fill in a diagram — add one when a real caller needs a generated entry contract.
+A backend service that is only called inside the application boundary doesn't need `for`. Don't add a public actor just to fill in a diagram — add one when a real caller needs a generated entry contract.
 
 ## Declare Web Capabilities
 

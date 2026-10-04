@@ -54,7 +54,7 @@ data UserPage {
 }
 ```
 
-只有 `data` 能声明类型参数。参数名以 `T` 开头并用 `CamelCase`；参数声明不能标成 nullable。参数引用可以 nullable，例如 `value: TItem?`，泛型实参也可以 nullable。引用泛型 data 时必须提供准确数量的类型参数。
+只有 `data` 能声明类型参数。参数名以 `T` 开头并用 `CamelCase`；参数声明不能标成 nullable。参数引用和泛型实参都可以 nullable，例如 `value: TItem?`。引用泛型 data 时必须提供准确数量的类型参数。
 
 硬引用形成的循环会被拒绝，因为它没法构造有限值。nullable 或集合边能引入间接层：
 

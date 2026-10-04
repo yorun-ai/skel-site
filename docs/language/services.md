@@ -6,7 +6,7 @@ slug: /services
 
 A service defines callable methods independently of their Go implementation or TypeScript client. skelc generates both sides from the same method names and types.
 
-API service names must end with `ApiService`, such as `OrderApiService`; other services still end with `Service`.
+API service names must end with `ApiService`, such as `OrderApiService`; other services end with `Service`.
 
 Every API service must declare at least one `for Actor`; omission is a compilation error. Anonymous APIs also declare an actor and use `noauth` to allow unauthenticated calls.
 
@@ -14,7 +14,7 @@ Every API service must declare at least one `for Actor`; omission is a compilati
 
 Use `pub service` for backend calls between domains and `api service` for entry points that clients call through Portal. The two modifiers are mutually exclusive, and service names are unique across both kinds within a domain. An API service is reached through Portal, so it is not invoked through a backend Rpc client.
 
-Declare `for Actor`, `auth`/`noauth`, or `require` only on API services, including at the method level. Authentication defaults to `auth` when it is not declared; audience and transport are still chosen explicitly, not inferred from that default. Services that perform authentication, permission, and resource checks are backend services, not client entry points.
+Declare `for Actor`, `auth`/`noauth`, or `require` only on API services, including at the method level. Authentication defaults to `auth` when it is not declared; audience and transport are chosen explicitly, not inferred from that default. Services that perform authentication, permission, and resource checks are backend services, not client entry points.
 
 ### Extension Contracts
 
@@ -29,7 +29,7 @@ ext service StorageService {
 }
 ```
 
-The service modifiers `ext`, `pub`, and `api` are mutually exclusive. Names still end with `Service`. An `ext` service is a server contract, not a Portal entry point, so client rules such as `for Actor` or `auth` fail under `--strict`. To implement the exported server interface, embed the generated default server type and override the methods you need.
+The service modifiers `ext`, `pub`, and `api` are mutually exclusive. An `ext` service is a server contract, not a Portal entry point, so client rules such as `for Actor` or `auth` fail under `--strict`. To implement the exported server interface, embed the generated default server type and override the methods you need.
 
 ## Declare a Service
 
@@ -47,7 +47,7 @@ api service OrderApiService {
 }
 ```
 
-A service name ends in `Service`, or in `ApiService` for API services, and contains at least one method. Method names and input fields use `lowerCamelCase`.
+A service declares at least one method. Method names and input fields use `lowerCamelCase`.
 
 Sections inside a method must appear in this order: `auth`/`noauth`, `require`, `input`, then `output`. Both input and output are optional:
 
