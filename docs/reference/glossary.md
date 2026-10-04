@@ -11,6 +11,7 @@ slug: /glossary
 | skelc | The compiler that parses, validates, and generates Skel contracts |
 | regular | Generated output containing complete private and public contracts |
 | pub | A consumer-visible declaration or public-only generated output |
+| ext | A declaration exported for other domains to implement or emit |
 | Actor | A caller plus its authentication and permission model |
 | Resource | A namespace for permission actions and checks |
 | Schema | Domain metadata registered by generated code |

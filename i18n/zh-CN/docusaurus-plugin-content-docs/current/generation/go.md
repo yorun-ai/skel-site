@@ -23,7 +23,7 @@ skelc gen go-module \
   --go-module example.com/demo/user/skeled
 ```
 
-如果还需要对外暴露 module，加上 `--go-pub-out` 和 `--go-pub-module` 就行。regular module 包含完整契约和服务端能力，pub module 则只暴露公开的 client/listener 和必要的类型。
+如果还需要对外暴露 module，加上 `--go-pub-out` 和 `--go-pub-module` 就行。regular module 包含完整契约和服务端能力，pub module 暴露 `pub` 契约的 client/listener、`ext` 契约的 server/emitter，以及必要的类型。
 
 ## 集合编码与校验
 
@@ -63,7 +63,7 @@ nil 指针表示 `null`；非 nil 指针表示集合，即使它指向的 slice 
 
 如果用的是统一的命名规则，用 `--go-module-prefix` 就能自动推导路径，无需逐个配置。生成完后运行 `gofmt` 和 `go test`，检查 `go.mod` 和 API diff。完整参数清单见 [CLI 参考](/docs/cli)。
 
-后端 Go 输出要求 Vine v0.20.2 或更高版本，并默认使用 v0.20.2。在已有 module 中生成时，需要自行更新依赖。
+后端 Go 输出要求 Vine v0.25.1 或更高版本，并默认使用 v0.25.1。在已有 module 中生成时，需要自行更新依赖。
 
 ## Web 生成
 
@@ -71,7 +71,7 @@ nil 指针表示 `null`；非 nil 指针表示集合，即使它指向的 slice 
 
 服务端接口命名为 `<WebName>Server`，默认实现命名为 `Default<WebName>Server`。其他包的实现需要嵌入默认类型并覆盖所需路由。该默认类型只是空壳：在 Go 代码提供路由之前，它的 `Routes(*web.Router)` 会 panic。
 
-声明的 `mount` 会写入生成的 Web spec 和 runtime domain schema，详见 [Vine 集成](/docs/vine-integration#声明的-web-挂载路径)。使用挂载能力需要 Vine v0.19.0 或更高版本；当前所有后端 Go 输出的依赖版本为 v0.20.2。
+声明的 `mount` 会写入生成的 Web spec 和 runtime domain schema，详见 [Vine 集成](/docs/vine-integration#声明的-web-挂载路径)。使用挂载能力需要 Vine v0.19.0 或更高版本；当前所有后端 Go 输出的依赖版本为 v0.25.1。
 
 ## Portal API 客户端
 
@@ -82,7 +82,7 @@ skelc gen go-module --api \
   --go-module-prefix example.com/gen
 ```
 
-领域为 `shop.order` 时，推导 module 为 `example.com/gen/shop/orderapi`，包名为 `orderapi`。`--go-module` 可覆盖 module 路径；`gen go --api` 写入已有模块。`--api` 与 `--pub` 互斥；默认 Go 生成用于后端实现，`--pub` 选择后端公共契约。
+领域为 `shop.order` 时，推导 module 为 `example.com/gen/shop/orderapi`，包名为 `orderapi`。`--go-module` 可覆盖 module 路径；`gen go --api` 写入已有模块。`--api` 与 `--pub` 互斥；默认 Go 生成用于后端实现，`--pub` 选择后端公共契约。`--api` 支持可重复的 `--actor domain.NameActor`，按服务的 `for` 受众筛选；筛选与依赖规则见 [CLI 参考](/docs/cli)。
 
 API 客户端依赖 `go.yorun.ai/vrpc` v0.12.0 或更高版本，可用 `--go-vrpc-version` 指定。基础类型来自 `go.yorun.ai/vrpc/skel`。跨领域类型依赖指向对应 `xxxapi` 包，不依赖 Vine。
 
@@ -90,4 +90,6 @@ API 客户端依赖 `go.yorun.ai/vrpc` v0.12.0 或更高版本，可用 `--go-vr
 
 `--api` 客户端使用 vRPC，不依赖 Vine。
 
-skelc 会为 `open service` 在 pub 包中同时生成 Client、Server/ERServer 及默认实现；regular 包也会暴露这些服务端类型。普通 `pub service` 的 pub 包仍只生成客户端。
+`ext service` 的 pub 包只生成 Server/ERServer 及默认实现；regular 包生成 Client，并转发公共服务端类型。完整 Go 输出包含两侧。普通 `pub service` 的 pub 包只生成 Client，regular 包额外生成 Server，并转发 pub 包的 Client 类型。`ext service` 不进入 Go 或 TypeScript 的 `--api` 输出。
+
+`ext event` 的 pub 包只生成 Emitter，regular 包生成 Listener 与默认实现，并复用 pub 包的 payload 和 Emitter 类型。完整输出包含两侧。扩展契约需要 Vine v0.25.1 或更高版本，生成的运行时 schema 带有 `Ext: true`。

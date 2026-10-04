@@ -8,18 +8,20 @@ A service defines callable methods independently of their Go implementation or T
 
 API service names must end with `ApiService`, such as `OrderApiService`; other services still end with `Service`.
 
+Every API service must declare at least one `for Actor`; omission is a compilation error. Anonymous APIs also declare an actor and use `noauth` to allow unauthenticated calls.
+
 ## Service Boundaries
 
 Use `pub service` for backend calls between domains and `api service` for entry points that clients call through Portal. The two modifiers are mutually exclusive, and service names are unique across both kinds within a domain. An API service is reached through Portal, so it is not invoked through a backend Rpc client.
 
 Declare `for Actor`, `auth`/`noauth`, or `require` only on API services, including at the method level. Authentication defaults to `auth` when it is not declared; audience and transport are still chosen explicitly, not inferred from that default. Services that perform authentication, permission, and resource checks are backend services, not client entry points.
 
-### Open Server Contracts
+### Extension Contracts
 
-`open service` is for services that other domains need to implement. It is as public as `pub service`, and its Go public package also contains the Server/ERServer interfaces, default implementations, and server registration. When you generate split regular and public packages, the regular package exposes those server types as well.
+`ext service` declares an extension contract owned by the defining domain and implemented by another domain. Its Go public package contains only Server/ERServer interfaces, default implementations, and server registration, without clients. In split output, the regular package generates the defining domain's clients and aliases the public server types. The defining domain calls the contract through a generated client, the implementing domain registers the generated server, and the runtime routes calls between them.
 
 ```skel
-open service StorageService {
+ext service StorageService {
     method get {
         input { key: string }
         output binary
@@ -27,7 +29,7 @@ open service StorageService {
 }
 ```
 
-`open` is valid only on services and is mutually exclusive with `pub` and `api`. Names still end with `Service`. An `open` service is a server contract, not a Portal entry point, so client rules such as `for Actor` or `auth` fail under `--strict`. To implement the exported server interface, embed the generated default server type and override the methods you need.
+The service modifiers `ext`, `pub`, and `api` are mutually exclusive. Names still end with `Service`. An `ext` service is a server contract, not a Portal entry point, so client rules such as `for Actor` or `auth` fail under `--strict`. To implement the exported server interface, embed the generated default server type and override the methods you need.
 
 ## Declare a Service
 
@@ -51,6 +53,7 @@ Sections inside a method must appear in this order: `auth`/`noauth`, `require`, 
 
 ```skel
 api service HealthApiService {
+    for ClientActor via client
     noauth
 
     method ping {}
