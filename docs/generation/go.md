@@ -85,24 +85,24 @@ behavior. Keep business implementations and adapters in separate packages.
 
 When a shared naming convention can derive import paths, `--go-module-prefix` saves you from enumerating every mapping. After generation, run `gofmt` and `go test`, then review `go.mod` and any API diffs. The [CLI reference](/docs/cli) documents every flag.
 
-Backend Go output requires Vine v0.25.1 or later and defaults to v0.25.1. Update the dependency yourself when generating into an existing module.
+Backend Go output requires Vine v0.27.0 or later and defaults to v0.27.0. Update the dependency yourself when generating into an existing module.
 
-## Web Generation
+## web Generation
 
-Ordinary Go generation registers one Web spec for each `web` declaration. Web
-capabilities cannot be `pub`, so a public-contract module has no Web output.
+Ordinary Go generation registers one web spec for each `web` declaration. web
+capabilities cannot be `pub`, so a public-contract module has no web output.
 
 The server interface is named `<WebName>Server` and the default implementation
 `Default<WebName>Server`. An implementation in another package embeds the default
 type and overrides the routes it needs. That default type is only a shell: its
 `Routes(*web.Router)` panics until Go code supplies routing.
 
-A declared `mount` reaches the generated Web spec and the runtime domain schema;
+A declared `mount` reaches the generated web spec and the runtime domain schema;
 see [Vine Integration](/docs/vine-integration#declared-web-mount-paths). Mounted
 output needs Vine v0.19.0 or later; the current dependency for all backend Go
-output is v0.25.1.
+output is v0.27.0.
 
-## Portal API Clients
+## portal API Clients
 
 ```bash
 skelc gen go-module --api \
@@ -113,10 +113,10 @@ skelc gen go-module --api \
 
 For domain `shop.order`, this derives module `example.com/gen/shop/orderapi` and package `orderapi`. `--go-module` overrides the module path. Use `gen go --api` to generate into an existing module. `--api` and `--pub` are mutually exclusive; default Go generation supplies backend implementations, while `--pub` selects backend public contracts. `--api` accepts repeatable `--actor domain.NameActor` filters that select API services by their `for` audiences; see the [CLI reference](/docs/cli) for the selection and dependency rules.
 
-API clients depend on `go.yorun.ai/vrpc` v0.12.0 or later, configurable with `--go-vrpc-version`. Scalar types come from `go.yorun.ai/vrpc/skel`. Cross-domain types are imported from the corresponding `xxxapi` package, and API clients never depend on Vine.
+API clients depend on `go.yorun.ai/vrpc` v0.13.0 or later, configurable with `--go-vrpc-version`. Scalar types come from `go.yorun.ai/vrpc/skel`. Cross-domain types are imported from the corresponding `xxxapi` package, and API clients never depend on Vine.
 
-Construct a client with `NewOrderApiServiceClient(client)`, passing a `*vrpc.Client` you configure for the Portal endpoint. The constructor returns the `OrderApiServiceClient` interface, so you can supply your own implementation or mock in tests. Each method takes `context.Context`, the declared business parameters, and any optional `vrpc.InvokeOption` values, and returns the business result with `error`, or just `error` when the method has no result.
+Construct a client with `NewOrderApiServiceClient(client)`, passing a `*vrpc.Client` you configure for the portal endpoint. The constructor returns the `OrderApiServiceClient` interface, so you can supply your own implementation or mock in tests. Each method takes `context.Context`, the declared business parameters, and any optional `vrpc.InvokeOption` values, and returns the business result with `error`, or just `error` when the method has no result.
 
 `--api` clients use vRPC and do not require Vine.
 
-For `ext service`, the public package generates Server/ERServer interfaces and default implementations, and the regular package generates clients and aliases the public server types. For `ext event`, the public package generates only the Emitter, and the regular package generates Listener interfaces and default implementations, aliasing the public payload and Emitter types. Full Go output contains both sides of each contract. Ordinary `pub service` output remains client-only in the public package, while the regular package adds the server interfaces and re-exports the public client types. Extension contracts are excluded from Go and TypeScript `--api` output and need Vine v0.25.1 or later; their generated runtime schemas carry `Ext: true`.
+For `ext service`, the public package generates Server/ERServer interfaces and default implementations, and the regular package generates clients and aliases the public server types. For `ext event`, the public package generates only the Emitter, and the regular package generates Listener interfaces and default implementations, aliasing the public payload and Emitter types. Full Go output contains both sides of each contract. Ordinary `pub service` output remains client-only in the public package, while the regular package adds the server interfaces and re-exports the public client types. Extension contracts are excluded from Go and TypeScript `--api` output and need Vine v0.27.0 or later; their generated runtime schemas carry `Ext: true`.

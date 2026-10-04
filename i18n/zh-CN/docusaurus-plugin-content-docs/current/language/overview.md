@@ -26,7 +26,7 @@ domain commerce.order
 | 哪些能力可以被调用？ | `service` |
 | 异步发生了什么？ | `event` |
 | 可以启动哪些后台工作？ | `task` |
-| 哪个 Web 能力可以进入？ | `web` |
+| 哪个 web 能力可以进入？ | `web` |
 
 这些关注点应该各司其职。调用者身份用 actor 表达就好，不要塞进随意的 string 参数里；权限词汇由 resource 拥有，不要散落成业务代码里的常量。
 

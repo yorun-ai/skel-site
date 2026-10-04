@@ -26,7 +26,7 @@ Don't name a domain after a repository, process, team sprint, or current deploym
 | What can be called? | `service` |
 | What happened asynchronously? | `event` |
 | What background work can run? | `task` |
-| Which Web capability may be entered? | `web` |
+| Which web capability may be entered? | `web` |
 
 Keeping these concerns separate matters. A service method shouldn't encode caller identity into an arbitrary string argument when an actor owns that identity. Permission names shouldn't live as ad-hoc constants when a resource owns them.
 

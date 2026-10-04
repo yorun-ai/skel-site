@@ -93,6 +93,6 @@ task 声明不管你用的是 cron、queue、重试次数、并发度还是 work
 | 立即请求结果 | `service` method |
 | 发布已完成的事实 | `event` |
 | 启动具名后台工作 | `task` trigger |
-| 暴露 Web 能力 | `web` |
+| 暴露 web 能力 | `web` |
 
 接下来阅读[描述与标记](/docs/metadata)或 [Vine 集成](/docs/vine-integration)。

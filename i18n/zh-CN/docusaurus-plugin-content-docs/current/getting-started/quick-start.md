@@ -55,7 +55,7 @@ pub resource Order {
 
 api service OrderApiService {
     for CustomerActor via client
-    auth
+    auth required
     require Order:read
 
     method get {
