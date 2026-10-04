@@ -4,7 +4,7 @@ slug: /metadata
 
 # 描述与标记
 
-decorator 给契约附加文档和处理规则，不影响类型语法。skelc 目前支持 `@desc`、`@example`、`@sensitive` 和 `@deprecated`。
+decorator 给契约附加文档和处理规则，不影响类型语法。skelc 支持 `@desc`、`@example`、`@sensitive`、`@deprecated` 和 `@identifier`。
 
 ## 描述
 
@@ -81,7 +81,7 @@ data User {
 
 弃用只作用于被标记的元素，不会向子元素传递。domain 以及 `input`、`output`、`payload`、`credential`、`info` 等结构 block 不能被弃用。
 
-生成的 Go 声明会使用标准的 `Deprecated:` 文档段落，生成的 TypeScript 会使用 `@deprecated` JSDoc tag，公开 Skel 输出会保留 decorator；生成的 domain schema 同时携带布尔标记和解释文本。skelc 会记录并暴露这些元数据，但目前不会在其他声明引用弃用元素时发出警告。
+生成的 Go 声明会使用标准的 `Deprecated:` 文档段落，TypeScript 会使用 `@deprecated` JSDoc tag，公开 Skel 输出会保留 decorator，domain schema 携带布尔标记和解释文本。skelc 会暴露这些元数据，但不会在其他声明引用弃用元素时发出警告。
 
 生成的 TypeScript 会把 Skel enum 表示为字符串联合类型。enum item 的弃用说明会保留在对应联合分支旁边，但该分支不是独立的具名符号，因此 TypeScript 无法给出 item 级弃用警告。
 
@@ -101,9 +101,9 @@ data User {
 
 移动 decorator 后记得运行 `skelc check`。不支持的位置会报错，不会被静默忽略。
 
-接下来阅读[契约边界](/docs/contract-design)，或者用[语法速查](/docs/syntax)快速定位声明。
-
 ## 身份标识字段
 
 `@identifier` 用于指定 actor 的调用者标识字段。
 完整示例、字段类型限制和版本要求见 [Actor 与访问入口](/docs/actors-and-access)。
+
+接下来阅读[契约边界](/docs/contract-design)，或者用[语法速查](/docs/syntax)快速定位声明。

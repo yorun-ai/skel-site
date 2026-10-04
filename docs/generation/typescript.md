@@ -12,6 +12,8 @@ skelc gen ts --api \
 
 `--api` is required; omitting it or passing `--pub` is an error. skelc generates API service clients, their data dependencies, and explicitly public data and enums.
 
+`gen ts --api` and the Go API generators accept repeatable `--actor domain.NameActor` filters that select API services by their `for` audiences; see the [CLI reference](/docs/cli) for the selection and dependency rules.
+
 ## Deprecation Output
 
 Generated declarations, fields, services, methods, and parameters use the `@deprecated` JSDoc tag. A Skel enum is generated as a string union, so an enum item's explanation remains beside its union branch but cannot produce an item-level TypeScript warning.

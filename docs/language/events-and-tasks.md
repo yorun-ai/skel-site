@@ -4,7 +4,7 @@ slug: /events-and-tasks
 
 # Events & Tasks
 
-Events describe facts published by a domain. Tasks describe named work that the runtime can trigger. Both follow the same field and metadata rules as service input, but they have different ownership.
+Events describe facts published by a domain or accepted from other domains. Tasks describe named work that the runtime can trigger. Both follow the same field and metadata rules as service input, but they have different ownership.
 
 ## Events
 
@@ -37,6 +37,27 @@ event CredentialIssuedEvent {
 ```
 
 `@sensitive` on `payload` marks the generated payload as a whole. You can also place it on individual fields. The event declaration itself doesn't accept `@sensitive`.
+
+## Extension Events
+
+An `ext event` is defined by one domain and emitted by other domains; the defining domain listens for it. Its direction is the reverse of `pub event`:
+
+| Declaration | Go public package | Go regular package |
+| --- | --- | --- |
+| `pub event` | Listener | Emitter |
+| `ext event` | Emitter | Listener |
+
+```skel
+ext event AuditRecordedEvent {
+    payload {
+        message: string
+    }
+}
+```
+
+For example, an audit domain defines its input contract and other domains use the public Emitter to publish audit facts. `ext` and `pub` are mutually exclusive; events do not support `api`. The regular package aliases the public payload and Emitter types. Full Go output contains both Emitter and Listener capabilities.
+
+Events are asynchronous broadcasts with no unique handler and no return value. Use a service for a result or a task for named background work.
 
 ## Tasks and Triggers
 

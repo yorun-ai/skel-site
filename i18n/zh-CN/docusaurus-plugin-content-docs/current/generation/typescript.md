@@ -12,6 +12,8 @@ skelc gen ts --api \
 
 必须传 `--api`；省略或传 `--pub` 都会报错。输出包含 API 服务客户端、所需数据依赖，以及显式公开的 data、enum。
 
+`gen ts --api` 与 Go 的 API 生成命令支持可重复的 `--actor domain.NameActor`，按服务的 `for` 受众筛选；筛选与依赖规则见 [CLI 参考](/docs/cli)。
+
 ## 弃用输出
 
 生成的声明、字段、service、method 和参数会使用 `@deprecated` JSDoc tag。Skel enum 会生成字符串联合类型，因此 enum item 的解释会保留在对应联合分支旁边，但无法触发 item 级 TypeScript 弃用警告。

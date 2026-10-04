@@ -28,4 +28,4 @@ skelc gen skel \
 - 公开声明改完之后，记得重新生成所有语言产物，并通知消费者。
 - 推荐用版本化的 module/package 来分发公开契约，而不是依赖相邻目录的“碰巧能读到”的相对路径。
 
-skelc v0.19.0 的 `gen skel --pub` 会保留 `open service` 修饰符及其本领域类型依赖，消费者可据此生成包含服务端接口的 Go pub 包。
+`gen skel --pub` 会保留 `ext service` 修饰符及其本领域类型依赖，消费者可据此生成仅包含服务端契约的 Go pub 包；它也会保留 `ext event` 及其 payload 的类型依赖，对应 Go pub 包公开 Emitter。

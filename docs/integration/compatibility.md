@@ -23,7 +23,7 @@ Versioned documentation explains historical behavior; when fixing current contra
 
 ## Generated Output Contract
 
-Generated Go modules depend on Vine v0.20.2 or later, which is the version written
+Generated Go modules depend on Vine v0.25.1 or later, which is the version written
 to the module's `go.mod`. Application code that needs its own copy of a generated
 bean uses `vine/util/vbean.DeepClone`.
 
@@ -42,9 +42,11 @@ owns each declaration and makes import paths unnecessary for schema checks.
 Schema commands do not accept import-path mappings.
 
 A Web that declares `mount` records it as `mountPath`, and changing that value
-appears as `web.mount-path.changed` at `BREAKING` impact. Consumers that decode
-snapshots strictly must recognize the field, so keep `go.yorun.ai/skelc/schema` in
-step with the compiler that produced the snapshot.
+appears as `web.mount-path.changed` at `BREAKING` impact. Switching a service or
+event between `pub` and `ext` changes which side implements or consumes it, and
+appears as `service.ext.changed` or `event.ext.changed` at `BREAKING` impact.
+Consumers that decode snapshots strictly must recognize the field, so keep
+`go.yorun.ai/skelc/schema` in step with the compiler that produced the snapshot.
 
 Diff reads the baseline and candidate Skel source files or directories directly;
 schema snapshot JSON is not accepted as diff input.

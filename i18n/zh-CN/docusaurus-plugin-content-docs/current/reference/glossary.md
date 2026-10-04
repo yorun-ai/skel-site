@@ -11,6 +11,7 @@ slug: /glossary
 | skelc | 解析、检查并生成 Skel 契约的编译器 |
 | regular | 包含完整私有与公开契约的生成输出 |
 | pub | 对消费者公开的声明，或只含公开面的生成输出 |
+| ext | 供其他领域实现或发出的导出声明 |
 | Actor | 调用者及其认证/权限模型 |
 | Resource | 权限 action 与 check 的命名空间 |
 | Schema | 生成代码注册的 domain 元数据 |

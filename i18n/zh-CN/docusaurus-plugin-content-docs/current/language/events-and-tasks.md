@@ -4,7 +4,7 @@ slug: /events-and-tasks
 
 # 事件与任务
 
-event 描述 domain 已经发布的事实，task 描述运行时能触发的具名工作。两者都沿用 service input 的字段与元数据规则，但各司其职。
+event 描述 domain 发布或接收的事实，task 描述运行时能触发的具名工作。两者都沿用 service input 的字段与元数据规则，但各司其职。
 
 ## Event
 
@@ -23,6 +23,27 @@ event 名以 `Event` 结尾，包含一个 `payload` block，不声明 actor，�
 event 应该描述已经发生的事实。`OrderPlacedEvent` 给消费者一个稳定的既成事实；`PlaceOrderEvent` 听起来更像命令，应该写成 service method 或 task trigger。
 
 payload 满足消费者需要就好，不必把整个内部模型复制过来。如果详情会独立变化，只带标识符，让消费者向所属 domain 查询就行。
+
+## 扩展 Event
+
+`ext event` 由一个 domain 定义、其他 domain 发出，定义方负责监听。它与 `pub event` 的方向相反：
+
+| 声明 | Go pub 包 | Go regular 包 |
+| --- | --- | --- |
+| `pub event` | Listener | Emitter |
+| `ext event` | Emitter | Listener |
+
+```skel
+ext event AuditRecordedEvent {
+    payload {
+        message: string
+    }
+}
+```
+
+例如审计 domain 定义接入契约，其他 domain 用公开的 Emitter 发出审计事实。`ext` 与 `pub` 互斥，event 不支持 `api`。regular 包复用 pub 包的 payload 和 Emitter 类型；完整 Go 输出包含 Emitter 与 Listener 两侧。
+
+事件是异步广播，不承诺唯一处理者或返回结果。需要返回结果时用 service，需要具名后台工作时用 task。
 
 ## 敏感 Payload
 

@@ -6,7 +6,7 @@ slug: /installation
 
 ## 前提条件
 
-skelc v0.15.0 和生成的 Go module 需要 Go 1.27.0 及以上版本。生成的 Go module 要求 Vine `v0.20.2` 或更高版本，默认依赖为 `v0.20.2`。在已有 Go module 中生成时，需要自行更新依赖。
+skelc v0.15.0 和生成的 Go module 需要 Go 1.27.0 及以上版本。生成的 Go module 要求 Vine `v0.25.1` 或更高版本，默认依赖为 `v0.25.1`。在已有 Go module 中生成时，需要自行更新依赖。
 
 ## 安装
 
@@ -15,17 +15,17 @@ go install go.yorun.ai/skelc/cmd/skelc@latest
 skelc version
 ```
 
-确保 Go 的 bin 目录在 `PATH` 里。如果终端找不到命令，运行 `go env GOBIN` 和 `go env GOPATH` 确认安装位置。
+Go 的 bin 目录必须在 `PATH` 中。如果终端找不到 skelc，运行 `go env GOBIN` 和 `go env GOPATH` 确认安装位置。
 
 ## 固定版本
 
 CI 和需要可重复生成的场景建议锁死版本：
 
 ```bash
-go install go.yorun.ai/skelc/cmd/skelc@v0.23.1
+go install go.yorun.ai/skelc/cmd/skelc@v0.24.0
 ```
 
-升级 skelc 之后，重新生成契约并 review diff。生成的 Go module 依赖 Vine v0.20.2 或更高版本；进程内值隔离模型和应用代码复制生成 bean 的方式见 [Go 生成](/docs/generation/go#进程内-rpc-值隔离)。开发机和 CI 应使用相同的编译器版本。
+升级 skelc 之后，重新生成契约并 review diff，同时让开发机和 CI 使用相同的编译器版本。进程内值隔离模型和应用代码复制生成 bean 的方式见 [Go 生成](/docs/generation/go#进程内-rpc-值隔离)。
 
 ## 查看版本信息
 

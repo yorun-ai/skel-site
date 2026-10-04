@@ -6,20 +6,22 @@ slug: /services
 
 service 独立于 Go 实现和 TypeScript client，描述可调用的 method。skelc 从同一组名称和类型生成两侧的接口。
 
-API 服务名必须以 `ApiService` 结尾，例如 `OrderApiService`；其他 service 仍以 `Service` 结尾。
+API 服务名必须以 `ApiService` 结尾，例如 `OrderApiService`；其他 service 以 `Service` 结尾。
+
+API 服务必须至少声明一条 `for Actor`，缺失时编译报错；匿名 API 也需要声明 actor，并通过 `noauth` 允许匿名调用。
 
 ## 服务边界
 
 `pub service` 用于跨领域后端调用，`api service` 用于客户端经 Portal 访问的入口。两修饰符互斥，同一领域的服务名在两种类型间统一判重。API 服务经 Portal 访问，不通过后端 Rpc 客户端调用。
 
-只有 API 服务应声明 `for Actor`、`auth/noauth` 或 `require`，包括方法级规则。未声明认证时默认 `auth`；audience 和 transport 仍按显式声明处理，不由默认值推导。执行认证、权限和资源检查的服务属于后端服务，不作为客户端入口。
+只有 API 服务应声明 `for Actor`、`auth/noauth` 或 `require`，包括方法级规则。未声明认证时默认 `auth`；audience 和 transport 按显式声明处理，不由默认值推导。执行认证、权限和资源检查的服务属于后端服务，不作为客户端入口。
 
-### 公开服务端契约
+### 扩展契约
 
-`open service` 用于让其他领域实现该服务。它与 `pub service` 具有相同的公开可见性，生成的 Go pub 包还包含 Server/ERServer 接口、默认实现和服务端注册。分包生成 regular 和 pub 包时，regular 包也会暴露这些服务端类型。
+`ext service` 声明由当前领域定义、其他领域提供实现的扩展契约。Go pub 包只生成 Server/ERServer 接口、默认实现和服务端注册，不生成 Client。分包生成时，regular 包生成供定义方使用的 Client，并转发 pub 包的服务端类型。定义方通过生成的 Client 调用契约，实现方注册生成的 Server，调用由 runtime 路由。
 
 ```skel
-open service StorageService {
+ext service StorageService {
     method get {
         input { key: string }
         output binary
@@ -27,7 +29,7 @@ open service StorageService {
 }
 ```
 
-`open` 仅适用于 service，与 `pub`、`api` 互斥，名称仍以 `Service` 结尾。`open service` 是服务端契约，不是 Portal 入口，因此 `for Actor`、`auth` 等客户端规则在 `--strict` 下会报错。要实现公开的服务端接口，可嵌入生成的默认 Server 类型，并覆盖所需方法。
+service 的 `ext`、`pub`、`api` 修饰符互斥。`ext service` 是服务端契约，不是 Portal 入口，因此 `for Actor`、`auth` 等客户端规则在 `--strict` 下会报错。要实现公开的服务端接口，可嵌入生成的默认 Server 类型，并覆盖所需方法。
 
 ## 声明 Service
 
@@ -45,12 +47,13 @@ api service OrderApiService {
 }
 ```
 
-service 名以 `Service` 结尾（API 服务为 `ApiService`），至少包含一个 method。method 和 input 字段用 `lowerCamelCase`。
+service 至少包含一个 method。method 和 input 字段用 `lowerCamelCase`。
 
 method 内部顺序为：`auth`/`noauth`、`require`、`input`、`output`。input 和 output 都可省略：
 
 ```skel
 api service HealthApiService {
+    for ClientActor via client
     noauth
 
     method ping {}

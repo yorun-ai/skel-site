@@ -4,7 +4,7 @@ slug: /metadata
 
 # Metadata & Docs
 
-Decorators attach documentation and handling rules to a contract without changing its type syntax. skelc supports `@desc`, `@example`, `@sensitive`, and `@deprecated`.
+Decorators attach documentation and handling rules to a contract without changing its type syntax. skelc supports `@desc`, `@example`, `@sensitive`, `@deprecated`, and `@identifier`.
 
 ## Descriptions
 
@@ -81,7 +81,7 @@ data User {
 
 Deprecation applies only to the decorated element; it does not cascade to children. A domain and structural blocks such as `input`, `output`, `payload`, `credential`, and `info` cannot be deprecated.
 
-Generated Go declarations use the standard `Deprecated:` doc paragraph, generated TypeScript uses the `@deprecated` JSDoc tag, public Skel output preserves the decorator, and the generated domain schema carries both the boolean marker and explanation. skelc records and exposes the metadata but does not currently warn when another declaration references a deprecated element.
+Generated Go declarations use the standard `Deprecated:` doc paragraph, TypeScript uses the `@deprecated` JSDoc tag, public Skel preserves the decorator, and the domain schema carries the boolean marker with its explanation. skelc exposes the metadata but does not warn when another declaration references a deprecated element.
 
 Generated TypeScript represents a Skel enum as a string union. An enum item's deprecation remains visible beside its union branch, but TypeScript cannot issue an item-level deprecation warning because that branch is not a separately named symbol.
 
@@ -101,10 +101,10 @@ Generated TypeScript represents a Skel enum as a string union. An enum item's de
 
 Run `skelc check` after moving a decorator. Unsupported placement is an error — metadata is never silently ignored.
 
-Continue with [Contract Boundaries](/docs/contract-design) or use the [Syntax Index](/docs/syntax) for a compact declaration reference.
-
 ## Identity Fields
 
 `@identifier` selects the field that identifies an actor's caller. See
 [Actors & Access](/docs/actors-and-access) for a complete example, allowed field
 types, and version requirements.
+
+Continue with [Contract Boundaries](/docs/contract-design) or use the [Syntax Index](/docs/syntax) for a compact declaration reference.

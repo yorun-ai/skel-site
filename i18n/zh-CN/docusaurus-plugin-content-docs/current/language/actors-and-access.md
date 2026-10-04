@@ -92,7 +92,7 @@ api service OrderApiService {
 
 每个 `for` 声明一种允许的 actor。想限定 actor 的某个入口时加上 `via`；不写就不限定入口。
 
-只在应用内部使用的 service 可以不写 `for`。只有真实调用方需要生成入口契约时才声明 actor——不必为了画图好看去虚构公共 actor。
+只在应用边界内部调用的后端 service 不需要 `for`。只有真实调用方需要生成入口契约时才声明 actor——不必为了画图好看去虚构公共 actor。
 
 ## 声明 Web 能力
 

@@ -42,7 +42,11 @@ pub data UserSummary {
 }
 ```
 
-`api` 仅支持 service，与 `pub` 互斥。`open service` 同时公开 Client 和 Server 契约；`open` 与 `pub`、`api` 互斥。API 服务名必须以 `ApiService` 结尾，例如 `OrderApiService`。后端调用使用 `pub service`，Portal 客户端入口使用 `api service`。`--strict` 会把未声明修饰符的 service 视为错误，也会拒绝在非 API service 中声明客户端准入规则。
+`api` 仅支持 service，与 `pub` 互斥。`ext service` 对外公开供其他领域实现的 Server 契约；`ext event` 对外公开供其他领域发出事件的 Emitter 契约。`ext` 与 `pub`、`api` 互斥，适用于 service 和 event。
+
+API 服务名必须以 `ApiService` 结尾，例如 `OrderApiService`。API 服务必须至少声明一条 `for Actor`，缺失时编译报错；匿名 API 也需要声明 actor，并通过 `noauth` 允许匿名调用。后端调用使用 `pub service`，Portal 客户端入口使用 `api service`。
+
+`--strict` 会把未声明修饰符的 service 视为错误，也会拒绝在非 API service 中声明客户端准入规则。
 
 ## 类型形式
 
