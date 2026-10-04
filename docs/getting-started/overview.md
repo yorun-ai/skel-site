@@ -16,7 +16,7 @@ outputs you ask for. Formatting and schema commands support daily maintenance.
 - Data shapes exchanged across processes or languages
 - Rpc services, events, and task contracts
 - Actors, authentication information, and permission resources
-- Vine Web entry capabilities
+- Vine web entry capabilities
 - Public boundaries shared between domains
 
 Route implementations, database models, business algorithms, and deployment configuration are application concerns. Don't force them into Skel just to make everything declarative.

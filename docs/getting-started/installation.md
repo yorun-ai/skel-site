@@ -6,7 +6,7 @@ slug: /installation
 
 ## Prerequisites
 
-skelc v0.15.0 and generated Go modules need Go 1.27.0 or later. Generated Go modules require Vine `v0.25.1` or later and default to `v0.25.1`. When generating into an existing Go module, update its dependencies yourself.
+skelc v0.15.0 and generated Go modules need Go 1.27.0 or later. Generated Go modules require Vine `v0.27.0` or later and default to `v0.27.0`. When generating into an existing Go module, update its dependencies yourself.
 
 ## Install
 

@@ -44,7 +44,7 @@ pub data UserSummary {
 
 `api` is supported only on services and is mutually exclusive with `pub`. `ext service` exports the server contract for other domains to implement; `ext event` exports the Emitter contract for other domains to publish. `ext` applies to services and events and is mutually exclusive with `pub` and `api`.
 
-API service names must end with `ApiService`, such as `OrderApiService`. Every API service must declare at least one `for Actor`; omission is a compilation error. Anonymous APIs also declare an actor and use `noauth` to allow unauthenticated calls. Use `pub service` for backend calls and `api service` for Portal clients.
+API service names must end with `ApiService`, such as `OrderApiService`. Every API service must declare at least one `for Actor`; omission is a compilation error. Anonymous APIs also declare an actor and use `auth optional` to allow unauthenticated calls. Use `pub service` for backend calls and `api service` for portal clients.
 
 `--strict` rejects a service that declares no modifier, and rejects client admission rules on non-API services.
 
@@ -71,11 +71,11 @@ T?
 ```skel
 api service OrderApiService {
     for CustomerActor via client
-    auth
+    auth required
     require Order:read
 
     method get {
-        noauth
+        auth optional
         require Order:read:exists(orderId)
         input {
             orderId: uuid
@@ -84,6 +84,8 @@ api service OrderApiService {
     }
 }
 ```
+
+API services support `auth required`, `auth optional`, and `auth anonymous`; web also supports `auth off`. A missing API service-level or web mode warns and defaults to `required`, and `--strict` rejects the omission. See [Service Contracts](/docs/services) for mode semantics.
 
 Service sections may include audiences, one auth marker, one service requirement, and methods. Method sections appear in this order: auth marker, requirement, input, output.
 

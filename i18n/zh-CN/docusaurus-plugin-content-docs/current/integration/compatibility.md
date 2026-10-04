@@ -23,7 +23,7 @@ CI 和开发环境要用同一个 skelc 版本。输入、import 映射和输出
 
 ## 生成产物契约
 
-生成的 Go module 依赖 Vine v0.25.1 或更高版本，该版本号会写入 module 的 `go.mod`。应用代码需要自己的生成 bean 副本时使用 `vine/util/vbean.DeepClone`。
+生成的 Go module 依赖 Vine v0.27.0 或更高版本，该版本号会写入 module 的 `go.mod`。应用代码需要自己的生成 bean 副本时使用 `vine/util/vbean.DeepClone`。
 
 review 生成的 schema 差异时，应比较 key 而不是位置：带 key 的字段可以出现在任意顺序。
 
@@ -36,10 +36,11 @@ review 生成的 schema 差异时，应比较 key 而不是位置：带 key 的�
 
 schema 命令不接受 import 路径映射。
 
-声明了 `mount` 的 Web 会在 schema 中记录 `mountPath`，修改该值会以 `BREAKING` 影响级别
+声明了 `mount` 的 web 会在 schema 中记录 `mountPath`，修改该值会以 `BREAKING` 影响级别
 报告 `web.mount-path.changed`。在 `pub` 与 `ext` 之间切换 service 或 event 会改变由哪一侧
 实现或消费，会以 `BREAKING` 影响级别报告 `service.ext.changed` 或 `event.ext.changed`。
-严格解码快照的消费者必须识别这些字段，因此请让 `go.yorun.ai/skelc/schema`
+修改认证模式会以 `DANGEROUS` 影响级别报告 `service.auth.changed` 或
+`method.auth.changed`。严格解码快照的消费者必须识别这些字段，因此请让 `go.yorun.ai/skelc/schema`
 与生成快照的编译器保持同一版本。
 
 diff 直接读取 baseline 和 candidate 的 Skel 源文件或目录，不接受 schema 快照

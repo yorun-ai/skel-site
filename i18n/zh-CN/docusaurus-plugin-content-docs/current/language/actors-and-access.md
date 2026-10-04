@@ -80,6 +80,7 @@ actor StaffActor {
 api service OrderApiService {
     for CustomerActor via client
     for StaffActor
+    auth required
 
     method get {
         input {
@@ -94,15 +95,20 @@ api service OrderApiService {
 
 只在应用边界内部调用的后端 service 不需要 `for`。只有真实调用方需要生成入口契约时才声明 actor——不必为了画图好看去虚构公共 actor。
 
-## 声明 Web 能力
+## 声明 web 能力
 
 ```skel
 web CustomerPortalWeb {
     for CustomerActor via client
+    auth required
 }
 ```
 
-web 名以 `Web` 结尾，至少声明一个 actor。它说明谁能进入一个 Web 能力，但不声明 HTTP method、path 或 handler。注意 web 是本地运行能力，不能标记 `pub`。
+web 名以 `Web` 结尾，至少声明一个 actor。它说明谁能进入一个 web 能力，但不声明 HTTP method、path 或 handler。web 声明是本地运行能力，不能标记 `pub`。
+
+### web 认证
+
+web 声明只接受一种 auth 模式：`auth required`、`auth optional`、`auth anonymous` 或 `auth off`。前三种使用 portal 认证，并在转发前移除 `Authorization`；`off` 跳过 portal 认证，把 header 留给 web handler。省略模式会警告并生成 `required`，`--strict` 拒绝省略。
 
 ### 固定前端挂载路径
 
@@ -117,11 +123,11 @@ web ConsoleWeb {
 
 mount 是入口及其静态资源的不可变前缀。当客户端、书签、CDN 规则或反向代理配置依赖该前缀时就应该声明它，并把取值视为已发布契约的一部分：修改它会让 `schema diff` 以 `BREAKING` 报告 `web.mount-path.changed`。
 
-mount 路径是字面绝对路径：必须以 `/` 开头，不能包含路由参数、query 或 fragment 分隔符、转义、空白、空段（`//`）以及 `.`、`..` 段；允许以 `/` 结尾。同一个 Web 最多声明一次 `mount`。
+mount 路径是字面绝对路径：必须以 `/` 开头，不能包含路由参数、query 或 fragment 分隔符、转义、空白、空段（`//`）以及 `.`、`..` 段；允许以 `/` 结尾。同一个 web 最多声明一次 `mount`。
 
-不写 `mount` 表示该 Web 不受已声明的挂载路径限制，而 `mount /` 显式声明根路径，两者并不等价：只有显式声明根路径才会把 Web 限制在 `/`。
+不写 `mount` 表示该 web 不受已声明的挂载路径限制，而 `mount /` 显式声明根路径，两者并不等价：只有显式声明根路径才会把 web 限制在 `/`。
 
-该值如何进入生成代码见 [Vine 集成](/docs/vine-integration#声明的-web-挂载路径)，生成的 Web 产物见 [Go 生成](/docs/generation/go#web-生成)。
+该值如何进入生成代码见 [Vine 集成](/docs/vine-integration#声明的-web-挂载路径)，生成的 web 产物见 [Go 生成](/docs/generation/go#web-生成)。
 
 ## 控制 Actor 粒度
 

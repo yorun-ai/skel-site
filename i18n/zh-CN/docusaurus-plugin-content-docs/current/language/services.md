@@ -8,13 +8,13 @@ service 独立于 Go 实现和 TypeScript client，描述可调用的 method。s
 
 API 服务名必须以 `ApiService` 结尾，例如 `OrderApiService`；其他 service 以 `Service` 结尾。
 
-API 服务必须至少声明一条 `for Actor`，缺失时编译报错；匿名 API 也需要声明 actor，并通过 `noauth` 允许匿名调用。
+API 服务必须至少声明一条 `for Actor`，缺失时编译报错；匿名 API 也需要声明 actor，并通过 `auth optional` 允许匿名调用。
 
 ## 服务边界
 
-`pub service` 用于跨领域后端调用，`api service` 用于客户端经 Portal 访问的入口。两修饰符互斥，同一领域的服务名在两种类型间统一判重。API 服务经 Portal 访问，不通过后端 Rpc 客户端调用。
+`pub service` 用于跨领域后端调用，`api service` 用于客户端经 portal 访问的入口。两修饰符互斥，同一领域的服务名在两种类型间统一判重。API 服务经 portal 访问，不通过后端 Rpc 客户端调用。
 
-只有 API 服务应声明 `for Actor`、`auth/noauth` 或 `require`，包括方法级规则。未声明认证时默认 `auth`；audience 和 transport 按显式声明处理，不由默认值推导。执行认证、权限和资源检查的服务属于后端服务，不作为客户端入口。
+只有 API 服务应声明 `for Actor`、`auth <mode>` 或 `require`，包括方法级规则。未声明认证时默认 `required` 并警告；audience 和 transport 按显式声明处理，不由默认值推导。执行认证、权限和资源检查的服务属于后端服务，不作为客户端入口。
 
 ### 扩展契约
 
@@ -29,14 +29,14 @@ ext service StorageService {
 }
 ```
 
-service 的 `ext`、`pub`、`api` 修饰符互斥。`ext service` 是服务端契约，不是 Portal 入口，因此 `for Actor`、`auth` 等客户端规则在 `--strict` 下会报错。要实现公开的服务端接口，可嵌入生成的默认 Server 类型，并覆盖所需方法。
+service 的 `ext`、`pub`、`api` 修饰符互斥。`ext service` 是服务端契约，不是 portal 入口，因此 `for Actor`、`auth` 等客户端规则在 `--strict` 下会报错。要实现公开的服务端接口，可嵌入生成的默认 Server 类型，并覆盖所需方法。
 
 ## 声明 Service
 
 ```skel
 api service OrderApiService {
     for CustomerActor via client
-    auth
+    auth required
 
     method get {
         input {
@@ -49,12 +49,12 @@ api service OrderApiService {
 
 service 至少包含一个 method。method 和 input 字段用 `lowerCamelCase`。
 
-method 内部顺序为：`auth`/`noauth`、`require`、`input`、`output`。input 和 output 都可省略：
+method 内部顺序为：`auth <mode>`、`require`、`input`、`output`。input 和 output 都可省略：
 
 ```skel
 api service HealthApiService {
     for ClientActor via client
-    noauth
+    auth optional
 
     method ping {}
 
@@ -66,9 +66,19 @@ api service HealthApiService {
 
 ## 认证与调用方
 
-`for Actor [via name]` 记录契约服务的调用者。`auth` 要求已认证 actor，`noauth` 显式允许未认证调用。method 标记会覆盖 service 标记；都没设置的话，行为由外层 service 或运行时上下文决定。
+`for Actor [via name]` 记录契约服务的调用者。方法级 auth 覆盖服务级模式；方法省略时生成 `inherit`。非 API service 省略 auth 时生成 `required`，不产生缺失 auth 的警告。
 
-外部可达的 service 最好显式写出 `auth` 或 `noauth`，不要将安全意图藏在外围默认值里。
+| 声明 | 允许的调用者 |
+| --- | --- |
+| `auth required` | 已认证调用者 |
+| `auth optional` | 匿名或已认证调用者 |
+| `auth anonymous` | 仅匿名调用者 |
+
+这三种模式都会拒绝无效凭证。`anonymous` 还会拒绝持有效凭证的已认证调用者。`auth off` 仅适用于 web，Rpc 服务和方法不能使用。
+
+`--strict` 要求每个 API 服务显式声明服务级 auth，即使所有方法都已声明自己的模式。默认模式下，省略服务级 auth 会警告，并生成 `required`。
+
+actor 的 `auth { credential / info }` 块使用自己的语法，不受 service 模式影响。模式写法需要 skelc v0.26.0 或更高版本，运行时需要 Vine v0.27.0 或更高版本。
 
 ## Input 与 Output
 
@@ -96,7 +106,7 @@ method create {
 ```skel
 api service OrderApiService {
     for StaffActor via client
-    auth
+    auth required
     require Order:read
 
     method cancel {

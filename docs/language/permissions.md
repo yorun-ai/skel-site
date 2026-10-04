@@ -62,6 +62,7 @@ Checks answer application-specific questions like "does this order exist?" or "d
 ```skel
 api service OrderApiService {
     for CustomerActor via client
+    auth required
     require Order:read
 
     method get {

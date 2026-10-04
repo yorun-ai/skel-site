@@ -63,17 +63,17 @@ nil 指针表示 `null`；非 nil 指针表示集合，即使它指向的 slice 
 
 如果用的是统一的命名规则，用 `--go-module-prefix` 就能自动推导路径，无需逐个配置。生成完后运行 `gofmt` 和 `go test`，检查 `go.mod` 和 API diff。完整参数清单见 [CLI 参考](/docs/cli)。
 
-后端 Go 输出要求 Vine v0.25.1 或更高版本，并默认使用 v0.25.1。在已有 module 中生成时，需要自行更新依赖。
+后端 Go 输出要求 Vine v0.27.0 或更高版本，并默认使用 v0.27.0。在已有 module 中生成时，需要自行更新依赖。
 
-## Web 生成
+## web 生成
 
-普通 Go 生成为每个 `web` 声明注册一个 Web spec。Web 能力不能标记 `pub`，因此 pub 契约 module 不包含 Web 产物。
+普通 Go 生成为每个 `web` 声明注册一个 web spec。web 能力不能标记 `pub`，因此 pub 契约 module 不包含 web 产物。
 
 服务端接口命名为 `<WebName>Server`，默认实现命名为 `Default<WebName>Server`。其他包的实现需要嵌入默认类型并覆盖所需路由。该默认类型只是空壳：在 Go 代码提供路由之前，它的 `Routes(*web.Router)` 会 panic。
 
-声明的 `mount` 会写入生成的 Web spec 和 runtime domain schema，详见 [Vine 集成](/docs/vine-integration#声明的-web-挂载路径)。使用挂载能力需要 Vine v0.19.0 或更高版本；当前所有后端 Go 输出的依赖版本为 v0.25.1。
+声明的 `mount` 会写入生成的 web spec 和 runtime domain schema，详见 [Vine 集成](/docs/vine-integration#声明的-web-挂载路径)。使用挂载能力需要 Vine v0.19.0 或更高版本；当前所有后端 Go 输出的依赖版本为 v0.27.0。
 
-## Portal API 客户端
+## portal API 客户端
 
 ```bash
 skelc gen go-module --api \
@@ -84,10 +84,10 @@ skelc gen go-module --api \
 
 领域为 `shop.order` 时，推导 module 为 `example.com/gen/shop/orderapi`，包名为 `orderapi`。`--go-module` 可覆盖 module 路径；`gen go --api` 写入已有模块。`--api` 与 `--pub` 互斥；默认 Go 生成用于后端实现，`--pub` 选择后端公共契约。`--api` 支持可重复的 `--actor domain.NameActor`，按服务的 `for` 受众筛选；筛选与依赖规则见 [CLI 参考](/docs/cli)。
 
-API 客户端依赖 `go.yorun.ai/vrpc` v0.12.0 或更高版本，可用 `--go-vrpc-version` 指定。基础类型来自 `go.yorun.ai/vrpc/skel`。跨领域类型依赖指向对应 `xxxapi` 包，不依赖 Vine。
+API 客户端依赖 `go.yorun.ai/vrpc` v0.13.0 或更高版本，可用 `--go-vrpc-version` 指定。基础类型来自 `go.yorun.ai/vrpc/skel`。跨领域类型依赖指向对应 `xxxapi` 包，不依赖 Vine。
 
-调用 `NewOrderApiServiceClient(client)`，传入为你配置好的 `*vrpc.Client`（指向 Portal 地址）。构造函数返回 `OrderApiServiceClient` 接口，你可以在测试中提供自己的实现或 mock。每个生成方法接受 `context.Context`、声明的业务参数和任意可选 `vrpc.InvokeOption`，返回业务结果与 `error`；无结果的方法仅返回 `error`。
+调用 `NewOrderApiServiceClient(client)`，传入为你配置好的 `*vrpc.Client`（指向 portal 地址）。构造函数返回 `OrderApiServiceClient` 接口，你可以在测试中提供自己的实现或 mock。每个生成方法接受 `context.Context`、声明的业务参数和任意可选 `vrpc.InvokeOption`，返回业务结果与 `error`；无结果的方法仅返回 `error`。
 
 `--api` 客户端使用 vRPC，不依赖 Vine。
 
-`ext service` 的 pub 包只生成 Server/ERServer 及默认实现，regular 包生成 Client，并转发公共服务端类型；`ext event` 的 pub 包只生成 Emitter，regular 包生成 Listener 与默认实现，并复用 pub 包的 payload 和 Emitter 类型。完整 Go 输出包含两类契约的两侧。普通 `pub service` 的 pub 包只生成 Client，regular 包额外生成 Server，并转发 pub 包的 Client 类型。扩展契约不进入 Go 或 TypeScript 的 `--api` 输出，且需要 Vine v0.25.1 或更高版本；生成的运行时 schema 带有 `Ext: true`。
+`ext service` 的 pub 包只生成 Server/ERServer 及默认实现，regular 包生成 Client，并转发公共服务端类型；`ext event` 的 pub 包只生成 Emitter，regular 包生成 Listener 与默认实现，并复用 pub 包的 payload 和 Emitter 类型。完整 Go 输出包含两类契约的两侧。普通 `pub service` 的 pub 包只生成 Client，regular 包额外生成 Server，并转发 pub 包的 Client 类型。扩展契约不进入 Go 或 TypeScript 的 `--api` 输出，且需要 Vine v0.27.0 或更高版本；生成的运行时 schema 带有 `Ext: true`。

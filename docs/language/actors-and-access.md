@@ -82,6 +82,7 @@ actor StaffActor {
 api service OrderApiService {
     for CustomerActor via client
     for StaffActor
+    auth required
 
     method get {
         input {
@@ -96,15 +97,20 @@ Each `for` line declares an allowed actor. Add `via` when the contract must pin 
 
 A backend service that is only called inside the application boundary doesn't need `for`. Don't add a public actor just to fill in a diagram — add one when a real caller needs a generated entry contract.
 
-## Declare Web Capabilities
+## Declare web Capabilities
 
 ```skel
 web CustomerPortalWeb {
     for CustomerActor via client
+    auth required
 }
 ```
 
-A `web` name ends in `Web` and declares at least one actor. It describes who may enter a web capability; it doesn't define HTTP methods, paths, or handler code. Web declarations are local runtime capabilities and can't be marked `pub`.
+A `web` name ends in `Web` and declares at least one actor. It describes who may enter a web capability; it doesn't define HTTP methods, paths, or handler code. A web declaration is a local runtime capability and can't be marked `pub`.
+
+### web Authentication
+
+A web declaration accepts one auth mode: `auth required`, `auth optional`, `auth anonymous`, or `auth off`. The first three use portal authentication and remove `Authorization` before forwarding; `off` skips portal authentication and leaves the header for the web handler. An omitted mode warns and generates `required`, and `--strict` rejects the omission.
 
 ### Pin a Frontend Mount Path
 
@@ -125,15 +131,15 @@ prefix, and treat the value as part of the published contract: changing it makes
 A mount path is a literal absolute path. It must start with `/`, and it cannot contain
 route parameters, query or fragment delimiters, escapes, whitespace, empty segments
 (`//`), or `.` and `..` segments. A trailing slash is allowed. Include `mount` at most
-once per Web.
+once per web.
 
-Omitting `mount` leaves the Web unrestricted by a declared mount path, while `mount /`
+Omitting `mount` leaves the web unrestricted by a declared mount path, while `mount /`
 declares the root path explicitly. The two are not interchangeable: only the declared
-root restricts the Web to `/`.
+root restricts the web to `/`.
 
 See [Vine Integration](/docs/vine-integration#declared-web-mount-paths) for how the
 value reaches generated code, and
-[Go Generation](/docs/generation/go#web-generation) for the generated Web surface.
+[Go Generation](/docs/generation/go#web-generation) for the generated web surface.
 
 ## Keep Actor Scope Deliberate
 
