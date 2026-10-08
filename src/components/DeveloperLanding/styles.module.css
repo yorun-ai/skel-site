@@ -38,16 +38,16 @@
 }
 
 :global(html[data-theme='dark']) .landing {
-  --visual-surface: #17141e;
-  --visual-raised: #211b2e;
-  --visual-canvas: #1b1724;
+  --visual-surface: #1b2027;
+  --visual-raised: #222831;
+  --visual-canvas: #191d24;
   --visual-border: rgb(255 255 255 / 10%);
-  --visual-border-strong: rgb(169 150 255 / 25%);
-  --visual-text: #eeeaf6;
-  --visual-muted: #b8b0c4;
-  --visual-faint: #7f778c;
-  --visual-accent: #b69cff;
-  --visual-accent-soft: rgb(169 150 255 / 10%);
+  --visual-border-strong: rgb(96 189 216 / 25%);
+  --visual-text: #edf0f4;
+  --visual-muted: #adb6c3;
+  --visual-faint: #7d8794;
+  --visual-accent: #60bdd8;
+  --visual-accent-soft: rgb(96 189 216 / 10%);
   --visual-type: #83c7ef;
   --visual-success: #94ddb0;
   --visual-success-soft: rgb(85 210 137 / 9%);
