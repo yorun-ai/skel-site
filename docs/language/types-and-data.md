@@ -107,8 +107,6 @@ config AssetConfig eternal {
 }
 ```
 
-Structured config values need skelc v0.23.0 or later, and the runtime needs Vine v0.25.0 or later.
-
 The Vine runtime preserves config string whitespace. Represent binary values as base64 strings in JSON or YAML; see [Vine configuration](https://vine.yorun.ai/docs/configuration).
 
 ## Model Contract Shapes, Not Storage

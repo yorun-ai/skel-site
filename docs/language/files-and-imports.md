@@ -49,6 +49,8 @@ data Order {
 
 Without `as`, references use the full domain name, such as `identity.user.UserSummary`. With `import identity.user as user`, references use the explicit alias, such as `user.UserSummary`. An alias is optional: two domains that end with the same segment can be imported, and referenced, without one.
 
+An alias cannot equal the current domain's full name or another imported domain's full name, even if that other import has an alias. Different imported domains cannot share a reference qualifier. These rules apply across all files in the input, regardless of import order, and are checked without loading dependencies. Only full domain names are reserved: `identity.user` does not reserve `user`. Repeating the same import with the same alias across files is allowed. Reserving an original domain name does not make it a usable reference qualifier after an alias is declared.
+
 An import is a logical dependency. The source file doesn't contain a filesystem path. `skelc check` and the language server validate the current input while leaving imported symbols unresolved, so checking needs only the source input:
 
 ```bash

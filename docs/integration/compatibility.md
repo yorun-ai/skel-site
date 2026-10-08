@@ -23,49 +23,49 @@ Versioned documentation explains historical behavior; when fixing current contra
 
 ## Generated Output Contract
 
-Generated Go modules depend on Vine v0.27.0 or later, which is the version written
-to the module's `go.mod`. Application code that needs its own copy of a generated
-bean uses `vine/util/vbean.DeepClone`.
+Backend Go modules emit `descriptor.go` and use the public
+`go.yorun.ai/skel/descriptor` types. Their registration call requires
+`skel.RegisterDomainDescriptor(*descriptor.Domain)`, and the generated module
+depends on Vine v0.28.0 or later. Go `--api` clients use vRPC and are unaffected.
+Application code that needs its own copy of a generated bean uses
+`vine/util/vbean.DeepClone`.
 
-When reviewing a generated schema diff, compare keys rather than positions:
+When reviewing a generated descriptor diff, compare keys rather than positions:
 keyed fields can appear in any order.
 
 ## Domain Schema Checks
 
-Snapshot and diff each domain independently. References to imported domains are
-stored as opaque, fully qualified names; their declarations are not copied into
-the current domain's schema. A schema snapshot covers the complete domain,
-including public and private declarations, while retaining each declaration's
-`pub` marker. This keeps compatibility ownership aligned with the domain that
-owns each declaration and makes import paths unnecessary for schema checks.
-
-Schema commands do not accept import-path mappings.
+Diff each domain independently. References to imported domains remain opaque,
+fully qualified names; their declarations are not copied into the current domain.
+Diff covers all public and private declarations. `schema diff` and default
+`schema list/get` do not accept import mappings; `schema dep` and selected
+`schema list --pub/--api` views resolve dependencies with `--skel-import`.
 
 A web that declares `mount` records it as `mountPath`, and changing that value
 appears as `web.mount-path.changed` at `BREAKING` impact. Switching a service or
 event between `pub` and `ext` changes which side implements or consumes it, and
 appears as `service.ext.changed` or `event.ext.changed` at `BREAKING` impact.
-Changing an authentication mode appears as `service.auth.changed` or
-`method.auth.changed` at `DANGEROUS` impact. Consumers that decode snapshots
-strictly must recognize the field, so keep
-`go.yorun.ai/skelc/schema` in step with the compiler that produced the snapshot.
+Changing or tightening an authentication mode appears as `service.auth.changed`,
+`service.auth.tightened`, `method.auth.changed`, or `method.auth.tightened` at
+`BREAKING` impact; relaxing one appears as `service.auth.relaxed` or
+`method.auth.relaxed` at `DANGEROUS` impact. Consumers of normalized query output should keep
+`go.yorun.ai/skel/cmd/skelc/output` in step with the compiler.
 
-Diff reads the baseline and candidate Skel source files or directories directly;
-schema snapshot JSON is not accepted as diff input.
+Diff reads the baseline and candidate Skel source files or directories directly.
 
 When no explicit baseline is supplied, diff reads the candidate source from Git
 `HEAD`. Repositories without usable history must pass `--baseline-skel-in`.
 
-Go integrations consume these command outputs through the public facade
-`go.yorun.ai/skelc/schema`. It exposes the response and nested wire types,
-typed constants, and strict `schema.Decode`, `schema.Validate`, and
-`schema.Encode` functions. Strict decoding rejects unknown fields, trailing JSON
-values, unsupported format versions, unknown wire enum values, and malformed
-normalized structures.
+Go integrations decode schema list/get outputs using the types in
+`go.yorun.ai/skel/cmd/skelc/output`, and diff reports using
+`go.yorun.ai/skel/schema/diff.Report`, with Go's `encoding/json`.
+Programmatic tools can use `api.QuerySchema` to obtain a semantic `*schema.Domain`
+and `diff.Compare` to compare two domains directly, without serializing them.
 
 ## Actor Identity
 
-Regenerate actor types and schemas after changing an actor. Applications that read
-schema output with `go.yorun.ai/skelc/schema` update that dependency alongside the
-compiler so both recognize `identifierField`. See
+Regenerate actor registration, authentication data, services, and descriptors after changing an actor. Applications that read
+schema query output with `go.yorun.ai/skel/cmd/skelc/output` update that dependency alongside the
+compiler so both recognize `actor.auth.identifierField`. Actor authentication is
+grouped under `auth`; an omitted `auth` means no authentication was declared. See
 [Actors & Access](/docs/actors-and-access) for marker usage.

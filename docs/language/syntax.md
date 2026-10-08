@@ -46,7 +46,7 @@ pub data UserSummary {
 
 API service names must end with `ApiService`, such as `OrderApiService`. Every API service must declare at least one `for Actor`; omission is a compilation error. Anonymous APIs also declare an actor and use `auth optional` to allow unauthenticated calls. Use `pub service` for backend calls and `api service` for portal clients.
 
-`--strict` rejects a service that declares no modifier, and rejects client admission rules on non-API services.
+Every service must declare `pub`, `ext`, or `api`. Client admission rules are allowed only on API services.
 
 ## Type Forms
 
@@ -85,7 +85,7 @@ api service OrderApiService {
 }
 ```
 
-API services support `auth required`, `auth optional`, and `auth anonymous`; web also supports `auth off`. A missing API service-level or web mode warns and defaults to `required`, and `--strict` rejects the omission. See [Service Contracts](/docs/services) for mode semantics.
+API services support `auth required`, `auth optional`, and `auth anonymous`; web also supports `auth off`. API service-level and web auth modes are required. See [Service Contracts](/docs/services) for mode semantics.
 
 Service sections may include audiences, one auth marker, one service requirement, and methods. Method sections appear in this order: auth marker, requirement, input, output.
 
@@ -122,9 +122,9 @@ An imported resource is referenced by its full domain name, such as `commerce.ac
 | Field, method, via, action, check, trigger | `lowerCamelCase` |
 | Enum item | `SCREAMING_SNAKE_CASE` |
 
-Identifiers can't begin with `_`. `UNSPECIFIED` is reserved for enum output,
-and `skelSensitive` is reserved in generated sensitive structures. No other name
-is reserved.
+Identifiers can't begin with `_`. `UNSPECIFIED` is reserved for enum output.
+`skelc check` accepts the field name `skelSensitive`; Go generation rejects it
+when it conflicts with the generated `SkelSensitive()` method on a sensitive structure.
 
 Validate the current input after every contract change:
 

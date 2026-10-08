@@ -108,7 +108,7 @@ web 名以 `Web` 结尾，至少声明一个 actor。它说明谁能进入一个
 
 ### web 认证
 
-web 声明只接受一种 auth 模式：`auth required`、`auth optional`、`auth anonymous` 或 `auth off`。前三种使用 portal 认证，并在转发前移除 `Authorization`；`off` 跳过 portal 认证，把 header 留给 web handler。省略模式会警告并生成 `required`，`--strict` 拒绝省略。
+web 声明只接受一种 auth 模式：`auth required`、`auth optional`、`auth anonymous` 或 `auth off`。前三种使用 portal 认证，并在转发前移除 `Authorization`；`off` 跳过 portal 认证，把 header 留给 web handler。必须显式声明认证模式。
 
 ### 固定前端挂载路径
 

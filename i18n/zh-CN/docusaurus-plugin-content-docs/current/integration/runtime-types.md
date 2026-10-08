@@ -4,7 +4,7 @@ slug: /runtime-types
 
 # 运行时类型
 
-Skel 生成的 Go 代码用 `core/skel` 来表达扩展标量、Actor 标记和契约元数据。当你在应用里保存、比较或跨语言传递这些值时，需要了解它们的传输形态和比较规则。
+Skel 生成的 Go 代码用 `go.yorun.ai/skel/types` 表达扩展标量，导入别名为 `skeltype`；服务端 Actor 标记和契约元数据来自 `go.yorun.ai/vine/core/skel`。当你在应用里保存、比较或跨语言传递这些值时，需要了解它们的传输形态和比较规则。
 
 ## 标量编码
 
@@ -62,7 +62,7 @@ Skel 标量扩展遵循一个基本原则：
 "550e8400-e29b-41d4-a716-446655440000"
 ```
 
-`uuid` 作为 map key 时，Go 生成类型为 `map[skel.UUID]T`，TypeScript 生成类型为 `Record<string, T>`，JSON 和 CBOR 都使用 UUID 字符串作为 key。
+`uuid` 作为 map key 时，Go 生成类型为 `map[skeltype.UUID]T`，TypeScript 生成类型为 `Record<string, T>`，JSON 和 CBOR 都使用 UUID 字符串作为 key。
 
 ### JSON（JSON 文本）
 
@@ -87,14 +87,11 @@ TypeScript generator 会把 `Binary` 映射为 `Uint8Array`；只有 method argu
 
 Go 集合的可空性与编码契约见 [Go 生成](/docs/generation/go#集合编码与校验)。`binary` 标量保留其字节编码，不属于 `list<T>`。
 
-## Domain Schema 注册表
+## Domain Descriptor 注册
 
-每个生成的 package 都会注册自己的 domain schema，应用可通过以下方式读取已注册的 schema：
+后端包生成 `descriptor.go`，使用 `go.yorun.ai/skel/descriptor` 构造
+`descriptor.Domain`，并传给 `skel.RegisterDomainDescriptor`。这些值包含运行时
+元数据和具名类型引用，不包含源码位置。
 
-```go
-skel.RegisteredDomainSchemas()
-```
-
-返回结果按 `Domain` 稳定排序，这样 App 注册、测试快照和日志对比都能保持确定性。
-
-由低于 `skel.MinSkelcVersion()` 的编译器生成的 schema 会在应用启动时报错。
+注册要求 Vine v0.28.0 或更高版本。编译器版本缺失或低于 `skel.MinSkelcVersion()`
+的 descriptor 会在应用启动阶段失败。
