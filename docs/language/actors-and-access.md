@@ -110,7 +110,7 @@ A `web` name ends in `Web` and declares at least one actor. It describes who may
 
 ### web Authentication
 
-A web declaration accepts one auth mode: `auth required`, `auth optional`, `auth anonymous`, or `auth off`. The first three use portal authentication and remove `Authorization` before forwarding; `off` skips portal authentication and leaves the header for the web handler. An omitted mode warns and generates `required`, and `--strict` rejects the omission.
+A web declaration accepts one auth mode: `auth required`, `auth optional`, `auth anonymous`, or `auth off`. The first three use portal authentication and remove `Authorization` before forwarding; `off` skips portal authentication and leaves the header for the web handler. The auth mode must be declared explicitly.
 
 ### Pin a Frontend Mount Path
 

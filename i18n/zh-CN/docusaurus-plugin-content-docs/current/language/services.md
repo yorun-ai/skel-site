@@ -14,7 +14,7 @@ API 服务必须至少声明一条 `for Actor`，缺失时编译报错；匿名 
 
 `pub service` 用于跨领域后端调用，`api service` 用于客户端经 portal 访问的入口。两修饰符互斥，同一领域的服务名在两种类型间统一判重。API 服务经 portal 访问，不通过后端 Rpc 客户端调用。
 
-只有 API 服务应声明 `for Actor`、`auth <mode>` 或 `require`，包括方法级规则。未声明认证时默认 `required` 并警告；audience 和 transport 按显式声明处理，不由默认值推导。执行认证、权限和资源检查的服务属于后端服务，不作为客户端入口。
+只有 API 服务应声明 `for Actor`、`auth <mode>` 或 `require`，包括方法级规则。API 服务必须显式声明认证；audience 和 transport 也按显式声明处理。执行认证、权限和资源检查的服务属于后端服务，不作为客户端入口。
 
 ### 扩展契约
 
@@ -29,7 +29,7 @@ ext service StorageService {
 }
 ```
 
-service 的 `ext`、`pub`、`api` 修饰符互斥。`ext service` 是服务端契约，不是 portal 入口，因此 `for Actor`、`auth` 等客户端规则在 `--strict` 下会报错。要实现公开的服务端接口，可嵌入生成的默认 Server 类型，并覆盖所需方法。
+service 的 `ext`、`pub`、`api` 修饰符互斥。`ext service` 是服务端契约，不是 portal 入口，因此 `for Actor`、`auth` 等客户端规则会报错。要实现公开的服务端接口，可嵌入生成的默认 Server 类型，并覆盖所需方法。
 
 ## 声明 Service
 
@@ -66,7 +66,7 @@ api service HealthApiService {
 
 ## 认证与调用方
 
-`for Actor [via name]` 记录契约服务的调用者。方法级 auth 覆盖服务级模式；方法省略时生成 `inherit`。非 API service 省略 auth 时生成 `required`，不产生缺失 auth 的警告。
+`for Actor [via name]` 记录契约服务的调用者。方法级 auth 覆盖服务级模式；方法省略时生成 `inherit`。非 API service 不声明客户端认证策略。
 
 | 声明 | 允许的调用者 |
 | --- | --- |
@@ -76,9 +76,9 @@ api service HealthApiService {
 
 这三种模式都会拒绝无效凭证。`anonymous` 还会拒绝持有效凭证的已认证调用者。`auth off` 仅适用于 web，Rpc 服务和方法不能使用。
 
-`--strict` 要求每个 API 服务显式声明服务级 auth，即使所有方法都已声明自己的模式。默认模式下，省略服务级 auth 会警告，并生成 `required`。
+每个 API 服务必须显式声明服务级 auth，即使所有方法都已声明自己的模式。
 
-actor 的 `auth { credential / info }` 块使用自己的语法，不受 service 模式影响。模式写法需要 skelc v0.26.0 或更高版本，运行时需要 Vine v0.27.0 或更高版本。
+actor 的 `auth { credential / info }` 块使用自己的语法，不受 service 模式影响。
 
 ## Input 与 Output
 

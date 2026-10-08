@@ -49,6 +49,8 @@ data Order {
 
 没有 `as` 时，引用使用完整 domain 名，例如 `identity.user.UserSummary`；声明 `import identity.user as user` 后，引用使用显式别名，例如 `user.UserSummary`。别名是可选的：末段同名的两个 domain 也可以不带别名直接导入并引用。
 
+别名不能与当前 domain 的完整名称或其他导入 domain 的完整名称相同，即使另一个导入也声明了别名。不同导入 domain 不能共用同一个引用限定名。这些规则在整个输入的所有文件之间统一检查，不受 import 顺序影响，也不需要加载依赖。只保留完整 domain 名：`identity.user` 不会占用 `user`。跨文件重复导入同一 domain 并使用同一别名是允许的。原名被保留以避免冲突，不代表声明别名后仍可通过原名引用。
+
 `import` 表达的是逻辑依赖，不包含文件系统路径。`skelc check` 和语言服务器只校验当前输入，跨 domain 符号保持未解析，因此检查时只需提供源文件：
 
 ```bash

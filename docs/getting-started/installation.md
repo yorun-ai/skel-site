@@ -6,12 +6,12 @@ slug: /installation
 
 ## Prerequisites
 
-skelc v0.15.0 and generated Go modules need Go 1.27.0 or later. Generated Go modules require Vine `v0.27.0` or later and default to `v0.27.0`. When generating into an existing Go module, update its dependencies yourself.
+skelc and generated Go modules need Go 1.27.0 or later. Backend Go modules require Vine `v0.28.0` or later and default to `v0.28.0`. Go API clients use vRPC instead of Vine. When generating into an existing Go module, update its dependencies yourself.
 
 ## Install
 
 ```bash
-go install go.yorun.ai/skelc/cmd/skelc@latest
+go install go.yorun.ai/skel/cmd/skelc@latest
 skelc version
 ```
 
@@ -22,8 +22,10 @@ The Go binary directory must be on `PATH`. If the shell can't find skelc, check 
 CI and reproducible generation environments should pin an exact version:
 
 ```bash
-go install go.yorun.ai/skelc/cmd/skelc@v0.24.0
+go install go.yorun.ai/skel/cmd/skelc@v0.31.0
 ```
+
+The module path is `go.yorun.ai/skel`; the executable is named `skelc`.
 
 After upgrading skelc, regenerate contracts and review the diff, and keep developer machines and CI on the same compiler version. [Go generation](/docs/generation/go#in-process-rpc-value-isolation) describes the in-process value isolation model and the copy helper application code uses.
 

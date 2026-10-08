@@ -14,7 +14,7 @@ Every API service must declare at least one `for Actor`; omission is a compilati
 
 Use `pub service` for backend calls between domains and `api service` for entry points that clients call through portal. The two modifiers are mutually exclusive, and service names are unique across both kinds within a domain. An API service is reached through portal, so it is not invoked through a backend Rpc client.
 
-Declare `for Actor`, `auth <mode>`, or `require` only on API services, including at the method level. Authentication defaults to `required` with a warning when it is not declared; audience and transport are chosen explicitly, not inferred from that default. Services that perform authentication, permission, and resource checks are backend services, not client entry points.
+Declare `for Actor`, `auth <mode>`, or `require` only on API services, including at the method level. API services must explicitly declare authentication; audience and transport are also chosen explicitly. Services that perform authentication, permission, and resource checks are backend services, not client entry points.
 
 ### Extension Contracts
 
@@ -29,7 +29,7 @@ ext service StorageService {
 }
 ```
 
-The service modifiers `ext`, `pub`, and `api` are mutually exclusive. An `ext` service is a server contract, not a portal entry point, so client rules such as `for Actor` or `auth` fail under `--strict`. To implement the exported server interface, embed the generated default server type and override the methods you need.
+The service modifiers `ext`, `pub`, and `api` are mutually exclusive. An `ext` service is a server contract, not a portal entry point, so client rules such as `for Actor`, `auth`, or `require` are rejected. To implement the exported server interface, embed the generated default server type and override the methods you need.
 
 ## Declare a Service
 
@@ -66,7 +66,7 @@ api service HealthApiService {
 
 ## Authentication and Audiences
 
-`for Actor [via name]` records the callers this contract serves. A method's auth mode overrides the service mode; an omitted method mode generates `inherit`. Non-API services without an auth declaration generate `required` without a missing-auth warning.
+`for Actor [via name]` records the callers this contract serves. A method's auth mode overrides the service mode; an omitted method mode generates `inherit`. Non-API services do not declare client authentication policies.
 
 | Declaration | Accepted callers |
 | --- | --- |
@@ -76,9 +76,9 @@ api service HealthApiService {
 
 All three modes reject invalid credentials. `anonymous` also rejects valid authenticated callers. `auth off` is only available on web declarations; Rpc services and methods reject it.
 
-Every API service must explicitly declare a service-level auth mode under `--strict`, even when its methods declare their own modes. Without `--strict`, omission produces a warning and generates `required`.
+Every API service must explicitly declare a service-level auth mode, even when its methods declare their own modes.
 
-Actor `auth { credential / info }` blocks use their own syntax and are unaffected by the service mode. The mode spellings need skelc v0.26.0 or later and Vine v0.27.0 or later.
+Actor `auth { credential / info }` blocks use their own syntax and are unaffected by the service mode.
 
 ## Inputs and Outputs
 

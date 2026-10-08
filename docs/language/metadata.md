@@ -63,7 +63,7 @@ The marker can apply to:
 - A resource-check `input` or input field
 - A task-trigger `input` or input field
 
-`skelSensitive` is a reserved field name in generated sensitive structures.
+`skelc check` accepts fields named `skelSensitive`. Go generation rejects this name when the enclosing generated structure also has a `SkelSensitive()` marker method. Ordinary Go structures and TypeScript or Skel output allow the field.
 
 Sensitivity is a handling instruction, not an access rule. Use actors, authentication, and permissions to control who may receive the value.
 

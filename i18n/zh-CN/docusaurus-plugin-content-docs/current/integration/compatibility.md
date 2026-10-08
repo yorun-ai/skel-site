@@ -23,39 +23,39 @@ CI 和开发环境要用同一个 skelc 版本。输入、import 映射和输出
 
 ## 生成产物契约
 
-生成的 Go module 依赖 Vine v0.27.0 或更高版本，该版本号会写入 module 的 `go.mod`。应用代码需要自己的生成 bean 副本时使用 `vine/util/vbean.DeepClone`。
+后端 Go module 生成 `descriptor.go`，直接使用 `go.yorun.ai/skel/descriptor` 类型，并要求运行时提供 `skel.RegisterDomainDescriptor(*descriptor.Domain)`；生成的 module 依赖 Vine v0.28.0 或更高版本。Go `--api` 客户端使用 vRPC，不受影响。应用代码需要自己的生成 bean 副本时使用 `vine/util/vbean.DeepClone`。
 
-review 生成的 schema 差异时，应比较 key 而不是位置：带 key 的字段可以出现在任意顺序。
+review 生成的 descriptor 差异时，应比较 key 而不是位置：带 key 的字段可以出现在任意顺序。
 
 ## 按 domain 检查 schema
 
-每个 domain 独立生成快照和执行 diff。当前 domain 的 schema 只把 import domain 中的符号
-保存为不透明的完整名称，不会复制外部声明。schema 快照覆盖完整 domain，包括
-公开和私有声明，同时保留每个声明的 `pub` 标记。这样，每项声明的兼容性都由
-所属的 domain 负责，schema 检查不再依赖 import 的文件系统路径。
-
-schema 命令不接受 import 路径映射。
+每个 domain 独立执行 diff。外部引用保留为不透明的完整名称，不复制依赖 domain
+的声明。diff 覆盖全部公开和私有声明。`schema diff` 和默认 `schema list/get`
+不接受 import 映射；`schema dep` 与 `schema list --pub/--api` 视图通过
+`--skel-import` 解析依赖。
 
 声明了 `mount` 的 web 会在 schema 中记录 `mountPath`，修改该值会以 `BREAKING` 影响级别
 报告 `web.mount-path.changed`。在 `pub` 与 `ext` 之间切换 service 或 event 会改变由哪一侧
 实现或消费，会以 `BREAKING` 影响级别报告 `service.ext.changed` 或 `event.ext.changed`。
-修改认证模式会以 `DANGEROUS` 影响级别报告 `service.auth.changed` 或
-`method.auth.changed`。严格解码快照的消费者必须识别这些字段，因此请让 `go.yorun.ai/skelc/schema`
-与生成快照的编译器保持同一版本。
+修改或收紧认证模式会以 `BREAKING` 影响级别报告 `service.auth.changed`、
+`service.auth.tightened`、`method.auth.changed` 或 `method.auth.tightened`；
+放宽认证模式会以 `DANGEROUS` 影响级别报告 `service.auth.relaxed` 或
+`method.auth.relaxed`。规范化查询结果的消费者应让 `go.yorun.ai/skel/cmd/skelc/output`
+与编译器保持同一版本。
 
-diff 直接读取 baseline 和 candidate 的 Skel 源文件或目录，不接受 schema 快照
-JSON 作为 diff 输入。
+diff 直接读取 baseline 和 candidate 的 Skel 源文件或目录。
 
 未显式指定 baseline 时，diff 会从 Git `HEAD` 读取 candidate 的同一路径；没有
 可用历史的仓库必须传入 `--baseline-skel-in`。
 
-Go 集成通过公开 facade `go.yorun.ai/skelc/schema` 解析这些命令输出。该 package
-对外提供响应类型、嵌套 wire 类型、带类型的常量，以及严格的
-`schema.Decode`、`schema.Validate`、`schema.Encode` 函数。严格解码会拒绝未知字段、
-尾随 JSON 值、不支持的格式版本、未知 wire 枚举值和格式错误的规范化结构。
+Go 集成使用 `encoding/json`，将 schema list/get 输出解码为
+`go.yorun.ai/skel/cmd/skelc/output` 中的类型，将 diff 报告解码为
+`go.yorun.ai/skel/schema/diff.Report`。程序化工具可通过 `api.QuerySchema`
+取得语义 `*schema.Domain`，并用 `diff.Compare` 直接比较两个 domain，无需序列化。
 
 ## Actor 身份
 
-修改 actor 后请重新生成 actor 类型和 schema。如果程序使用 `go.yorun.ai/skelc/schema`
-读取 schema 输出，应与编译器一起升级该依赖，使两者都能识别 `identifierField`。
+修改 actor 后请重新生成 actor 注册、认证数据、服务和 descriptor。如果程序使用 `go.yorun.ai/skel/cmd/skelc/output`
+读取 schema 输出，应与编译器一起升级该依赖，使两者都能识别 `actor.auth.identifierField`。
+Actor 的认证信息统一放在 `auth` 下；省略 `auth` 表示未声明认证能力。
 标记的用法参见 [Actor 与访问入口](/docs/actors-and-access)。

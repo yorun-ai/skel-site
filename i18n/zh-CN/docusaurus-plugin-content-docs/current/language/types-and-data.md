@@ -107,8 +107,6 @@ config AssetConfig eternal {
 }
 ```
 
-结构化 config 需要 skelc v0.23.0 或更高版本，运行时需要 Vine v0.25.0 或更高版本。
-
 Vine runtime 会保留配置字符串的原始空白。JSON 或 YAML 中的 binary 值使用 base64 字符串；参见 [Vine 配置](https://vine.yorun.ai/zh-CN/docs/configuration)。
 
 ## 契约结构不等于存储结构

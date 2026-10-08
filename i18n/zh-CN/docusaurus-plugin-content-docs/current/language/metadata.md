@@ -63,7 +63,7 @@ data AccessCredential {
 - resource check `input` 或字段
 - task trigger `input` 或字段
 
-在生成的敏感结构中，`skelSensitive` 是保留字段名。
+`skelc check` 允许名为 `skelSensitive` 的字段。如果该字段所在的 Go 结构同时生成了 `SkelSensitive()` 标记方法，Go 生成会报重名错误。普通 Go 结构以及 TypeScript、Skel 输出允许使用此字段。
 
 敏感标记是处理要求，不是访问规则。谁能拿到这个值仍然由 actor、认证和权限来控制。
 

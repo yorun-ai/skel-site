@@ -13,7 +13,7 @@ The extension does not bundle the compiler. It starts `skelc lsp`, so install sk
 1. Install skelc and confirm that VS Code can find it:
 
    ```bash
-   go install go.yorun.ai/skelc/cmd/skelc@latest
+   go install go.yorun.ai/skel/cmd/skelc@latest
    skelc version
    ```
 
@@ -47,7 +47,7 @@ Parsing, formatting, diagnostics, completion, navigation, and rename are all pro
 | `skelc.schemaCompatibility.includeCompatible` | `false` | Also report `COMPATIBLE` changes as hints. |
 | `skelc.schemaCompatibility.codeLens` | `true` | Show the compatibility CodeLens above domain declarations. |
 | `skelc.schemaCompatibility.baseline` | empty | Explicit baseline relative to the domain source directory; empty uses Git `HEAD`. |
-| `skelc.strict` | `false` | Treat migration warnings as errors. Changing it restarts the language server. |
+| `skelc.strict` | `false` | Currently identical to default validation. Changing it restarts the language server. |
 
 The Command Palette provides:
 

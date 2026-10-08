@@ -46,7 +46,7 @@ pub data UserSummary {
 
 API 服务名必须以 `ApiService` 结尾，例如 `OrderApiService`。API 服务必须至少声明一条 `for Actor`，缺失时编译报错；匿名 API 也需要声明 actor，并通过 `auth optional` 允许匿名调用。后端调用使用 `pub service`，portal 客户端入口使用 `api service`。
 
-`--strict` 会把未声明修饰符的 service 视为错误，也会拒绝在非 API service 中声明客户端准入规则。
+service 必须声明 `pub`、`ext` 或 `api`，客户端准入规则只允许出现在 API service 中。
 
 ## 类型形式
 
@@ -85,7 +85,7 @@ api service OrderApiService {
 }
 ```
 
-API 服务支持 `auth required`、`auth optional`、`auth anonymous`；web 还支持 `auth off`。省略 API 服务级或 web 模式会警告并默认 `required`，`--strict` 拒绝省略。模式语义见 [Service 契约](/docs/services)。
+API 服务支持 `auth required`、`auth optional`、`auth anonymous`；web 还支持 `auth off`。必须显式声明 API 服务级或 web 认证模式。模式语义见 [Service 契约](/docs/services)。
 
 service 可包含 audience、一个 auth 标记、一个 service require 和若干 method。method 内顺序为 auth 标记、require、input、output。
 
@@ -122,7 +122,7 @@ any(item, item)
 | 字段、method、via、action、check、trigger | `lowerCamelCase` |
 | Enum item | `SCREAMING_SNAKE_CASE` |
 
-标识符不能以 `_` 开头。`UNSPECIFIED` 预留给 enum 输出，`skelSensitive` 预留给生成的敏感结构；除此之外没有保留名称。
+标识符不能以 `_` 开头。`UNSPECIFIED` 预留给 enum 输出。`skelc check` 允许使用 `skelSensitive` 字段名；Go 生成时，如果它与敏感结构生成的 `SkelSensitive()` 方法重名，则会报错。
 
 每次修改契约后都运行一下：
 
