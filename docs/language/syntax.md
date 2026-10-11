@@ -27,7 +27,7 @@ Every file declares a domain. Imports follow the domain and precede declarations
 | `enum Name { ITEM }` | At least one item | Yes | [Types & Data](/docs/types-and-data#enums) |
 | `data Name { field: Type }` | Fields are optional | Yes | [Types & Data](/docs/types-and-data#data-and-generics) |
 | `config NameConfig eternal { ... }` | `eternal` or `instant` | Yes | [Types & Data](/docs/types-and-data#configuration) |
-| `actor NameActor { via client {} }` | At least one via | Yes | [Actors & Access](/docs/actors-and-access) |
+| `actor NameActor {}` | Optional auth and permission | Yes | [Actors & Access](/docs/actors-and-access) |
 | `resource Name { action read }` | At least one action | Yes | [Permission Model](/docs/permissions) |
 | `service NameService { method get {} }` | At least one method | Yes | [Service Contracts](/docs/services) |
 | `event NameEvent { payload { ... } }` | One payload | Yes | [Events & Tasks](/docs/events-and-tasks#events) |
@@ -44,7 +44,9 @@ pub data UserSummary {
 
 `api` is supported only on services and is mutually exclusive with `pub`. `ext service` exports the server contract for other domains to implement; `ext event` exports the Emitter contract for other domains to publish. `ext` applies to services and events and is mutually exclusive with `pub` and `api`.
 
-API service names must end with `ApiService`, such as `OrderApiService`. Every API service must declare at least one `for Actor`; omission is a compilation error. Anonymous APIs also declare an actor and use `auth optional` to allow unauthenticated calls. Use `pub service` for backend calls and `api service` for portal clients.
+API service names use the `ApiService` suffix with an optional version, such as `OrderApiService` or `OrderApiServiceV2`. Every API service must declare at least one `for Actor`; omission is a compilation error. Anonymous APIs also declare an actor and use `auth optional` to allow unauthenticated calls. Use `pub service` for backend calls and `api service` for portal clients.
+
+For multiple actors on an API service or web, use `for AActor, BActor`; comma lists may wrap across lines. Listing the same actor twice is an error. See [Actors & Access](/docs/actors-and-access).
 
 Every service must declare `pub`, `ext`, or `api`. Client admission rules are allowed only on API services.
 
@@ -70,7 +72,7 @@ T?
 
 ```skel
 api service OrderApiService {
-    for CustomerActor via client
+    for CustomerActor
     auth required
     require Order:read
 
@@ -118,9 +120,19 @@ An imported resource is referenced by its full domain name, such as `commerce.ac
 | --- | --- |
 | Domain | dot-separated lower names, such as `commerce.order` |
 | Top-level declaration and type parameter | `CamelCase` |
-| Service, config, event, actor, web, task | matching suffix such as `Service` or `Actor` |
-| Field, method, via, action, check, trigger | `lowerCamelCase` |
+| Service, config, event, actor, web, task | matching suffix such as `Service` or `Actor`, optionally followed by `V1`, `V2`, etc. |
+| Field, method, action, check, trigger | `lowerCamelCase` |
 | Enum item | `SCREAMING_SNAKE_CASE` |
+
+The optional version suffix is an uppercase `V` followed by a positive decimal
+integer without leading zeroes: `V1`, `V2`, and `V10` are valid; `V0`, `V01`, and
+`v2` are not. A versioned name is an independent declaration: references and
+generated code retain the full name, and each version keeps its own fields,
+methods, and hash. `OrderApiServiceV2` may reference the same `Order` data type
+and `CustomerActor` as `OrderApiService`.
+
+A declaration name cannot consist only of its kind suffix and version: `Event`,
+`EventV2`, `Config`, and `ConfigV2` are rejected.
 
 Identifiers can't begin with `_`. `UNSPECIFIED` is reserved for enum output.
 `skelc check` accepts the field name `skelSensitive`; Go generation rejects it

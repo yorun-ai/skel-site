@@ -4,33 +4,20 @@ slug: /actors-and-access
 
 # Actors & Access
 
-An actor names a kind of caller. It records how that caller can enter the system and, when needed, the credential and identity information carried by authentication.
+An actor names a kind of caller. When authentication is needed, it declares the credential and identity information for that caller.
 
-## Declare Entry Transports
+## Declare a Caller
 
 ```skel
-pub actor CustomerActor {
-    via client {}
-    via openapi {}
-}
+pub actor CustomerActor {}
 ```
 
-An actor name ends in `Actor` and declares at least one `via`. The supported transports:
-
-| Via | Typical caller |
-| --- | --- |
-| `client` | A generated vRPC client |
-| `agent` | An application or internal agent |
-| `openapi` | An OpenAPI-facing caller |
-
-The declaration states capability, not network policy. TLS, tokens, gateways, and endpoint exposure remain runtime concerns.
+An actor name uses the `Actor` suffix with an optional version, such as `CustomerActorV2`. An actor without authentication or permission declarations can have an empty body. TLS, tokens, gateways, and endpoint exposure remain runtime concerns.
 
 ## Add Authentication Data
 
 ```skel
 pub actor CustomerActor {
-    via client {}
-
     auth {
         @sensitive
         credential {
@@ -69,7 +56,6 @@ identity information at runtime, see the
 
 ```skel
 actor StaffActor {
-    via client {}
     permission {}
 }
 ```
@@ -80,8 +66,7 @@ actor StaffActor {
 
 ```skel
 api service OrderApiService {
-    for CustomerActor via client
-    for StaffActor
+    for CustomerActor, StaffActor
     auth required
 
     method get {
@@ -93,20 +78,20 @@ api service OrderApiService {
 }
 ```
 
-Each `for` line declares an allowed actor. Add `via` when the contract must pin a specific transport from the actor's options. Leave it off to keep the transport unspecified.
+An API service or web declaration lists every allowed actor in one `for` clause, separated by commas; the list may wrap across lines. A single actor uses `for CustomerActor`. Listing the same actor twice is an error.
 
-A backend service that is only called inside the application boundary doesn't need `for`. Don't add a public actor just to fill in a diagram — add one when a real caller needs a generated entry contract.
+A backend service that is only called inside the application boundary doesn't need `for`. Declare an actor when a real caller needs a generated entry contract.
 
 ## Declare web Capabilities
 
 ```skel
 web CustomerPortalWeb {
-    for CustomerActor via client
+    for CustomerActor
     auth required
 }
 ```
 
-A `web` name ends in `Web` and declares at least one actor. It describes who may enter a web capability; it doesn't define HTTP methods, paths, or handler code. A web declaration is a local runtime capability and can't be marked `pub`.
+A `web` name uses the `Web` suffix with an optional version, such as `CustomerPortalWebV2`, and declares at least one actor. It describes who may enter a web capability; it doesn't define HTTP methods, paths, or handler code. A web declaration is a local runtime capability and can't be marked `pub`.
 
 ### web Authentication
 
@@ -119,7 +104,7 @@ Add `mount` when a frontend build must answer on a fixed public URL prefix:
 ```skel
 web ConsoleWeb {
     mount /console
-    for ClientActor via client
+    for ClientActor
 }
 ```
 
@@ -143,6 +128,6 @@ value reaches generated code, and
 
 ## Keep Actor Scope Deliberate
 
-Create separate actors when callers have meaningfully different credentials, identity data, transports, or permission behavior. Don't spin up a new actor for every UI screen or service method. A stable actor represents a caller role that spans several capabilities.
+Create separate actors when callers have meaningfully different credentials, identity data, or permission behavior. Avoid one actor per UI screen or service method; a stable actor represents a caller role that spans several capabilities.
 
 Next: [Permission Model](/docs/permissions) or [Service Contracts](/docs/services).

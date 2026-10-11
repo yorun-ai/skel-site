@@ -58,7 +58,7 @@ check 用来回答“订单是不是存在”“订单是否属于当前调用�
 
 ```skel
 api service OrderApiService {
-    for CustomerActor via client
+    for CustomerActor
     auth required
     require Order:read
 

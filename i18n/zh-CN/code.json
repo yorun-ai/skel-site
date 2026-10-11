@@ -493,7 +493,7 @@
     "message": "调用者与权限也是契约数据"
   },
   "homepage.mechanisms.access.description": {
-    "message": "actor 表示调用者及入口；resource、action、check 和 require 把授权意图放在受保护的能力旁边。"
+    "message": "actor 表示调用者并携带认证数据；resource、action、check 和 require 把授权意图放在受保护的能力旁边。"
   },
   "homepage.mechanisms.validation.label": {
     "message": "校验"
@@ -502,7 +502,7 @@
     "message": "无效边界不会进入生成阶段"
   },
   "homepage.mechanisms.validation.description": {
-    "message": "skelc 使用同一套诊断模型检查命名、类型、import、公共闭包、actor 入口、权限路径、decorator 与引用循环。"
+    "message": "skelc 使用同一套诊断模型检查命名、类型、import、公共闭包、actor 受众、权限路径、decorator 与引用循环。"
   },
   "homepage.mechanisms.generation.label": {
     "message": "生成"
@@ -583,7 +583,7 @@
     "message": "调用者与入口"
   },
   "homepage.guides.access.description": {
-    "message": "描述调用者、凭据和入口类型。"
+    "message": "描述调用者、凭据和身份信息。"
   },
   "homepage.guides.permissions.title": {
     "message": "权限模型"

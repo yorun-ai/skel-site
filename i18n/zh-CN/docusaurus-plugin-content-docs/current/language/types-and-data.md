@@ -89,7 +89,7 @@ config CheckoutConfig eternal {
 }
 ```
 
-config 名以 `Config` 结尾，并声明一种生命周期：
+config 名使用 `Config` 后缀，可追加版本号，例如 `CheckoutConfigV2`，并声明一种生命周期：
 
 - `eternal`：应用生命周期内保持稳定。
 - `instant`：应用运行中可能发生变化。

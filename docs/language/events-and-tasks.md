@@ -18,7 +18,12 @@ pub event OrderPlacedEvent {
 }
 ```
 
-An event name ends in `Event` and contains one `payload` block. Events don't declare actors or type parameters.
+An event name uses the `Event` suffix with an optional version, such as `OrderPlacedEventV2`, and contains one `payload` block. Events don't declare actors or type parameters.
+
+For Go output, `OrderPlacedEventV2` keeps that payload type name and generates
+`OrderPlacedEventV2Emitter` / `OrderPlacedEventV2Listener` with methods
+`EmitOrderPlacedV2` / `OnOrderPlacedV2`; the methods omit `Event` and retain the
+version.
 
 Model an event as something that has already happened. `OrderPlacedEvent` gives consumers a stable fact; `PlaceOrderEvent` reads like a command and works better as a service method or task trigger.
 
@@ -74,7 +79,7 @@ task RebuildOrderIndexTask {
 }
 ```
 
-A task name ends in `Task` and declares at least one trigger. Trigger names use `lowerCamelCase`; each trigger has optional input and no output.
+A task name uses the `Task` suffix with an optional version, such as `RebuildOrderIndexTaskV2`, and declares at least one trigger. Trigger names use `lowerCamelCase`; each trigger has optional input and no output.
 
 Create separate triggers when the same task has distinct invocation shapes. Create separate tasks when ownership, failure handling, scheduling, or implementation differs.
 

@@ -6,7 +6,7 @@ slug: /services
 
 A service defines callable methods independently of their Go implementation or TypeScript client. skelc generates both sides from the same method names and types.
 
-API service names must end with `ApiService`, such as `OrderApiService`; other services end with `Service`.
+API service names use the `ApiService` suffix, such as `OrderApiService`; other services use `Service`. Either suffix may be followed by `V` and a positive integer without leading zeroes, such as `OrderApiServiceV2` or `OrderServiceV10`.
 
 Every API service must declare at least one `for Actor`; omission is a compilation error. Anonymous APIs also declare an actor and use `auth optional` to allow unauthenticated calls.
 
@@ -14,7 +14,7 @@ Every API service must declare at least one `for Actor`; omission is a compilati
 
 Use `pub service` for backend calls between domains and `api service` for entry points that clients call through portal. The two modifiers are mutually exclusive, and service names are unique across both kinds within a domain. An API service is reached through portal, so it is not invoked through a backend Rpc client.
 
-Declare `for Actor`, `auth <mode>`, or `require` only on API services, including at the method level. API services must explicitly declare authentication; audience and transport are also chosen explicitly. Services that perform authentication, permission, and resource checks are backend services, not client entry points.
+Declare `for Actor`, `auth <mode>`, or `require` only on API services, including at the method level. An API service must declare its audience and authentication mode explicitly. Services that perform authentication, permission, and resource checks are backend services, not client entry points.
 
 ### Extension Contracts
 
@@ -35,7 +35,7 @@ The service modifiers `ext`, `pub`, and `api` are mutually exclusive. An `ext` s
 
 ```skel
 api service OrderApiService {
-    for CustomerActor via client
+    for CustomerActor
     auth required
 
     method get {
@@ -53,7 +53,7 @@ Sections inside a method must appear in this order: `auth <mode>`, `require`, `i
 
 ```skel
 api service HealthApiService {
-    for ClientActor via client
+    for ClientActor
     auth optional
 
     method ping {}
@@ -66,7 +66,7 @@ api service HealthApiService {
 
 ## Authentication and Audiences
 
-`for Actor [via name]` records the callers this contract serves. A method's auth mode overrides the service mode; an omitted method mode generates `inherit`. Non-API services do not declare client authentication policies.
+`for Actor` records the callers this contract serves. List multiple actors in one `for AActor, BActor` clause; the comma list may wrap across lines. A method's auth mode overrides the service mode; an omitted method mode generates `inherit`. Non-API services do not declare client authentication policies.
 
 | Declaration | Accepted callers |
 | --- | --- |
@@ -105,7 +105,7 @@ Don't wrap every result in a generic response envelope. Transport status, struct
 
 ```skel
 api service OrderApiService {
-    for StaffActor via client
+    for StaffActor
     auth required
     require Order:read
 

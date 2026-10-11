@@ -98,9 +98,9 @@ export const skelMechanisms: SkelMechanism[] = [
     },
     description: {
       id: 'homepage.mechanisms.access.description',
-      text: 'Actors name callers and entry transports. Resources, actions, checks, and require expressions keep authorization intent beside the capability it protects.',
+      text: 'Actors name callers and carry their authentication data. Resources, actions, checks, and require expressions keep authorization intent beside the capability it protects.',
     },
-    markers: ['actor', 'via', 'resource', 'require', 'auth'],
+    markers: ['actor', 'auth', 'for', 'resource', 'require'],
     links: [
       {
         title: {id: 'homepage.links.actorsAccess', text: 'Actors & Access'},
@@ -120,7 +120,7 @@ export const skelMechanisms: SkelMechanism[] = [
     },
     description: {
       id: 'homepage.mechanisms.validation.description',
-      text: 'skelc checks names, types, imports, public closure, actor transports, permission paths, decorators, and reference cycles in one diagnostic model.',
+      text: 'skelc checks names, types, imports, public closure, actor audiences, permission paths, decorators, and reference cycles in one diagnostic model.',
     },
     markers: ['format', 'check', 'diagnostics', 'public closure'],
     links: [
@@ -211,7 +211,7 @@ export const guideGroups: GuideGroup[] = [
         title: {id: 'homepage.guides.access.title', text: 'Actors & Access'},
         description: {
           id: 'homepage.guides.access.description',
-          text: 'Model callers, credentials, and entry transports.',
+          text: 'Model callers, credentials, and identity data.',
         },
         to: '/actors-and-access',
       },
