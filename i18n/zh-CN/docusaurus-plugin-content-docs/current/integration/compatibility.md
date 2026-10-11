@@ -23,7 +23,7 @@ CI 和开发环境要用同一个 skelc 版本。输入、import 映射和输出
 
 ## 生成产物契约
 
-后端 Go module 生成 `descriptor.go`，直接使用 `go.yorun.ai/skel/descriptor` 类型，并要求运行时提供 `skel.RegisterDomainDescriptor(*descriptor.Domain)`；生成的 module 依赖 Vine v0.29.0 或更高版本。Go `--api` 客户端使用 vRPC，不受影响。应用代码需要自己的生成 bean 副本时使用 `vine/util/vbean.DeepClone`。
+后端 Go module 生成 `descriptor.go`，直接使用 `go.yorun.ai/skel/descriptor` 类型，并要求运行时提供 `skel.RegisterDomainDescriptor(*descriptor.Domain)`；生成的 module 依赖 Vine v0.29.0 或更高版本。Go `--api` 客户端声明依赖 `go.yorun.ai/vrpc` v0.15.0 或更高版本，不使用 Vine。应用代码需要自己的生成 bean 副本时使用 `vine/util/vbean.DeepClone`。
 
 review 生成的 descriptor 差异时，应比较 key 而不是位置：带 key 的字段可以出现在任意顺序。
 

@@ -26,7 +26,8 @@ Versioned documentation explains historical behavior; when fixing current contra
 Backend Go modules emit `descriptor.go` and use the public
 `go.yorun.ai/skel/descriptor` types. Their registration call requires
 `skel.RegisterDomainDescriptor(*descriptor.Domain)`, and the generated module
-depends on Vine v0.29.0 or later. Go `--api` clients use vRPC and are unaffected.
+depends on Vine v0.29.0 or later. Go `--api` clients declare
+`go.yorun.ai/vrpc` v0.15.0 or later and do not use Vine.
 Application code that needs its own copy of a generated bean uses
 `vine/util/vbean.DeepClone`.
 

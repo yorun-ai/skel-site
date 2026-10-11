@@ -8,7 +8,7 @@ Generated Go code uses Vine public packages as its runtime contract. Output incl
 
 ## Version Relationship
 
-Generated Go contracts require Vine v0.29.0 or newer. `skelc version` reports both the minimum supported and default Vine versions; generated Go modules write the default version to `go.mod`, and `--go-vine-version` may select another version as long as it is not older than the minimum. A higher version is not guaranteed to be compatible, so pin a specific version, regenerate, and run application tests when upgrading.
+Generated Go contracts require Vine v0.29.0 or newer. `skelc version` reports both the minimum supported and default Vine versions; generated Go modules write the default version to `go.mod`, and `--go-vine-version` may select another version as long as it is not older than the minimum. A higher version is not guaranteed to be compatible, so pin a specific version, regenerate, and run application tests when upgrading. Go `--api` clients target `go.yorun.ai/vrpc` instead; see [Go Generation](/docs/generation/go#portal-api-clients).
 
 ## Declared web Mount Paths
 

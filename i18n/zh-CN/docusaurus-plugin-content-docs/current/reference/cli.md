@@ -420,7 +420,7 @@ skelc gen go-module \
 
 生成前会校验写入的 module 元数据。主 module、pub module 及由 prefix 推导的路径都必须是有效 Go module 路径，Go import 的版本必须是完整、带 `v` 前缀且与 module 路径兼容的语义版本。指向同一 Go module 的映射必须使用一致的版本；版本冲突（包括覆盖所选 runtime 依赖）会导致生成失败。
 
-`--api` 生成 portal 客户端，可用 `--go-vrpc-version` 覆盖默认的 vRPC v0.14.0，不接受 `--go-vine-version`。后端 Go 输出需要 Vine 的 `RegisterDomainDescriptor` API，默认依赖与最低支持版本均为 v0.29.0；详见[兼容性说明](/docs/compatibility#生成产物契约)。module prefix 会把 domain `shop.order` 推导为 `example.com/gen/shop/orderapi`，跨领域 API 类型引用对应的 `xxxapi` 包。
+`--api` 生成 portal 客户端，`--go-vrpc-version` 用于指定写入生成 module 的 vRPC 版本，不得低于 v0.15.0；该模式不接受 `--go-vine-version`。后端 Go 输出需要 Vine 的 `RegisterDomainDescriptor` API，默认依赖与最低支持版本均为 v0.29.0；详见[兼容性说明](/docs/compatibility#生成产物契约)。module prefix 会把 domain `shop.order` 推导为 `example.com/gen/shop/orderapi`，跨领域 API 类型引用对应的 `xxxapi` 包。
 
 `gen go --api`、`gen go-module --api` 和 `gen ts --api` 支持可重复的 `--actor domain.NameActor`，仅生成 `for` 声明匹配指定 actor 全称的服务。多个 actor 取服务并集；未启用 `--prune` 时省略参数会生成全部 API 服务。筛选保留服务的全部方法，不按认证模式或权限条件删减方法。未知名称、短名和导入别名会报错。未启用 `--prune` 时输出保留显式公开的 data / enum，其他数据类型及外部类型依赖只跟随选中的服务收集。
 

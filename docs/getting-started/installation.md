@@ -6,7 +6,7 @@ slug: /installation
 
 ## Prerequisites
 
-skelc and generated Go modules need Go 1.27.0 or later. Backend Go modules require Vine `v0.29.0` or later and default to `v0.29.0`. Go API clients use vRPC instead of Vine. When generating into an existing Go module, update its dependencies yourself.
+skelc and generated Go modules need Go 1.27.0 or later. Backend Go modules require Vine `v0.29.0` or later and default to `v0.29.0`. Go API clients depend on `go.yorun.ai/vrpc` v0.15.0 or later instead of Vine. When generating into an existing Go module, update its dependencies yourself.
 
 ## Install
 
@@ -22,7 +22,7 @@ The Go binary directory must be on `PATH`. If the shell can't find skelc, check 
 CI and reproducible generation environments should pin an exact version:
 
 ```bash
-go install go.yorun.ai/skel/cmd/skelc@v0.32.0
+go install go.yorun.ai/skel/cmd/skelc@v0.32.1
 ```
 
 The module path is `go.yorun.ai/skel`; the executable is named `skelc`.
