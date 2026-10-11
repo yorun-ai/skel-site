@@ -63,7 +63,7 @@ nil 指针表示 `null`；非 nil 指针表示集合，即使它指向的 slice 
 
 如果用的是统一的命名规则，用 `--go-module-prefix` 就能自动推导路径，无需逐个配置。生成完后运行 `gofmt` 和 `go test`，检查 `go.mod` 和 API diff。完整参数清单见 [CLI 参考](/docs/cli)。
 
-后端 Go 输出在 `descriptor.go` 中使用 `go.yorun.ai/skel/descriptor`，并调用 `skel.RegisterDomainDescriptor`；它要求 Vine v0.28.0 或更高版本，并默认使用该版本。`--api` 客户端不受影响。详见[兼容性说明](/docs/compatibility#生成产物契约)。
+后端 Go 输出在 `descriptor.go` 中使用 `go.yorun.ai/skel/descriptor`，并调用 `skel.RegisterDomainDescriptor`；它要求 Vine v0.29.0 或更高版本，并默认使用该版本。`--api` 客户端不受影响。详见[兼容性说明](/docs/compatibility#生成产物契约)。
 
 每个方法 descriptor 保留 `AuthMode` 和 `Require`，并提供派生的
 `EffectiveAuthMode` 和 `EffectiveRequire`，其中已完成认证策略继承，以及 service
@@ -79,7 +79,7 @@ nil 指针表示 `null`；非 nil 指针表示集合，即使它指向的 slice 
 
 服务端接口命名为 `<WebName>Server`，默认实现命名为 `Default<WebName>Server`。其他包的实现需要嵌入默认类型并覆盖所需路由。该默认类型只是空壳：在 Go 代码提供路由之前，它的 `Routes(*web.Router)` 会 panic。
 
-声明的 `mount` 会写入生成的 web spec 和 runtime domain descriptor，详见 [Vine 集成](/docs/vine-integration#声明的-web-挂载路径)。使用挂载能力需要 Vine v0.19.0 或更高版本；当前后端 Go 输出依赖 v0.28.0。
+声明的 `mount` 会写入生成的 web spec 和 runtime domain descriptor，详见 [Vine 集成](/docs/vine-integration#声明的-web-挂载路径)。后端 Go 输出（包括挂载的 web 产物）需要 Vine v0.29.0 或更高版本。
 
 ## portal API 客户端
 
@@ -92,7 +92,7 @@ skelc gen go-module --api \
 
 领域为 `shop.order` 时，推导 module 为 `example.com/gen/shop/orderapi`，包名为 `orderapi`。`--go-module` 可覆盖 module 路径；`gen go --api` 写入已有模块。`--api` 与 `--pub` 互斥；默认 Go 生成用于后端实现，`--pub` 选择后端公共契约。`--api` 支持可重复的 `--actor domain.NameActor`，按服务的 `for` 受众筛选；筛选与依赖规则见 [CLI 参考](/docs/cli)。
 
-API 客户端依赖 `go.yorun.ai/vrpc` v0.13.0 或更高版本，可用 `--go-vrpc-version` 指定。基础类型来自 `go.yorun.ai/skel/types`。跨领域类型依赖指向对应 `xxxapi` 包，不依赖 Vine。
+API 客户端依赖 `go.yorun.ai/vrpc` v0.13.0 或更高版本，默认 v0.14.0，可用 `--go-vrpc-version` 指定。基础类型来自 `go.yorun.ai/skel/types`。跨领域类型依赖指向对应 `xxxapi` 包，不依赖 Vine。
 
 调用 `NewOrderApiServiceClient(client)`，传入为你配置好的 `*vrpc.Client`（指向 portal 地址）。构造函数返回 `OrderApiServiceClient` 接口，你可以在测试中提供自己的实现或 mock。每个生成方法接受 `context.Context`、声明的业务参数和任意可选 `vrpc.InvokeOption`，返回业务结果与 `error`；无结果的方法仅返回 `error`。
 

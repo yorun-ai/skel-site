@@ -18,7 +18,9 @@ pub event OrderPlacedEvent {
 }
 ```
 
-event 名以 `Event` 结尾，包含一个 `payload` block，不声明 actor，也不支持类型参数。
+event 名使用 `Event` 后缀，可追加版本号，例如 `OrderPlacedEventV2`；包含一个 `payload` block，不声明 actor，也不支持类型参数。
+
+Go 输出中，`OrderPlacedEventV2` 保留该 payload 类型名，生成 `OrderPlacedEventV2Emitter` / `OrderPlacedEventV2Listener`，方法名为 `EmitOrderPlacedV2` / `OnOrderPlacedV2`；方法名省略 `Event`、保留版本号。
 
 event 应该描述已经发生的事实。`OrderPlacedEvent` 给消费者一个稳定的既成事实；`PlaceOrderEvent` 听起来更像命令，应该写成 service method 或 task trigger。
 
@@ -74,7 +76,7 @@ task RebuildOrderIndexTask {
 }
 ```
 
-task 名以 `Task` 结尾，至少声明一个 trigger。trigger 用 `lowerCamelCase`，能带 input，但没有 output。
+task 名使用 `Task` 后缀，可追加版本号，例如 `RebuildOrderIndexTaskV2`；至少声明一个 trigger。trigger 用 `lowerCamelCase`，能带 input，但没有 output。
 
 同一个任务存在不同调用参数时用多个 trigger；所有权、失败处理、调度或实现不一样的时候拆成多个 task。
 

@@ -26,7 +26,7 @@ Versioned documentation explains historical behavior; when fixing current contra
 Backend Go modules emit `descriptor.go` and use the public
 `go.yorun.ai/skel/descriptor` types. Their registration call requires
 `skel.RegisterDomainDescriptor(*descriptor.Domain)`, and the generated module
-depends on Vine v0.28.0 or later. Go `--api` clients use vRPC and are unaffected.
+depends on Vine v0.29.0 or later. Go `--api` clients use vRPC and are unaffected.
 Application code that needs its own copy of a generated bean uses
 `vine/util/vbean.DeepClone`.
 
@@ -48,7 +48,9 @@ appears as `service.ext.changed` or `event.ext.changed` at `BREAKING` impact.
 Changing or tightening an authentication mode appears as `service.auth.changed`,
 `service.auth.tightened`, `method.auth.changed`, or `method.auth.tightened` at
 `BREAKING` impact; relaxing one appears as `service.auth.relaxed` or
-`method.auth.relaxed` at `DANGEROUS` impact. Consumers of normalized query output should keep
+`method.auth.relaxed` at `DANGEROUS` impact. Versioned declarations are compared
+under their complete names, so adding `OrderApiServiceV2` leaves the
+`OrderApiService` contract and its hash unchanged. Consumers of normalized query output should keep
 `go.yorun.ai/skel/cmd/skelc/output` in step with the compiler.
 
 Diff reads the baseline and candidate Skel source files or directories directly.

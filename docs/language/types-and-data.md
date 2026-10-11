@@ -89,7 +89,7 @@ config CheckoutConfig eternal {
 }
 ```
 
-A config name ends in `Config` and declares one lifecycle:
+A config name uses the `Config` suffix with an optional version, such as `CheckoutConfigV2`, and declares one lifecycle:
 
 - `eternal` stays stable for the application lifetime.
 - `instant` can change while the application runs.

@@ -27,7 +27,7 @@ import commerce.catalog as catalog
 | `enum Name { ITEM }` | 至少一个 item | 支持 | [类型与数据](/docs/types-and-data#enum) |
 | `data Name { field: Type }` | 字段可为空 | 支持 | [类型与数据](/docs/types-and-data#data-与泛型) |
 | `config NameConfig eternal { ... }` | `eternal` 或 `instant` | 支持 | [类型与数据](/docs/types-and-data#config) |
-| `actor NameActor { via client {} }` | 至少一个 via | 支持 | [调用者与入口](/docs/actors-and-access) |
+| `actor NameActor {}` | 可选 auth 和 permission | 支持 | [调用者与入口](/docs/actors-and-access) |
 | `resource Name { action read }` | 至少一个 action | 支持 | [权限模型](/docs/permissions) |
 | `service NameService { method get {} }` | 至少一个 method | 支持 | [服务契约](/docs/services) |
 | `event NameEvent { payload { ... } }` | 一个 payload | 支持 | [事件与任务](/docs/events-and-tasks#event) |
@@ -44,7 +44,9 @@ pub data UserSummary {
 
 `api` 仅支持 service，与 `pub` 互斥。`ext service` 对外公开供其他领域实现的 Server 契约；`ext event` 对外公开供其他领域发出事件的 Emitter 契约。`ext` 与 `pub`、`api` 互斥，适用于 service 和 event。
 
-API 服务名必须以 `ApiService` 结尾，例如 `OrderApiService`。API 服务必须至少声明一条 `for Actor`，缺失时编译报错；匿名 API 也需要声明 actor，并通过 `auth optional` 允许匿名调用。后端调用使用 `pub service`，portal 客户端入口使用 `api service`。
+API 服务名使用 `ApiService` 后缀，可追加版本号，例如 `OrderApiService` 或 `OrderApiServiceV2`。API 服务必须至少声明一条 `for Actor`，缺失时编译报错；匿名 API 也需要声明 actor，并通过 `auth optional` 允许匿名调用。后端调用使用 `pub service`，portal 客户端入口使用 `api service`。
+
+API service 和 web 的多个 actor 写成 `for AActor, BActor`，逗号列表可以换行。同一个 actor 重复出现会报错。参见[调用者与入口](/docs/actors-and-access)。
 
 service 必须声明 `pub`、`ext` 或 `api`，客户端准入规则只允许出现在 API service 中。
 
@@ -70,7 +72,7 @@ T?
 
 ```skel
 api service OrderApiService {
-    for CustomerActor via client
+    for CustomerActor
     auth required
     require Order:read
 
@@ -118,9 +120,13 @@ any(item, item)
 | --- | --- |
 | Domain | 点分小写名称，例如 `commerce.order` |
 | 顶层声明与类型参数 | `CamelCase` |
-| Service、config、event、actor、web、task | 使用对应 `Service`、`Actor` 等后缀 |
-| 字段、method、via、action、check、trigger | `lowerCamelCase` |
+| Service、config、event、actor、web、task | 使用对应 `Service`、`Actor` 等后缀，可追加 `V1`、`V2` 等版本号 |
+| 字段、method、action、check、trigger | `lowerCamelCase` |
 | Enum item | `SCREAMING_SNAKE_CASE` |
+
+可选版本后缀由大写 `V` 和不带前导零的十进制正整数组成：`V1`、`V2`、`V10` 合法，`V0`、`V01`、`v2` 不合法。带版本号的名称是一个独立声明：引用和生成代码保留完整名称，各版本拥有各自的字段、方法和哈希。`OrderApiServiceV2` 可以复用与 `OrderApiService` 相同的 `Order` 数据类型和 `CustomerActor`。
+
+声明名不能只由类型后缀和版本号组成：`Event`、`EventV2`、`Config`、`ConfigV2` 都会被拒绝。
 
 标识符不能以 `_` 开头。`UNSPECIFIED` 预留给 enum 输出。`skelc check` 允许使用 `skelSensitive` 字段名；Go 生成时，如果它与敏感结构生成的 `SkelSensitive()` 方法重名，则会报错。
 

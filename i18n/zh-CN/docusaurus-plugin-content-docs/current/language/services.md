@@ -6,7 +6,7 @@ slug: /services
 
 service 独立于 Go 实现和 TypeScript client，描述可调用的 method。skelc 从同一组名称和类型生成两侧的接口。
 
-API 服务名必须以 `ApiService` 结尾，例如 `OrderApiService`；其他 service 以 `Service` 结尾。
+API 服务名使用 `ApiService` 后缀，例如 `OrderApiService`；其他 service 使用 `Service` 后缀。两种后缀后都可以追加 `V` 和不带前导零的正整数，例如 `OrderApiServiceV2` 或 `OrderServiceV10`。
 
 API 服务必须至少声明一条 `for Actor`，缺失时编译报错；匿名 API 也需要声明 actor，并通过 `auth optional` 允许匿名调用。
 
@@ -14,7 +14,7 @@ API 服务必须至少声明一条 `for Actor`，缺失时编译报错；匿名 
 
 `pub service` 用于跨领域后端调用，`api service` 用于客户端经 portal 访问的入口。两修饰符互斥，同一领域的服务名在两种类型间统一判重。API 服务经 portal 访问，不通过后端 Rpc 客户端调用。
 
-只有 API 服务应声明 `for Actor`、`auth <mode>` 或 `require`，包括方法级规则。API 服务必须显式声明认证；audience 和 transport 也按显式声明处理。执行认证、权限和资源检查的服务属于后端服务，不作为客户端入口。
+只有 API 服务应声明 `for Actor`、`auth <mode>` 或 `require`，包括方法级规则。API 服务必须显式声明 audience 和认证模式。执行认证、权限和资源检查的服务属于后端服务，不作为客户端入口。
 
 ### 扩展契约
 
@@ -35,7 +35,7 @@ service 的 `ext`、`pub`、`api` 修饰符互斥。`ext service` 是服务端�
 
 ```skel
 api service OrderApiService {
-    for CustomerActor via client
+    for CustomerActor
     auth required
 
     method get {
@@ -53,7 +53,7 @@ method 内部顺序为：`auth <mode>`、`require`、`input`、`output`。input 
 
 ```skel
 api service HealthApiService {
-    for ClientActor via client
+    for ClientActor
     auth optional
 
     method ping {}
@@ -66,7 +66,7 @@ api service HealthApiService {
 
 ## 认证与调用方
 
-`for Actor [via name]` 记录契约服务的调用者。方法级 auth 覆盖服务级模式；方法省略时生成 `inherit`。非 API service 不声明客户端认证策略。
+`for Actor` 记录契约服务的调用者；多个 actor 用一条 `for AActor, BActor` 声明，逗号列表可以换行。方法级 auth 覆盖服务级模式；方法省略时生成 `inherit`。非 API service 不声明客户端认证策略。
 
 | 声明 | 允许的调用者 |
 | --- | --- |
@@ -105,7 +105,7 @@ method create {
 
 ```skel
 api service OrderApiService {
-    for StaffActor via client
+    for StaffActor
     auth required
     require Order:read
 

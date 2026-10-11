@@ -23,7 +23,7 @@ CI 和开发环境要用同一个 skelc 版本。输入、import 映射和输出
 
 ## 生成产物契约
 
-后端 Go module 生成 `descriptor.go`，直接使用 `go.yorun.ai/skel/descriptor` 类型，并要求运行时提供 `skel.RegisterDomainDescriptor(*descriptor.Domain)`；生成的 module 依赖 Vine v0.28.0 或更高版本。Go `--api` 客户端使用 vRPC，不受影响。应用代码需要自己的生成 bean 副本时使用 `vine/util/vbean.DeepClone`。
+后端 Go module 生成 `descriptor.go`，直接使用 `go.yorun.ai/skel/descriptor` 类型，并要求运行时提供 `skel.RegisterDomainDescriptor(*descriptor.Domain)`；生成的 module 依赖 Vine v0.29.0 或更高版本。Go `--api` 客户端使用 vRPC，不受影响。应用代码需要自己的生成 bean 副本时使用 `vine/util/vbean.DeepClone`。
 
 review 生成的 descriptor 差异时，应比较 key 而不是位置：带 key 的字段可以出现在任意顺序。
 
@@ -40,8 +40,9 @@ review 生成的 descriptor 差异时，应比较 key 而不是位置：带 key 
 修改或收紧认证模式会以 `BREAKING` 影响级别报告 `service.auth.changed`、
 `service.auth.tightened`、`method.auth.changed` 或 `method.auth.tightened`；
 放宽认证模式会以 `DANGEROUS` 影响级别报告 `service.auth.relaxed` 或
-`method.auth.relaxed`。规范化查询结果的消费者应让 `go.yorun.ai/skel/cmd/skelc/output`
-与编译器保持同一版本。
+`method.auth.relaxed`。带版本号的声明按完整名称比较，因此新增 `OrderApiServiceV2`
+不会改变 `OrderApiService` 契约及其哈希。规范化查询结果的消费者应让
+`go.yorun.ai/skel/cmd/skelc/output` 与编译器保持同一版本。
 
 diff 直接读取 baseline 和 candidate 的 Skel 源文件或目录。
 

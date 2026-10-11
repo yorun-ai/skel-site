@@ -24,8 +24,6 @@ domain demo.order
 domain demo.order
 
 pub actor CustomerActor {
-    via client {}
-
     auth {
         @sensitive
         credential {
@@ -54,7 +52,7 @@ pub resource Order {
 }
 
 api service OrderApiService {
-    for CustomerActor via client
+    for CustomerActor
     auth required
     require Order:read
 

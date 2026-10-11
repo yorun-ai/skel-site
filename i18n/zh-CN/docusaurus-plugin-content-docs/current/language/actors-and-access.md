@@ -4,33 +4,20 @@ slug: /actors-and-access
 
 # 调用者与入口
 
-actor 代表一类调用者。它记录了调用者能通过哪些入口进入系统，以及认证时需要携带的 credential 和身份信息。
+actor 代表一类调用者。需要认证时，它声明调用者的 credential 和身份信息。
 
-## 声明入口类型
+## 声明调用者
 
 ```skel
-pub actor CustomerActor {
-    via client {}
-    via openapi {}
-}
+pub actor CustomerActor {}
 ```
 
-actor 名以 `Actor` 结尾，至少声明一个 `via`：
-
-| Via | 常见调用方 |
-| --- | --- |
-| `client` | 生成的 vRPC client |
-| `agent` | 应用或内部 agent |
-| `openapi` | 面向 OpenAPI 的调用方 |
-
-这里声明的是能力，不是网络安全策略。TLS、token、网关和端点暴露仍由运行时负责。
+actor 名使用 `Actor` 后缀，可追加版本号，例如 `CustomerActorV2`。不需要认证和权限声明时，可以使用空的 actor 定义。TLS、token、网关和端点暴露仍由运行时负责。
 
 ## 增加认证数据
 
 ```skel
 pub actor CustomerActor {
-    via client {}
-
     auth {
         @sensitive
         credential {
@@ -67,7 +54,6 @@ skelc 会生成 actor 专属的 credential、info 数据类型和认证服务元
 
 ```skel
 actor StaffActor {
-    via client {}
     permission {}
 }
 ```
@@ -78,8 +64,7 @@ actor StaffActor {
 
 ```skel
 api service OrderApiService {
-    for CustomerActor via client
-    for StaffActor
+    for CustomerActor, StaffActor
     auth required
 
     method get {
@@ -91,20 +76,20 @@ api service OrderApiService {
 }
 ```
 
-每个 `for` 声明一种允许的 actor。想限定 actor 的某个入口时加上 `via`；不写就不限定入口。
+API service 和 web 都用一条 `for` 声明列出全部允许的 actor，多个 actor 用逗号分隔；列表可以换行。单个 actor 写成 `for CustomerActor`。同一个 actor 重复出现会报错。
 
-只在应用边界内部调用的后端 service 不需要 `for`。只有真实调用方需要生成入口契约时才声明 actor——不必为了画图好看去虚构公共 actor。
+只在应用边界内部调用的后端 service 不需要 `for`。只有真实调用方需要入口契约时才声明 actor。
 
 ## 声明 web 能力
 
 ```skel
 web CustomerPortalWeb {
-    for CustomerActor via client
+    for CustomerActor
     auth required
 }
 ```
 
-web 名以 `Web` 结尾，至少声明一个 actor。它说明谁能进入一个 web 能力，但不声明 HTTP method、path 或 handler。web 声明是本地运行能力，不能标记 `pub`。
+web 名使用 `Web` 后缀，可追加版本号，例如 `CustomerPortalWebV2`；至少声明一个 actor。它说明谁能进入一个 web 能力，但不声明 HTTP method、path 或 handler。web 声明是本地运行能力，不能标记 `pub`。
 
 ### web 认证
 
@@ -117,7 +102,7 @@ web 声明只接受一种 auth 模式：`auth required`、`auth optional`、`aut
 ```skel
 web ConsoleWeb {
     mount /console
-    for ClientActor via client
+    for ClientActor
 }
 ```
 
@@ -131,6 +116,6 @@ mount 路径是字面绝对路径：必须以 `/` 开头，不能包含路由参
 
 ## 控制 Actor 粒度
 
-当调用者在 credential、身份信息、入口或权限行为上确实不一样的时候，拆成不同的 actor。不建议按页面或 service method 去创建 actor；稳定的 actor 应该覆盖一组相关的功能。
+当调用者在 credential、身份信息或权限行为上确实不一样的时候，拆成不同的 actor。避免为每个页面或 service method 各建一个 actor；稳定的 actor 应该覆盖一组相关的功能。
 
 接下来阅读[权限模型](/docs/permissions)或[服务契约](/docs/services)。
