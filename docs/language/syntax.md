@@ -27,6 +27,7 @@ Every file declares a domain. Imports follow the domain and precede declarations
 | `enum Name { ITEM }` | At least one item | Yes | [Types & Data](/docs/types-and-data#enums) |
 | `data Name { field: Type }` | Fields are optional | Yes | [Types & Data](/docs/types-and-data#data-and-generics) |
 | `config NameConfig eternal { ... }` | `eternal` or `instant` | Yes | [Types & Data](/docs/types-and-data#configuration) |
+| `abs config NameAbsConfig eternal { ... }` | `eternal` or `instant` | Implicit | [Types & Data](/docs/types-and-data#abstract-configuration-contracts) |
 | `actor NameActor {}` | Optional auth and permission | Yes | [Actors & Access](/docs/actors-and-access) |
 | `resource Name { action read }` | At least one action | Yes | [Permission Model](/docs/permissions) |
 | `service NameService { method get {} }` | At least one method | Yes | [Service Contracts](/docs/services) |
@@ -133,6 +134,10 @@ and `CustomerActor` as `OrderApiService`.
 
 A declaration name cannot consist only of its kind suffix and version: `Event`,
 `EventV2`, `Config`, and `ConfigV2` are rejected.
+
+Two suffixes are reserved for one declaration kind: `AbsConfig` for `abs config`
+and `ApiService` for `api service`. Other configs and services cannot use them,
+including versioned names such as `OrderApiServiceV2`.
 
 Identifiers can't begin with `_`. `UNSPECIFIED` is reserved for enum output.
 `skelc check` accepts the field name `skelSensitive`; Go generation rejects it

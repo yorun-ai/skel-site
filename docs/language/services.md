@@ -8,6 +8,8 @@ A service defines callable methods independently of their Go implementation or T
 
 API service names use the `ApiService` suffix, such as `OrderApiService`; other services use `Service`. Either suffix may be followed by `V` and a positive integer without leading zeroes, such as `OrderApiServiceV2` or `OrderServiceV10`.
 
+The `ApiService` suffix is reserved for `api service`; `pub service` and `ext service` cannot use it, including versioned names such as `OrderApiServiceV2`.
+
 Every API service must declare at least one `for Actor`; omission is a compilation error. Anonymous APIs also declare an actor and use `auth optional` to allow unauthenticated calls.
 
 ## Service Boundaries

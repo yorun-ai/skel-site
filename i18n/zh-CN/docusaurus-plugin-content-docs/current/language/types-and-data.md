@@ -109,6 +109,30 @@ config AssetConfig eternal {
 
 Vine runtime 会保留配置字符串的原始空白。JSON 或 YAML 中的 binary 值使用 base64 字符串；参见 [Vine 配置](https://vine.yorun.ai/zh-CN/docs/configuration)。
 
+### 抽象配置契约
+
+```skel
+abs config DatabaseAbsConfig eternal {
+    @sensitive
+    connUrl: string
+}
+
+config PrimaryDatabaseConfig = DatabaseAbsConfig
+pub config ReportingDatabaseConfig = DatabaseAbsConfig
+```
+
+`abs config` 定义一份包含字段、但没有配置值的公开契约，名称以 `AbsConfig` 结尾。具体配置用
+`=` 采用该契约，继承字段、注解、生命周期和敏感性，同时保有自己的名称、可见性和配置值。
+来源可以是导入的抽象配置，例如 `rdb.DatabaseAbsConfig`。采用不能形成链：右侧必须是带配置体
+的抽象配置，左侧不能是抽象配置，采用方也不能再声明配置体或生命周期。
+
+`AbsConfig` 后缀仅供抽象配置使用，普通配置和 `pub config` 不得使用，带版本号的名称也一样。
+与其他 config 相同，抽象配置不能作为字段类型，也不能在 Hub 中赋值。
+
+Go 生成会为每份 config 生成独立类型，并在抽象契约及其所有采用方上生成
+`AsDatabaseAbsConfig()` 指针转换，因此泛型代码可以使用
+`interface{ AsDatabaseAbsConfig() *DatabaseAbsConfig }` 这样的约束。
+
 ## 契约结构不等于存储结构
 
 数据库行经常包含迁移字段、内部状态或反规范化数据，这些不该直接变成客户端的承诺。为边界单独定义 `data`，在应用层做映射，远比让存储演进牵动所有生成代码来得稳妥。

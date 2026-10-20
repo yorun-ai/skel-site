@@ -23,7 +23,7 @@ CI 和开发环境要用同一个 skelc 版本。输入、import 映射和输出
 
 ## 生成产物契约
 
-后端 Go module 生成 `descriptor.go`，直接使用 `go.yorun.ai/skel/descriptor` 类型，并要求运行时提供 `skel.RegisterDomainDescriptor(*descriptor.Domain)`；生成的 module 依赖 Vine v0.29.0 或更高版本。Go `--api` 客户端声明依赖 `go.yorun.ai/vrpc` v0.15.0 或更高版本，不使用 Vine。应用代码需要自己的生成 bean 副本时使用 `vine/util/vbean.DeepClone`。
+后端 Go module 生成 `descriptor.go`，直接使用 `go.yorun.ai/skel/descriptor` 类型，并要求运行时提供 `skel.RegisterDomainDescriptor(*descriptor.Domain)`；生成的 module 依赖 Vine v0.32.0 或更高版本。Go `--api` 客户端声明依赖 `go.yorun.ai/vrpc` v0.15.0 或更高版本，不使用 Vine。应用代码需要自己的生成 bean 副本时使用 `vine/util/vbean.DeepClone`。
 
 review 生成的 descriptor 差异时，应比较 key 而不是位置：带 key 的字段可以出现在任意顺序。
 
@@ -37,6 +37,8 @@ review 生成的 descriptor 差异时，应比较 key 而不是位置：带 key 
 声明了 `mount` 的 web 会在 schema 中记录 `mountPath`，修改该值会以 `BREAKING` 影响级别
 报告 `web.mount-path.changed`。在 `pub` 与 `ext` 之间切换 service 或 event 会改变由哪一侧
 实现或消费，会以 `BREAKING` 影响级别报告 `service.ext.changed` 或 `event.ext.changed`。
+修改 config 是否为抽象，或它采用哪个抽象 config，会以 `BREAKING` 影响级别报告
+`config.abs.changed` 或 `config.source.changed`；这两个值都参与契约哈希。
 修改或收紧认证模式会以 `BREAKING` 影响级别报告 `service.auth.changed`、
 `service.auth.tightened`、`method.auth.changed` 或 `method.auth.tightened`；
 放宽认证模式会以 `DANGEROUS` 影响级别报告 `service.auth.relaxed` 或

@@ -26,7 +26,7 @@ Versioned documentation explains historical behavior; when fixing current contra
 Backend Go modules emit `descriptor.go` and use the public
 `go.yorun.ai/skel/descriptor` types. Their registration call requires
 `skel.RegisterDomainDescriptor(*descriptor.Domain)`, and the generated module
-depends on Vine v0.29.0 or later. Go `--api` clients declare
+depends on Vine v0.32.0 or later. Go `--api` clients declare
 `go.yorun.ai/vrpc` v0.15.0 or later and do not use Vine.
 Application code that needs its own copy of a generated bean uses
 `vine/util/vbean.DeepClone`.
@@ -46,6 +46,9 @@ A web that declares `mount` records it as `mountPath`, and changing that value
 appears as `web.mount-path.changed` at `BREAKING` impact. Switching a service or
 event between `pub` and `ext` changes which side implements or consumes it, and
 appears as `service.ext.changed` or `event.ext.changed` at `BREAKING` impact.
+Changing whether a config is abstract, or which abstract config it adopts,
+appears as `config.abs.changed` or `config.source.changed` at `BREAKING` impact;
+both values participate in contract hashes.
 Changing or tightening an authentication mode appears as `service.auth.changed`,
 `service.auth.tightened`, `method.auth.changed`, or `method.auth.tightened` at
 `BREAKING` impact; relaxing one appears as `service.auth.relaxed` or
