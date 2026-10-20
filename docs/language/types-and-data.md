@@ -109,6 +109,35 @@ config AssetConfig eternal {
 
 The Vine runtime preserves config string whitespace. Represent binary values as base64 strings in JSON or YAML; see [Vine configuration](https://vine.yorun.ai/docs/configuration).
 
+### Abstract configuration contracts
+
+```skel
+abs config DatabaseAbsConfig eternal {
+    @sensitive
+    connUrl: string
+}
+
+config PrimaryDatabaseConfig = DatabaseAbsConfig
+pub config ReportingDatabaseConfig = DatabaseAbsConfig
+```
+
+An `abs config` defines a public contract with fields but no value. Its name ends
+with `AbsConfig`; a concrete config adopts it with `=` and inherits its fields,
+annotations, lifecycle, and sensitivity, while keeping its own name, visibility,
+and value. The source may be an imported abstract config, such as
+`rdb.DatabaseAbsConfig`. Adoption cannot chain: the right side must be an
+abstract config with a body, the left side cannot be abstract, and the adopter
+declares neither its own body nor a lifecycle.
+
+The `AbsConfig` suffix is reserved for abstract configs, so ordinary and `pub`
+configs cannot use it, including versioned names. Like other configs, an
+abstract config cannot be used as a field type or given a value in Hub.
+
+Go generation emits a distinct type for each config and an
+`AsDatabaseAbsConfig()` pointer conversion on the abstract contract and on every
+adopter, so generic code can accept a constraint such as
+`interface{ AsDatabaseAbsConfig() *DatabaseAbsConfig }`.
+
 ## Model Contract Shapes, Not Storage
 
 A database row often contains migration fields, internal state, or denormalized data that shouldn't become a client promise. Define a contract-specific `data` shape and map it at the application boundary. The extra mapping is cheaper than coupling storage evolution to every generated consumer.

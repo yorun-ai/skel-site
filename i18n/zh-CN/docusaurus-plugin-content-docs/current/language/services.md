@@ -8,6 +8,8 @@ service 独立于 Go 实现和 TypeScript client，描述可调用的 method。s
 
 API 服务名使用 `ApiService` 后缀，例如 `OrderApiService`；其他 service 使用 `Service` 后缀。两种后缀后都可以追加 `V` 和不带前导零的正整数，例如 `OrderApiServiceV2` 或 `OrderServiceV10`。
 
+`ApiService` 后缀仅供 `api service` 使用；`pub service` 和 `ext service` 不得使用，包括 `OrderApiServiceV2` 这样的版本化名称。
+
 API 服务必须至少声明一条 `for Actor`，缺失时编译报错；匿名 API 也需要声明 actor，并通过 `auth optional` 允许匿名调用。
 
 ## 服务边界

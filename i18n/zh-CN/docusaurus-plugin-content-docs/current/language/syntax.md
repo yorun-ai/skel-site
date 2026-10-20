@@ -27,6 +27,7 @@ import commerce.catalog as catalog
 | `enum Name { ITEM }` | 至少一个 item | 支持 | [类型与数据](/docs/types-and-data#enum) |
 | `data Name { field: Type }` | 字段可为空 | 支持 | [类型与数据](/docs/types-and-data#data-与泛型) |
 | `config NameConfig eternal { ... }` | `eternal` 或 `instant` | 支持 | [类型与数据](/docs/types-and-data#config) |
+| `abs config NameAbsConfig eternal { ... }` | `eternal` 或 `instant` | 隐式 | [类型与数据](/docs/types-and-data#抽象配置契约) |
 | `actor NameActor {}` | 可选 auth 和 permission | 支持 | [调用者与入口](/docs/actors-and-access) |
 | `resource Name { action read }` | 至少一个 action | 支持 | [权限模型](/docs/permissions) |
 | `service NameService { method get {} }` | 至少一个 method | 支持 | [服务契约](/docs/services) |
@@ -127,6 +128,9 @@ any(item, item)
 可选版本后缀由大写 `V` 和不带前导零的十进制正整数组成：`V1`、`V2`、`V10` 合法，`V0`、`V01`、`v2` 不合法。带版本号的名称是一个独立声明：引用和生成代码保留完整名称，各版本拥有各自的字段、方法和哈希。`OrderApiServiceV2` 可以复用与 `OrderApiService` 相同的 `Order` 数据类型和 `CustomerActor`。
 
 声明名不能只由类型后缀和版本号组成：`Event`、`EventV2`、`Config`、`ConfigV2` 都会被拒绝。
+
+有两个后缀专属于一种声明：`AbsConfig` 仅供 `abs config`，`ApiService` 仅供 `api service`。
+其他 config 和 service 不得使用，包括 `OrderApiServiceV2` 这样的版本化名称。
 
 标识符不能以 `_` 开头。`UNSPECIFIED` 预留给 enum 输出。`skelc check` 允许使用 `skelSensitive` 字段名；Go 生成时，如果它与敏感结构生成的 `SkelSensitive()` 方法重名，则会报错。
 

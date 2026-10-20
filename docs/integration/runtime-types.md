@@ -96,6 +96,6 @@ Backend packages emit `descriptor.go`, constructing a `descriptor.Domain` from
 `skel.RegisterDomainDescriptor`. These values contain runtime metadata and named
 type references, without source positions.
 
-Registration requires Vine v0.29.0 or later. A descriptor whose compiler
+Registration requires Vine v0.32.0 or later. A descriptor whose compiler
 version is missing or below `skel.MinSkelcVersion()` fails during application
 startup.

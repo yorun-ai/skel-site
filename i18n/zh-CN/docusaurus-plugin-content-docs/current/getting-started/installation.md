@@ -6,7 +6,7 @@ slug: /installation
 
 ## 前提条件
 
-skelc 和生成的 Go module 需要 Go 1.27.0 及以上版本。后端 Go module 要求 Vine `v0.29.0` 或更高版本，默认依赖为 `v0.29.0`。Go API 客户端依赖 `go.yorun.ai/vrpc` v0.15.0 或更高版本，不依赖 Vine。在已有 Go module 中生成时，需要自行更新依赖。
+skelc 和生成的 Go module 需要 Go 1.27.0 及以上版本。后端 Go module 要求 Vine `v0.32.0` 或更高版本，默认依赖为 `v0.32.0`。Go API 客户端依赖 `go.yorun.ai/vrpc` v0.15.0 或更高版本，不依赖 Vine。在已有 Go module 中生成时，需要自行更新依赖。
 
 ## 安装
 
@@ -22,7 +22,7 @@ Go 的 bin 目录必须在 `PATH` 中。如果终端找不到 skelc，运行 `go
 CI 和需要可重复生成的场景建议锁死版本：
 
 ```bash
-go install go.yorun.ai/skel/cmd/skelc@v0.32.1
+go install go.yorun.ai/skel/cmd/skelc@v0.33.0
 ```
 
 模块路径为 `go.yorun.ai/skel`，可执行文件名为 `skelc`。

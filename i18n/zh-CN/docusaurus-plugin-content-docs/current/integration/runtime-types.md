@@ -93,5 +93,5 @@ Go 集合的可空性与编码契约见 [Go 生成](/docs/generation/go#集合�
 `descriptor.Domain`，并传给 `skel.RegisterDomainDescriptor`。这些值包含运行时
 元数据和具名类型引用，不包含源码位置。
 
-注册要求 Vine v0.29.0 或更高版本。编译器版本缺失或低于 `skel.MinSkelcVersion()`
+注册要求 Vine v0.32.0 或更高版本。编译器版本缺失或低于 `skel.MinSkelcVersion()`
 的 descriptor 会在应用启动阶段失败。

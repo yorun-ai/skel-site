@@ -63,7 +63,7 @@ nil 指针表示 `null`；非 nil 指针表示集合，即使它指向的 slice 
 
 如果用的是统一的命名规则，用 `--go-module-prefix` 就能自动推导路径，无需逐个配置。生成完后运行 `gofmt` 和 `go test`，检查 `go.mod` 和 API diff。完整参数清单见 [CLI 参考](/docs/cli)。
 
-后端 Go 输出在 `descriptor.go` 中使用 `go.yorun.ai/skel/descriptor`，并调用 `skel.RegisterDomainDescriptor`；它要求 Vine v0.29.0 或更高版本，并默认使用该版本。`--api` 客户端不受影响。详见[兼容性说明](/docs/compatibility#生成产物契约)。
+后端 Go 输出在 `descriptor.go` 中使用 `go.yorun.ai/skel/descriptor`，并调用 `skel.RegisterDomainDescriptor`；它要求 Vine v0.32.0 或更高版本，并默认使用该版本。`--api` 客户端不受影响。详见[兼容性说明](/docs/compatibility#生成产物契约)。
 
 每个方法 descriptor 保留 `AuthMode` 和 `Require`，并提供派生的
 `EffectiveAuthMode` 和 `EffectiveRequire`，其中已完成认证策略继承，以及 service
@@ -79,7 +79,7 @@ nil 指针表示 `null`；非 nil 指针表示集合，即使它指向的 slice 
 
 服务端接口命名为 `<WebName>Server`，默认实现命名为 `Default<WebName>Server`。其他包的实现需要嵌入默认类型并覆盖所需路由。该默认类型只是空壳：在 Go 代码提供路由之前，它的 `Routes(*web.Router)` 会 panic。
 
-声明的 `mount` 会写入生成的 web spec 和 runtime domain descriptor，详见 [Vine 集成](/docs/vine-integration#声明的-web-挂载路径)。后端 Go 输出（包括挂载的 web 产物）需要 Vine v0.29.0 或更高版本。
+声明的 `mount` 会写入生成的 web spec 和 runtime domain descriptor，详见 [Vine 集成](/docs/vine-integration#声明的-web-挂载路径)。后端 Go 输出（包括挂载的 web 产物）需要 Vine v0.32.0 或更高版本。
 
 ## portal API 客户端
 
