@@ -67,8 +67,10 @@ Generation resolves imported domains with repeatable mappings:
 The mapping key is the full domain name declared by `import`; the value points
 to that domain's public Skel input.
 
-`schema dep` (all views) and `schema list --pub/--api` also accept these mappings to resolve dependencies. Other schema commands do not accept these mappings. Default schema queries and source-based
-diffs preserve imported symbols as opaque, fully qualified references.
+`schema dep` (all views), `schema list --pub/--api`, and `schema get` also accept
+these mappings to resolve dependencies; other schema commands do not. Default
+`schema list`, `schema get --shallow`, and source-based diffs preserve imported
+symbols as opaque, fully qualified references.
 
 ## Validate and transform
 
@@ -222,14 +224,21 @@ including its type-specific data, enum, resource, service, or other body:
 }
 ```
 
+`schema get` resolves the complete import graph by default, including inherited
+config fields. Provide all required transitive `--skel-import domain=PATH`
+mappings; missing or invalid dependencies fail the query. Use `--shallow` to
+inspect only local declarations without resolving imports; inherited fields from
+external configs are unavailable in that mode. `--shallow` and `--skel-import`
+are mutually exclusive.
+
 If the requested declaration does not exist, `get` returns JSON `null` with
 exit code `0` — absence is a normal query result, not a command failure.
 
-Default `schema list` and `schema get` inspect the complete current domain without
-resolving external domain definitions. External references use canonical fully
-qualified names, independent of the local import alias. Generation-view lists
-resolve imports but return only the selected current-domain declarations. Each
-declaration retains its original `pub` marker.
+Default `schema list` and `schema get --shallow` inspect the complete current
+domain without resolving external domain definitions. External references use
+canonical fully qualified names, independent of the local import alias.
+Generation-view lists resolve imports but return only the selected current-domain
+declarations. Each declaration retains its original `pub` marker.
 
 Services and web declarations expose authentication modes as `authMode`.
 Service methods retain declared `authMode` and `require` and also include
@@ -366,9 +375,10 @@ queries. `Check` allows unresolved imports and returns source errors as diagnost
 with `Valid: false`; loading failures return an error. Formatting returns source
 bytes or a validated replacement plan and does not write files.
 
-`QuerySchema` defaults to unresolved inspection, matching schema list/get;
-`Pub`, `Api`, or `ResolveImports` selects a resolved view and requires the complete
-import mappings. Its `Domain` result is a `*schema.Domain`; use
+`QuerySchema` defaults to unresolved inspection, matching `schema list` and
+`schema get --shallow`; `Pub`, `Api`, or `ResolveImports` selects a resolved view
+and requires the complete import mappings. Its `Domain` result is a
+`*schema.Domain`; use
 `domain.Declarations()` and `domain.Find(kind, skelName)` to inspect declarations.
 `go.yorun.ai/skel/schema/diff` provides `Compare(baseline, candidate)` for semantic
 domains. `DiffSchemaSources` compares explicit
@@ -464,7 +474,7 @@ Generation validates the module metadata it writes. Main and public module ident
 
 Both `gen go` and `gen go-module` accept `--api` for portal clients or `--pub` for backend public contracts. The flags are mutually exclusive and cannot be combined with `--go-pub-out` or `--go-pub-module`. Both commands support `--skel-import` and `--go-import`.
 
-With `--api`, `--go-vrpc-version` selects the vRPC release written into the generated module, which must be v0.15.0 or later; `--go-vine-version` does not apply. A module prefix derives `example.com/gen/shop/orderapi` for domain `shop.order`, and foreign domains use their corresponding API modules. Backend Go output requires Vine v0.32.0 or later for `RegisterDomainDescriptor` and defaults to that version; see [compatibility](/docs/compatibility#generated-output-contract).
+With `--api`, `--go-vrpc-version` selects the vRPC release written into the generated module, which must be v0.15.0 or later; `--go-vine-version` does not apply. A module prefix derives `example.com/gen/shop/orderapi` for domain `shop.order`, and foreign domains use their corresponding API modules. Backend Go output requires Vine v0.32.0 or later for `RegisterDomainDescriptor` and defaults to v0.32.1; see [compatibility](/docs/compatibility#generated-output-contract).
 
 `gen go --api`, `gen go-module --api`, and `gen ts --api` accept repeatable `--actor domain.NameActor` flags. Only services whose `for` declarations match a selected fully qualified actor name are generated. Multiple actors select the union; without `--prune`, omitting the flag selects all API services. Selected services retain all methods, regardless of authentication or permissions. Unknown names, short names, and import aliases are errors. Without `--prune`, explicitly public data and enums remain available; other data and external type dependencies are collected only from selected services.
 
