@@ -30,9 +30,9 @@ review 生成的 descriptor 差异时，应比较 key 而不是位置：带 key 
 ## 按 domain 检查 schema
 
 每个 domain 独立执行 diff。外部引用保留为不透明的完整名称，不复制依赖 domain
-的声明。diff 覆盖全部公开和私有声明。`schema diff` 和默认 `schema list/get`
-不接受 import 映射；`schema dep` 与 `schema list --pub/--api` 视图通过
-`--skel-import` 解析依赖。
+的声明。diff 覆盖全部公开和私有声明。`schema diff` 和默认 `schema list` 不接受
+import 映射；`schema dep`、`schema get` 以及带 `--pub/--api` 的 `schema list` 通过
+`--skel-import` 解析依赖，`schema get --shallow` 则保留不透明引用。
 
 声明了 `mount` 的 web 会在 schema 中记录 `mountPath`，修改该值会以 `BREAKING` 影响级别
 报告 `web.mount-path.changed`。在 `pub` 与 `ext` 之间切换 service 或 event 会改变由哪一侧

@@ -39,8 +39,9 @@ keyed fields can appear in any order.
 Diff each domain independently. References to imported domains remain opaque,
 fully qualified names; their declarations are not copied into the current domain.
 Diff covers all public and private declarations. `schema diff` and default
-`schema list/get` do not accept import mappings; `schema dep` and selected
-`schema list --pub/--api` views resolve dependencies with `--skel-import`.
+`schema list` do not accept import mappings; `schema dep`, `schema get`, and
+selected `schema list --pub/--api` views resolve dependencies with
+`--skel-import`, while `schema get --shallow` keeps imports opaque.
 
 A web that declares `mount` records it as `mountPath`, and changing that value
 appears as `web.mount-path.changed` at `BREAKING` impact. Switching a service or

@@ -68,7 +68,9 @@ Go 集成保留 `api.Input{SkelIn: "./skel", Strict: true}`。
 
 映射的 key 是 `import` 声明的完整 domain 名，value 指向该 domain 的公开 Skel 输入。
 
-`schema dep` 的所有视图和 `schema list --pub/--api` 同样接受这些映射来解析依赖；其他 schema 命令不接受这些映射。默认 schema 查询和基于源码的 diff 把外部符号保留为不透明的完整名称。
+`schema dep` 的所有视图、`schema list --pub/--api` 和 `schema get` 同样接受这些映射来解析
+依赖；其他 schema 命令不接受。默认 `schema list`、`schema get --shallow` 和基于源码的 diff
+把外部符号保留为不透明的完整名称。
 
 ## 校验与转换
 
@@ -221,7 +223,14 @@ Skel 名称。因此 `TYPE` 是必填参数，也是声明身份的一部分。`
 }
 ```
 
-请求的声明不存在时，`get` 会返回 JSON `null` 和退出码 `0`——不存在是正常查询结果，而不是命令失败。默认 `schema list` 和 `schema get` 查询完整的当前 domain，不解析外部定义；生成视图查询会解析 import，但只返回选中的当前领域声明。每个声明保留原本的 `pub` 标记。
+`schema get` 默认解析完整依赖图，包含配置继承字段。需提供所需的全部传递依赖
+`--skel-import domain=PATH` 映射；依赖缺失或无效时查询失败。`--shallow` 只检查本地声明、
+不解析 imports，此时无法读取外部配置的继承字段；`--shallow` 与 `--skel-import` 互斥。
+
+请求的声明不存在时，`get` 会返回 JSON `null` 和退出码 `0`——不存在是正常查询结果，
+而不是命令失败。默认 `schema list` 和 `schema get --shallow` 查询完整的当前 domain，
+不解析外部定义；生成视图查询会解析 import，但只返回选中的当前领域声明。每个声明保留
+原本的 `pub` 标记。
 
 Service 和 web 声明使用 `authMode` 表示认证模式。
 Service 方法保留声明的 `authMode` 和 `require`，同时提供 `effectiveAuthMode` 和可选的
@@ -332,8 +341,8 @@ Go 工具可直接通过 `go.yorun.ai/skel/api` 调用 `Check`、`ScanImports`�
 `Check` 允许未解析导入，将源码错误作为诊断返回并设置 `Valid: false`；加载失败返回
 error。格式化返回源码字节或全部输入验证通过后的修改计划，不写入文件。
 
-`QuerySchema` 默认保留未解析导入，与 schema list/get 一致；设置 `Pub`、`Api` 或
-`ResolveImports` 可选择完整解析的视图，并需提供完整依赖映射。
+`QuerySchema` 默认保留未解析导入，与 `schema list` 和 `schema get --shallow` 一致；
+设置 `Pub`、`Api` 或 `ResolveImports` 可选择完整解析的视图，并需提供完整依赖映射。
 结果的 `Domain` 字段是 `*schema.Domain`，可通过 `domain.Declarations()` 和
 `domain.Find(kind, skelName)` 检查声明。`go.yorun.ai/skel/schema/diff` 提供
 `Compare(baseline, candidate)`，直接比较语义 domain。
@@ -420,7 +429,7 @@ skelc gen go-module \
 
 生成前会校验写入的 module 元数据。主 module、pub module 及由 prefix 推导的路径都必须是有效 Go module 路径，Go import 的版本必须是完整、带 `v` 前缀且与 module 路径兼容的语义版本。指向同一 Go module 的映射必须使用一致的版本；版本冲突（包括覆盖所选 runtime 依赖）会导致生成失败。
 
-`--api` 生成 portal 客户端，`--go-vrpc-version` 用于指定写入生成 module 的 vRPC 版本，不得低于 v0.15.0；该模式不接受 `--go-vine-version`。后端 Go 输出需要 Vine 的 `RegisterDomainDescriptor` API，默认依赖与最低支持版本均为 v0.32.0；详见[兼容性说明](/docs/compatibility#生成产物契约)。module prefix 会把 domain `shop.order` 推导为 `example.com/gen/shop/orderapi`，跨领域 API 类型引用对应的 `xxxapi` 包。
+`--api` 生成 portal 客户端，`--go-vrpc-version` 用于指定写入生成 module 的 vRPC 版本，不得低于 v0.15.0；该模式不接受 `--go-vine-version`。后端 Go 输出需要 Vine 的 `RegisterDomainDescriptor` API，最低支持版本为 v0.32.0，默认依赖为 v0.32.1；详见[兼容性说明](/docs/compatibility#生成产物契约)。module prefix 会把 domain `shop.order` 推导为 `example.com/gen/shop/orderapi`，跨领域 API 类型引用对应的 `xxxapi` 包。
 
 `gen go --api`、`gen go-module --api` 和 `gen ts --api` 支持可重复的 `--actor domain.NameActor`，仅生成 `for` 声明匹配指定 actor 全称的服务。多个 actor 取服务并集；未启用 `--prune` 时省略参数会生成全部 API 服务。筛选保留服务的全部方法，不按认证模式或权限条件删减方法。未知名称、短名和导入别名会报错。未启用 `--prune` 时输出保留显式公开的 data / enum，其他数据类型及外部类型依赖只跟随选中的服务收集。
 

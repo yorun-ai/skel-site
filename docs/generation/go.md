@@ -85,7 +85,7 @@ behavior. Keep business implementations and adapters in separate packages.
 
 When a shared naming convention can derive import paths, `--go-module-prefix` saves you from enumerating every mapping. After generation, run `gofmt` and `go test`, then review `go.mod` and any API diffs. The [CLI reference](/docs/cli) documents every flag.
 
-Backend Go output writes `descriptor.go` using `go.yorun.ai/skel/descriptor` and calls `skel.RegisterDomainDescriptor`. It requires Vine v0.32.0 or later and defaults to that version. `--api` clients are unaffected. See [compatibility](/docs/compatibility#generated-output-contract).
+Backend Go output writes `descriptor.go` using `go.yorun.ai/skel/descriptor` and calls `skel.RegisterDomainDescriptor`. It requires Vine v0.32.0 or later and defaults to v0.32.1. `--api` clients are unaffected. See [compatibility](/docs/compatibility#generated-output-contract).
 
 Each method descriptor retains `AuthMode` and `Require` and includes the derived
 `EffectiveAuthMode` and `EffectiveRequire`. Authentication inheritance and the
