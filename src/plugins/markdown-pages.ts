@@ -1,5 +1,6 @@
 import {mkdir, readFile, rm, writeFile} from 'node:fs/promises'
 import path from 'node:path'
+import {llmsText} from '../data/llms'
 import type {LoadContext, Plugin} from '@docusaurus/types'
 import type {
   DocMetadata,
@@ -136,6 +137,8 @@ export default function markdownPagesPlugin({
   baseUrl,
   siteDir,
   codeTranslations,
+  siteConfig,
+  i18n,
 }: LoadContext): Plugin {
   let docs: DocMetadata[] = []
   let developmentWrite = Promise.resolve()
@@ -175,6 +178,11 @@ export default function markdownPagesPlugin({
           'utf8',
         )
       }),
+    )
+    await writeFile(
+      path.join(outputDir, 'llms.txt'),
+      llmsText(docs, siteConfig.url, outputBaseUrl, i18n.currentLocale),
+      'utf8',
     )
   }
 

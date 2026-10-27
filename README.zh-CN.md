@@ -37,6 +37,10 @@ pnpm build
 部署到生产环境需要经过授权的 Cloudflare 凭据。贡献者在本地构建或预览
 站点时不需要 Cloudflare 权限。
 
+## 机器可读文档
+
+Markdown 导出插件同时根据已发布文档的元数据生成 `/llms.txt` 和 `/zh-CN/llms.txt`，链接到对应的 Markdown 文档。产品简介变化时更新 `src/data/llms.ts`。
+
 ## 版本管理
 
 1.0 之前，站点只维护当前的 `next` 文档；版本快照从 `v1.0.0` 开始。
