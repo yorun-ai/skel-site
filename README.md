@@ -39,6 +39,10 @@ source of truth for the Worker configuration, 404 fallback, and the
 Deploying to production requires authorized Cloudflare credentials.
 Contributors do not need Cloudflare access to build or preview the site locally.
 
+## Machine-readable documentation
+
+The Markdown export plugin also generates `/llms.txt` and `/zh-CN/llms.txt` from the published document metadata, with links to the matching Markdown exports. Update `src/data/llms.ts` when the product briefing changes.
+
 ## Versioning
 
 Before 1.0, the site maintains only the current `next` documentation.
