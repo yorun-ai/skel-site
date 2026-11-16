@@ -29,3 +29,14 @@
 - Keep links valid in both locales. Use `/docs/...` for this site and absolute `https://vine.yorun.ai/docs/...` links for Vine content.
 - Do not document planned syntax, commands, flags, or behavior as available.
 - Run `pnpm typecheck` and `pnpm build` after site source, content or configuration changes; run `git diff --check` for all changes.
+
+## Search indexing
+
+- Serve published document routes; unmatched content paths return 404. The root
+  and locale root lead to the document overview.
+- Use `trailingSlash: false` and Cloudflare `html_handling: "drop-trailing-slash"`.
+  Canonical URLs, language alternates and sitemap entries resolve directly to HTML.
+- Generate `sitemap-index.xml` for the configured locales and declare it in
+  `robots.txt`.
+- Keep Markdown exports crawlable and associate each with its HTML document
+  through the canonical HTTP Link header.
