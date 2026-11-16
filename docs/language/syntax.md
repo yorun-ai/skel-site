@@ -51,6 +51,8 @@ For multiple actors on an API service or web, use `for AActor, BActor`; comma li
 
 Every service must declare `pub`, `ext`, or `api`. Client admission rules are allowed only on API services.
 
+An actor auth block may declare `impersonator OpsActor, AdminActor` to generate optional, typed operator information in its authentication result. See [Actors & Access](/docs/actors-and-access#declare-impersonators).
+
 ## Type Forms
 
 ```text

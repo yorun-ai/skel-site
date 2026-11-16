@@ -85,7 +85,7 @@ behavior. Keep business implementations and adapters in separate packages.
 
 When a shared naming convention can derive import paths, `--go-module-prefix` saves you from enumerating every mapping. After generation, run `gofmt` and `go test`, then review `go.mod` and any API diffs. The [CLI reference](/docs/cli) documents every flag.
 
-Backend Go output writes `descriptor.go` using `go.yorun.ai/skel/descriptor` and calls `skel.RegisterDomainDescriptor`. It requires Vine v0.32.0 or later and defaults to v0.32.1. `--api` clients are unaffected. See [compatibility](/docs/compatibility#generated-output-contract).
+Backend Go output writes `descriptor.go` using `go.yorun.ai/skel/descriptor` and calls `skel.RegisterDomainDescriptor`. It requires Vine v0.33.0 or later and defaults to v0.33.0. `--api` clients are unaffected. See [compatibility](/docs/compatibility#generated-output-contract).
 
 Each method descriptor retains `AuthMode` and `Require` and includes the derived
 `EffectiveAuthMode` and `EffectiveRequire`. Authentication inheritance and the
@@ -94,7 +94,7 @@ Consumers can call `descriptor.ValidateEffectivePolicy(domain)` to verify these
 stored values against the declarations. This read-only check does not validate
 external targets or perform request authorization.
 
-All Go output uses scalar values from `go.yorun.ai/skel/types`. Generated modules pin the Skel dependency to the compiler version. When generating into an existing module, add that Skel version yourself. Development builds require a local Go workspace or module replacement for Skel.
+Go output uses native `uuid.UUID` and other extended scalar values from `go.yorun.ai/skel/types`. Generated modules pin the Skel dependency to the compiler version. When generating into an existing module, add that Skel version yourself. Development builds require a local Go workspace or module replacement for Skel.
 
 ## web Generation
 
@@ -108,7 +108,7 @@ type and overrides the routes it needs. That default type is only a shell: its
 
 A declared `mount` reaches the generated web spec and the runtime domain descriptor;
 see [Vine Integration](/docs/vine-integration#declared-web-mount-paths). Backend Go
-output, including the mounted web surface, requires Vine v0.32.0 or later.
+output, including the mounted web surface, requires Vine v0.33.0 or later.
 
 ## portal API Clients
 
@@ -121,7 +121,7 @@ skelc gen go-module --api \
 
 For domain `shop.order`, this derives module `example.com/gen/shop/orderapi` and package `orderapi`. `--go-module` overrides the module path. Use `gen go --api` to generate into an existing module. `--api` and `--pub` are mutually exclusive; default Go generation supplies backend implementations, while `--pub` selects backend public contracts. `--api` accepts repeatable `--actor domain.NameActor` filters that select API services by their `for` audiences; see the [CLI reference](/docs/cli) for the selection and dependency rules.
 
-API clients depend on `go.yorun.ai/vrpc` v0.15.0 or later and default to v0.15.0; `--go-vrpc-version` selects the release and rejects anything older. Scalar types come from `go.yorun.ai/skel/types`. Cross-domain types are imported from the corresponding `xxxapi` package, and API clients never depend on Vine.
+API clients depend on `go.yorun.ai/vrpc` v0.17.0 or later and default to v0.17.0; `--go-vrpc-version` selects the release and rejects anything older. UUID uses native `uuid.UUID`; other extended scalar types come from `go.yorun.ai/skel/types`. Cross-domain types are imported from the corresponding `xxxapi` package, and API clients never depend on Vine.
 
 Construct a client with `NewOrderApiServiceClient(client)`, passing a `*vrpc.Client` you configure for the portal endpoint. The constructor returns the `OrderApiServiceClient` interface, so you can supply your own implementation or mock in tests. Each method takes `context.Context`, the declared business parameters, and any optional `vrpc.InvokeOption` values, and returns the business result with `error`, or just `error` when the method has no result.
 

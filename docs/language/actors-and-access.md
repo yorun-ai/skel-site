@@ -36,9 +36,61 @@ pub actor CustomerActor {
 An `auth` block holds both `credential` and `info`:
 
 - `credential` is what the caller presents. It needs at least one field; every field is `string` or `string?`, and at least one field must be a non-nullable `string`.
-- `info` is the authenticated identity returned to application code. It can use normal Skel field types.
+- `info` is the authenticated identity returned to application code. It must declare at least one field and can use normal Skel field types; `@identifier` remains optional. Empty `info {}` blocks are rejected.
 
-skelc generates actor-specific credential and info data models along with the authentication service metadata. Mark credentials or identity fields `@sensitive` when logs and schema consumers must treat them as confidential.
+skelc generates actor-specific credential, info, and auth-result data models along with the authentication service metadata. The generated `auth` method returns `<ActorName>AuthResult`, whose required `info` field contains `<ActorName>Info`. Mark credentials or identity fields `@sensitive` when logs and schema consumers must treat them as confidential.
+
+## Declare Impersonators
+
+An auth block can explicitly name the actor types whose identity information may
+accompany the effective identity:
+
+```skel
+pub actor UserActor {
+    auth {
+        impersonator OpsActor, AdminActor
+        credential { session: string }
+        info {
+            @identifier
+            userId: int
+        }
+    }
+}
+```
+
+`OpsActor` and `AdminActor` must be declared actors with authentication info.
+Imported actors must be public; a public actor can only name public impersonators.
+Import-qualified names and the current actor itself are supported. Use one
+comma-separated `impersonator` declaration; duplicate actors and generated field
+name collisions are errors.
+
+For this example, the generated result has this shape (these data declarations
+are generated, not additional source declarations):
+
+```skel
+data UserActorAuthResult {
+    info: UserActorInfo
+    impersonatorInfo: UserActorImpersonatorInfo?
+}
+
+data UserActorImpersonatorInfo {
+    opsActorInfo: OpsActorInfo?
+    adminActorInfo: AdminActorInfo?
+}
+```
+
+A null `impersonatorInfo` represents ordinary authentication. When it is non-null,
+exactly one candidate info field must be non-null; enforce this in the
+authentication consumer, because generated Go structs do not. Without an
+`impersonator` declaration, the result contains only `info`.
+
+The declaration describes supported identity information, not authorization.
+The business authentication service owns credentials, sessions, and the decision
+to impersonate. The result records one direct impersonator, not a recursive chain.
+
+Every generated auth method returns `<ActorName>AuthResult`, including actors
+without impersonators; implementations populate `info`. Vine v0.33.0 accepts this
+contract at Portal.
 
 ## Actor Identifier
 

@@ -36,9 +36,48 @@ pub actor CustomerActor {
 `auth` 同时包含 `credential` 和 `info`：
 
 - `credential` 是调用者提交的凭据，至少一个字段，每个字段是 `string` 或 `string?`，且至少有一个非 nullable 的 `string` 字段。
-- `info` 是应用代码拿到的认证身份，能用普通的 Skel 字段类型。
+- `info` 是应用代码拿到的认证身份，必须至少声明一个字段，能用普通的 Skel 字段类型；`@identifier` 仍然可选。空的 `info {}` 会被拒绝。
 
-skelc 会生成 actor 专属的 credential、info 数据类型和认证服务元数据。字段或 block 如果不想出现在明文日志里，加上 `@sensitive` 标记就行。
+skelc 会生成 actor 专属的 credential、info、auth-result 数据类型和认证服务元数据。生成的 `auth` 方法返回 `<ActorName>AuthResult`，其中必填的 `info` 字段包含 `<ActorName>Info`。字段或 block 如果不想出现在明文日志里，加上 `@sensitive` 标记就行。
+
+## 声明代操作身份
+
+在 auth block 中显式声明可随有效身份返回的操作者类型：
+
+```skel
+pub actor UserActor {
+    auth {
+        impersonator OpsActor, AdminActor
+        credential { session: string }
+        info {
+            @identifier
+            userId: int
+        }
+    }
+}
+```
+
+`OpsActor` 和 `AdminActor` 必须是声明了认证 info 的 actor。导入的 actor 必须公开；公开 actor 只能引用公开操作者。支持带 import 限定符的名称，也支持引用当前 actor 自身。使用一条逗号分隔的 `impersonator` 声明；重复 actor 或派生字段名冲突会报错。
+
+上例生成的结果结构如下（这些 Data 由编译器生成，无需在源文件中另行声明）：
+
+```skel
+data UserActorAuthResult {
+    info: UserActorInfo
+    impersonatorInfo: UserActorImpersonatorInfo?
+}
+
+data UserActorImpersonatorInfo {
+    opsActorInfo: OpsActorInfo?
+    adminActorInfo: AdminActorInfo?
+}
+```
+
+`impersonatorInfo` 为空表示普通认证；非空时，内部必须恰好一个候选 info 字段非空。该规则由认证结果消费方校验，生成的 Go 结构体本身不执行互斥检查。未声明 `impersonator` 时，结果只有 `info`。
+
+该声明描述支持的身份信息，不授予代登录权限。凭据、session 及是否代登录仍由业务认证服务决定。此结构记录直接操作者，不表示递归认证链。
+
+所有生成的 auth 方法都返回 `<ActorName>AuthResult`，未声明操作者的 actor 也一样；业务实现填写 `info`。Vine v0.33.0 在 Portal 接受该契约。
 
 ## Actor 标识符
 
