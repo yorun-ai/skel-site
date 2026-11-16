@@ -3,6 +3,7 @@ import {tmpdir} from 'node:os'
 import path from 'node:path'
 import {spawn} from 'node:child_process'
 import {fileURLToPath} from 'node:url'
+import {finalizeSearchOutput} from './search-output.mjs'
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url))
 const projectDir = path.resolve(scriptDir, '..')
@@ -70,6 +71,7 @@ try {
     'dir',
   )
   exitCode = await runBuild()
+  if (exitCode === 0) await finalizeSearchOutput(projectDir)
 } finally {
   await rm(temporarySiteDir, {force: true, recursive: true})
 }

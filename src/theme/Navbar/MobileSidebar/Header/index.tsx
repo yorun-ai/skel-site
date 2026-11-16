@@ -15,7 +15,7 @@ export default function NavbarMobileSidebarHeader(): ReactNode {
         aria-label="Skeleton DSL overview"
         className={styles.brand}
         onClick={mobileSidebar.toggle}
-        to="/docs/">
+        to="/docs">
         <span aria-hidden="true" className="navbar__logo">
           <img alt="" src="/brand/skel-navbar.png" />
         </span>

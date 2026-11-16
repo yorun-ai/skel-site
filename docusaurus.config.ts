@@ -18,6 +18,7 @@ const config: Config = {
   favicon: 'favicon.ico',
   url: 'https://skel.yorun.ai',
   baseUrl: '/',
+  trailingSlash: false,
   organizationName: 'yorun-ai',
   projectName: 'skel-site',
   onBrokenLinks: 'throw',
@@ -79,6 +80,9 @@ const config: Config = {
           },
         },
         blog: false,
+        sitemap: {
+          ignorePatterns: ['/', '/zh-CN', '/zh-CN/', '/search', '/zh-CN/search'],
+        },
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -89,6 +93,7 @@ const config: Config = {
     ['./src/plugins/tailwind.ts', {}],
     ['./src/plugins/aliases.ts', {}],
     ['./src/plugins/markdown-pages.ts', {}],
+    ['./src/plugins/search-index.ts', {}],
     ['./src/plugins/shared-preferences.ts', {}],
     ...(devWebSocketPath
       ? [

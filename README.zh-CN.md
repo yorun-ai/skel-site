@@ -60,3 +60,11 @@ pnpm docusaurus docs:version 1.0.0
 ## 许可证
 
 Skel Site 使用 [Apache License 2.0](LICENSE) 开源。
+
+## 搜索索引
+
+文档地址在 Cloudflare、canonical 和 sitemap 中统一使用无尾斜杠形式。
+站点根路径和语言根路径进入文档总览，未匹配的内容路径返回 404。
+
+构建验证文档元数据和 Markdown 导出，生成 canonical HTTP Link 响应头，
+生成 `sitemap-index.xml`，并在 `robots.txt` 中声明。

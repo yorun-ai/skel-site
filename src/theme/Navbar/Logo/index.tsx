@@ -29,7 +29,7 @@ export default function NavbarLogo(): ReactNode {
 
       <Link
         className={`navbar__brand ${styles.desktopBrand}`}
-        to="/docs/">
+        to="/docs">
         <span aria-hidden="true" className="navbar__logo">
           <img alt="" src="/brand/skel-navbar.png" />
         </span>

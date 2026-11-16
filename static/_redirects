@@ -1,0 +1,4 @@
+# Site entry points lead to the document overview.
+/ /docs 301
+/zh-CN /zh-CN/docs 301
+/zh-CN/ /zh-CN/docs 301

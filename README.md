@@ -62,3 +62,12 @@ content requirements, and validation steps.
 ## License
 
 Skel Site is open source under the [Apache License 2.0](LICENSE).
+
+## Search indexing
+
+Document URLs use the same slash-free form in Cloudflare, canonical tags and
+sitemaps. The root and locale root lead to the document overview; unmatched
+content paths return 404.
+
+The build validates document metadata and Markdown exports, generates canonical
+HTTP Link headers, publishes `sitemap-index.xml`, and declares it in `robots.txt`.
