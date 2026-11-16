@@ -63,7 +63,7 @@ nil 指针表示 `null`；非 nil 指针表示集合，即使它指向的 slice 
 
 如果用的是统一的命名规则，用 `--go-module-prefix` 就能自动推导路径，无需逐个配置。生成完后运行 `gofmt` 和 `go test`，检查 `go.mod` 和 API diff。完整参数清单见 [CLI 参考](/docs/cli)。
 
-后端 Go 输出在 `descriptor.go` 中使用 `go.yorun.ai/skel/descriptor`，并调用 `skel.RegisterDomainDescriptor`；它要求 Vine v0.32.0 或更高版本，默认使用 v0.32.1。`--api` 客户端不受影响。详见[兼容性说明](/docs/compatibility#生成产物契约)。
+后端 Go 输出在 `descriptor.go` 中使用 `go.yorun.ai/skel/descriptor`，并调用 `skel.RegisterDomainDescriptor`；它要求 Vine v0.33.0 或更高版本，默认使用 v0.33.0。`--api` 客户端不受影响。详见[兼容性说明](/docs/compatibility#生成产物契约)。
 
 每个方法 descriptor 保留 `AuthMode` 和 `Require`，并提供派生的
 `EffectiveAuthMode` 和 `EffectiveRequire`，其中已完成认证策略继承，以及 service
@@ -71,7 +71,7 @@ nil 指针表示 `null`；非 nil 指针表示集合，即使它指向的 slice 
 `descriptor.ValidateEffectivePolicy(domain)`，检查已有派生值是否与声明一致。
 该检查只读，不校验外部目标，也不执行请求鉴权。
 
-所有 Go 输出的标量值均来自 `go.yorun.ai/skel/types`。生成模块的 Skel 依赖与编译器版本一致；生成到现有模块时，需要自行添加对应版本的 Skel 依赖。开发构建需要通过本地 Go workspace 或 module replace 引用 Skel。
+Go 输出使用原生 `uuid.UUID`，其他扩展标量值来自 `go.yorun.ai/skel/types`。生成模块的 Skel 依赖与编译器版本一致；生成到现有模块时，需要自行添加对应版本的 Skel 依赖。开发构建需要通过本地 Go workspace 或 module replace 引用 Skel。
 
 ## web 生成
 
@@ -79,7 +79,7 @@ nil 指针表示 `null`；非 nil 指针表示集合，即使它指向的 slice 
 
 服务端接口命名为 `<WebName>Server`，默认实现命名为 `Default<WebName>Server`。其他包的实现需要嵌入默认类型并覆盖所需路由。该默认类型只是空壳：在 Go 代码提供路由之前，它的 `Routes(*web.Router)` 会 panic。
 
-声明的 `mount` 会写入生成的 web spec 和 runtime domain descriptor，详见 [Vine 集成](/docs/vine-integration#声明的-web-挂载路径)。后端 Go 输出（包括挂载的 web 产物）需要 Vine v0.32.0 或更高版本。
+声明的 `mount` 会写入生成的 web spec 和 runtime domain descriptor，详见 [Vine 集成](/docs/vine-integration#声明的-web-挂载路径)。后端 Go 输出（包括挂载的 web 产物）需要 Vine v0.33.0 或更高版本。
 
 ## portal API 客户端
 
@@ -92,7 +92,7 @@ skelc gen go-module --api \
 
 领域为 `shop.order` 时，推导 module 为 `example.com/gen/shop/orderapi`，包名为 `orderapi`。`--go-module` 可覆盖 module 路径；`gen go --api` 写入已有模块。`--api` 与 `--pub` 互斥；默认 Go 生成用于后端实现，`--pub` 选择后端公共契约。`--api` 支持可重复的 `--actor domain.NameActor`，按服务的 `for` 受众筛选；筛选与依赖规则见 [CLI 参考](/docs/cli)。
 
-API 客户端依赖 `go.yorun.ai/vrpc` v0.15.0 或更高版本，默认 v0.15.0；`--go-vrpc-version` 用于指定版本，低于该版本的取值会被拒绝。基础类型来自 `go.yorun.ai/skel/types`。跨领域类型依赖指向对应 `xxxapi` 包，不依赖 Vine。
+API 客户端依赖 `go.yorun.ai/vrpc` v0.17.0 或更高版本，默认 v0.17.0；`--go-vrpc-version` 用于指定版本，低于该版本的取值会被拒绝。UUID 使用原生 `uuid.UUID`，其他扩展基础类型来自 `go.yorun.ai/skel/types`。跨领域类型依赖指向对应 `xxxapi` 包，不依赖 Vine。
 
 调用 `NewOrderApiServiceClient(client)`，传入为你配置好的 `*vrpc.Client`（指向 portal 地址）。构造函数返回 `OrderApiServiceClient` 接口，你可以在测试中提供自己的实现或 mock。每个生成方法接受 `context.Context`、声明的业务参数和任意可选 `vrpc.InvokeOption`，返回业务结果与 `error`；无结果的方法仅返回 `error`。
 

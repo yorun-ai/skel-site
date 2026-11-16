@@ -20,6 +20,8 @@ import commerce.catalog as catalog
 
 每个文件都声明 domain。import 放在 domain 之后、顶层声明之前。目录输入必须包含 `domain.skel`，详见[文件与导入](/docs/files-and-imports)。
 
+actor 的 auth block 可通过 `impersonator OpsActor, AdminActor` 声明认证结果中可选的强类型操作者信息。参见 [Actors & Access](/docs/actors-and-access)。
+
 ## 顶层声明
 
 | 形式 | 必需内容 | `pub` | 详细说明 |

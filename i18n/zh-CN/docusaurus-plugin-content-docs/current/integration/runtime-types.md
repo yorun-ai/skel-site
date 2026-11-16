@@ -4,7 +4,7 @@ slug: /runtime-types
 
 # 运行时类型
 
-Skel 生成的 Go 代码用 `go.yorun.ai/skel/types` 表达扩展标量，导入别名为 `skeltype`；服务端 Actor 标记和契约元数据来自 `go.yorun.ai/vine/core/skel`。当你在应用里保存、比较或跨语言传递这些值时，需要了解它们的传输形态和比较规则。
+Skel 生成的 Go 代码用 `go.yorun.ai/skel/types` 表达 UUID 以外的扩展标量（UUID 使用原生 `uuid.UUID`），导入别名为 `skeltype`；服务端 Actor 标记和契约元数据来自 `go.yorun.ai/vine/core/skel`。当你在应用里保存、比较或跨语言传递这些值时，需要了解它们的传输形态和比较规则。
 
 ## 标量编码
 
@@ -22,7 +22,7 @@ Skel 标量扩展遵循一个基本原则：
 "1.00"
 ```
 
-编码时保留 decimal scale，`1.00` 不会被规范化为 `1`。这对金额、倍率、展示精度等场景很重要。
+编码时保留 decimal scale，`1.00` 不会被规范化为 `1`。这对金额、倍率、展示精度等场景很重要。解码时，考虑小数位后的指数绝对值上限为 10000；例如 `1e10000` 可以接受，`1e10001` 会被拒绝。
 
 ### Timestamp（时间戳）
 
@@ -56,13 +56,13 @@ Skel 标量扩展遵循一个基本原则：
 
 ### UUID（唯一标识）
 
-`UUID` 在 JSON 和 CBOR 中都编码为标准 UUID 字符串。
+`uuid` 生成原生 Go `uuid.UUID`，共享的 `go.yorun.ai/skel/types/codec` JSON/CBOR codec 将其编码为标准 UUID 字符串。`skeltype.UUID` 和 `skeltype.NewUUID` 已废弃，直接使用 Go `uuid` 包中的 `uuid.Parse`、`uuid.New` 等函数。共享 codec 由 Skel v0.35.0 提供；Rpc 流量中的原生 UUID 值需搭配 Vine v0.33.0 或 vRPC Go v0.17.0。
 
 ```json
 "550e8400-e29b-41d4-a716-446655440000"
 ```
 
-`uuid` 作为 map key 时，Go 生成类型为 `map[skeltype.UUID]T`，TypeScript 生成类型为 `Record<string, T>`，JSON 和 CBOR 都使用 UUID 字符串作为 key。
+`uuid` 作为 map key 时，Go 生成类型为 `map[uuid.UUID]T`，TypeScript 生成类型为 `Record<string, T>`，JSON 和 CBOR 都使用 UUID 字符串作为 key。
 
 ### JSON（JSON 文本）
 
@@ -83,6 +83,21 @@ JSON 没有原生 bytes 类型，只能用 base64；CBOR 有原生 bytes 类型�
 
 TypeScript generator 会把 `Binary` 映射为 `Uint8Array`；只有 method arguments 或 result 包含 Binary 时，生成的 service spec 才会附带稀疏的 `wire` schema，普通 JSON method 不会生成额外 metadata。应用注入 CBOR codec 的方式见 [TypeScript 生成](/docs/generation/typescript)。
 
+## Payload 编解码
+
+在 vRPC 以外编码 Skel payload 时，也使用 `go.yorun.ai/skel/types/codec`：
+
+```go
+encoded, err := codec.MarshalCBOR(value)
+// 处理 err 后再解码。
+err = codec.UnmarshalCBOR(encoded, &result)
+```
+
+`MarshalJSON` 和 `UnmarshalJSON` 提供对应的 JSON 操作。
+`MustMarshalJSONString` 直接返回 JSON 字符串，编码失败时 panic。固定规则将原生 UUID
+编码为文本、将 nil 集合编码为空集合，拒绝重复 key，并在 CBOR 解码时执行生成的
+枚举校验。传输 envelope 和消息体大小限制仍由调用方负责。
+
 ## 集合类型
 
 Go 集合的可空性与编码契约见 [Go 生成](/docs/generation/go#集合编码与校验)。`binary` 标量保留其字节编码，不属于 `list<T>`。
@@ -93,5 +108,5 @@ Go 集合的可空性与编码契约见 [Go 生成](/docs/generation/go#集合�
 `descriptor.Domain`，并传给 `skel.RegisterDomainDescriptor`。这些值包含运行时
 元数据和具名类型引用，不包含源码位置。
 
-注册要求 Vine v0.32.0 或更高版本。编译器版本缺失或低于 `skel.MinSkelcVersion()`
+注册要求 Vine v0.33.0 或更高版本。编译器版本缺失或低于 `skel.MinSkelcVersion()`
 的 descriptor 会在应用启动阶段失败。
